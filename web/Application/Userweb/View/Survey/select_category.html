@@ -1,0 +1,173 @@
+<include file="Public/includeHeader" />
+
+﻿<div class="row">
+	<div class="col-lg-12">
+		<h3 class="page-header">题目列表</h3>
+		
+	</div>
+</div>
+
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h2><i class="fa fa-table red"></i><span class="break"></span><strong>列表</strong></h2>
+		 
+	</div>
+
+	<div class="form-group" style="margin-top: 20px">
+        <a class="btn btn-primary" style="" href="{:U('add_question')}&categoryid={$_REQUEST[id]}">
+			添加题目
+		</a>
+
+		<a class="btn btn-primary" onclick="selfile()">
+			批量导入题目
+		</a>
+
+		<form name="form1" action="{:U('select_category')}&id={$_REQUEST[id]}" method="post" style="margin-top: 15px;">
+			<label for="text-input">题目标题:</label>
+			<input  type="text" name="question_name" placeholder="请输入搜索的题目"/>
+
+			<button class="btn btn-success" type="submit" style="margin-left: 15px;"><i class="fa fa-dot-circle-o"></i>搜索</button>
+		</form>
+
+		<a href="Uploads\excel\survey.xlsx" target="_blank">
+			下载题目导入表格样式
+		</a>  
+		
+	</div>
+	
+	<button class="btn btn-sm btn-success" onclick="save_category()">提交添加</button>
+
+	<form id="xlsform" enctype="multipart/form-data">
+		<input onchange="submitxls()" id="oncontacts" name="xlsfile" type="file" value="导入用户信息" style="display: none;" accept="" />
+	</form>
+
+		
+
+	<div class="panel-body">
+		<table class="table table-bordered table-striped table-condensed table-hover">
+			<thead>
+				<tr>
+					<th width="70px"><input name="allselect" type="checkbox" value="" id="allselect" onclick="selectbtn()" />全选</th>
+
+					<th>题号</th>
+					<th>题目</th>
+					<th>选项</th>
+					
+					<!-- <th>操作</th> -->
+				</tr>
+			</thead>
+			<tbody>
+				<volist name='data[content]' id='vo'>
+					<tr>
+						<td><input name="namelist" type="checkbox" value="<?php echo $vo[id];?>" /></td>
+
+						<td>{$vo[xulie]}</td>
+						<td><div  style="width:200px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;" title="{$vo[title]}">{$vo[title]}</div></td>
+						<td><volist name='vo[option]' id='vo2'>{$vo2[label]}.{$vo2[option_title]}&nbsp;&nbsp;&nbsp;&nbsp;</volist></td>
+						
+						<!-- <td>
+				          <a href='{:U("add_question",array("id"=>$vo["id"]))}'><i class="fa fa-pencil"></i></a>
+				          <a onclick='return del();' href='{:U("question_del",array("id"=>$vo["id"]))}' role="button" data-toggle="modal"><i class="fa fa-trash-o"></i></a>
+					    </td> -->
+					</tr>
+				</volist>			
+			</tbody>
+		</table>
+
+		<!-- <button class="btn btn-sm btn-success" onclick="save_category()">提交添加</button> -->
+
+	</div>
+</div>
+
+<include file="Public/pagination" />
+<include file="Public/includeFooter" />
+
+<script type="text/javascript">
+
+function submitxls(){
+
+	var fileval=$('#oncontacts').val();
+	var regex=/(.+)\.xls|xlsx$/i;
+	if(regex.test(fileval)==false){
+		alert("文件格式不正确,请上传Excel文件");
+		return false;
+	}
+
+	var formData = new FormData($( "#xlsform" )[0]);  
+	$.ajax({  
+	  url: 'userweb.php?c=survey&a=to_question&categoryid={$_REQUEST[id]}' ,  
+	  type: 'POST',  
+	  data: formData,  
+	  async: false,  
+	  cache: false,  
+	  contentType: false,  
+	  processData: false,  
+	  success: function (returndata) {  
+	      alert("导入成功！");
+	      window.location.href="userweb.php?m=Userweb&c=Survey&a=select_category&id={$_REQUEST[id]}";
+	  },  
+	  error: function (returndata) {  
+	      alert("导入失败");  
+	  }  
+	});
+}
+
+function selfile(){
+	$('#oncontacts').click();
+}
+
+
+function selectall()  
+{  
+	var obj=document.all.namelist;  
+	for(var i=0;i<obj.length;i++)  
+	{  
+		obj[i].checked=true;  
+	}  
+}  
+function cacelall()  
+{  
+	var obj=document.all.namelist;  
+	for(var i=0;i<obj.length;i++)  
+	{  
+		obj[i].checked=false;  
+	}  
+}  
+
+function selectbtn(){
+
+	if($("input[name='allselect']").attr("checked")){
+		selectall();
+	}else{
+		cacelall(); 
+	}
+}
+
+function save_category(){
+	var str="";
+    $("input[name='namelist']:checkbox").each(function(){ 
+        if($(this).attr("checked")){
+            str += $(this).val()+","
+        }
+    });
+    str=str.substring(0,str.length-1);
+    if(str == ""){
+    	alert("请选择题目！！");
+    	return;
+    }
+    var categoryid={$_REQUEST[id]};
+    $.ajax({
+    	url: 'userweb.php?c=survey&a=save_category',
+    	type: 'POST',
+    	dataType: 'json',
+    	data: {categoryid: categoryid,questionids: str},
+    	success:function(data) {  
+			alert("添加成功");
+		},  
+		error : function() {  
+			alert("添加失败");
+		}  
+    });
+}
+
+</script>

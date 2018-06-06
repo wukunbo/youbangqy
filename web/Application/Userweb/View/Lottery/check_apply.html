@@ -1,0 +1,151 @@
+<include file="Public/includeHeader" />
+
+﻿<div class="row">
+	<div class="col-lg-12">
+		<h3 class="page-header">名单列表</h3>
+		
+	</div>
+</div>
+
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h2><i class="fa fa-table red"></i><span class="break"></span><strong>列表</strong></h2>
+		 
+	</div>
+
+	<div class="form-group" style="margin-top: 20px">
+        <a class="btn btn-primary" onclick="show_content('userweb.php?c=contacts&a=choose_contact&t=lottery&id={$_REQUEST['id']}&back=check_apply')" >
+			添加人员名单
+		</a>
+		 <a class="btn btn-primary" onclick="del_apply();" >
+			批量删除
+		</a>	
+	</div>
+
+	<div class="panel-body">
+		<table class="table">
+			<thead>
+				<tr>
+					<th></th>
+					<th>ID</th>
+					<td >代码</td>
+					<th>姓名</th>
+					<!-- <th>部门</th> -->
+					
+		 
+					<td >导入时间</td>
+					<th style="width:15.5em;">操作</th>
+				</tr>
+			</thead>
+			
+			<tbody>
+				<volist name="data" id="lists">
+					<tr >
+						<td><input name="namelist" type="checkbox" value="{$lists['id']}" /></td>
+						<td >{$lists['id']}</td>
+						<td >{$lists[user_id]}</td>
+						<td >{$lists[truename]}</td>
+						<!-- <td >{$lists[partment]}</td> -->
+						
+						 <td >
+						 	{$lists[addtime]|date="Y-m-s",###}
+						 </td>
+						<td>
+							
+								<a  href="javascript:confirm_del('userweb.php?c=lottery&a=del_apply&id={$lists[id]}')" ><i class="fa fa-trash-o"></i></a>
+				  			
+						</td>
+					</tr>
+				</volist>
+				 
+				 
+			</tbody>
+		</table>
+		<a href="Uploads/excel/to_vote.xlsx" target="_blank">
+			下载导入表格样式
+		</a>  
+
+		<div class="form-group" style="margin-top: 15px">
+		<a class="btn btn-success" href="userweb.php?c=Lottery&a=lists&menu_app=Activity">返回列表</a>
+
+		<a class="btn btn-primary" onclick="to_apply();" >导入名单</a>
+
+<!-- 		<label style="margin-left: 15px"><input <if condition="$open_status eq 2">checked="checked"</if> type="checkbox" id="open_other" name="open_other" value="" onclick="open_other()">是否对外开放</label>	
+ -->		</div>
+
+		<form id="xlsform" enctype="multipart/form-data">
+			<input onchange="submitxls({$_REQUEST[id]})" id="oncontacts" name="xlsfile" type="file" value="导入名单" style="display: none;" accept="" />
+		</form>
+	</div>
+</div>
+
+<include file="Public/pagination" />
+<include file="Public/includeFooter" />
+
+
+<script type="text/javascript">
+function del_apply(){
+	var str="";
+    $("input[name='namelist']:checkbox").each(function(){ 
+        if($(this).attr("checked")){
+            str += $(this).val()+","
+        }
+    });
+    str=str.substring(0,str.length-1);
+    if(str == ""){
+    	alert("请选择名单！！");
+    	return;
+    }
+  
+    $.ajax({
+    	url: 'userweb.php?c=lottery&a=del_allapply',
+    	type: 'POST',
+    	dataType: 'json',
+    	data: {ids: str},
+    	success:function(data) {  
+			alert("删除成功");
+    		window.location.href="userweb.php?c=lottery&a=check_apply&id={$_REQUEST[id]}";
+		},  
+		error : function() {  
+			alert("删除失败");
+		}  
+    });
+}
+
+
+function submitxls(id){
+
+	var fileval=$('#oncontacts').val();
+	var regex=/(.+)\.xls|xlsx$/i;
+	if(regex.test(fileval)==false){
+		alert("文件格式不正确,请上传Excel文件");
+		return false;
+	}
+
+	var formData = new FormData($( "#xlsform" )[0]);  
+	$.ajax({  
+	  url: 'userweb.php?c=lottery&a=to_apply&id='+id ,  
+	  type: 'POST',  
+	  data: formData,  
+	  async: false,  
+	  cache: false,  
+	  contentType: false,  
+	  processData: false,
+	  beforeSend:function(e){
+	  	show_content();
+	  },
+	  success: function (returndata) {
+	  	 show_content_close();
+	     alert("导入成功！");
+	     location.reload();
+	  },  
+	  error: function (returndata) {  
+	      alert("导入失败");  
+	  }  
+	});
+}
+
+function to_apply(){
+	$('#oncontacts').click();
+}
+</script>

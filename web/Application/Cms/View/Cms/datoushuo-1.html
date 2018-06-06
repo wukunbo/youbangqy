@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+<title>大头说</title>
+<link href="{$config['view']}static/css/ionic.min.css" rel="stylesheet" type="text/css" />
+<link href="{$config['view']}static/css/style.css"rel="stylesheet" type="text/css" />
+<link href="{$config['view']}static/css/accordion_all.css" rel="stylesheet" type="text/css" />
+<link href="{$config['view']}static/css/accordion.css" rel="stylesheet" type="text/css" />
+<link href="{$config['view']}static/css/theme.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" charset="utf-8" src="{$config['view']}static/js/jquery.js"></script>
+<script type="text/javascript" src="{$config['view']}static/js/core.js"></script>
+<script type="text/javascript" src="{$config['view']}static/js/widget.js"></script>
+<script type="text/javascript" src="{$config['view']}static/js/accordion.js"></script>
+</head>
+<body>
+<div class="list" style="margin-bottom: 50px;">
+	<!--content start-->
+	<div class="menu_two" style="margin-top:0;">
+		<div class="item tabs tabs-secondary"  style="margin:-1px 0 -1px 0;">
+			<a class="tab-item dark-gray <php> if($cate_id ==14){ echo "active";}
+			</php>
+			" href="{:U('cms_lists')}&cate_id=14" >     
+			动态 </a>
+			<a class="tab-item dark-gray <php> if($cate_id ==5){ echo "active";}
+			</php>
+			" href="{:U('cms_lists')}&cate_id=5" style="border-right:none !important;">
+			活动 </a>
+		</div>
+	</div>
+	<div  id="list1" 
+	<php> if($cate_id !=5){ echo 'style="display:none;"';}</php>
+	>
+	<volist name="Cms_lists[content]" id="vo">
+		<div class="item item-body" >
+			<a href="{$vo.url}">
+				<h2 class="margin-v-5">{$vo.title}</h2>
+				<p class="font-size-12 gray date">
+					<php> echo date("Y-m-d",$vo[addtime]);</php>
+				</p>
+				<p class="margin-v-5 dark"></p>
+			</a>
+		</div>
+	</volist>
+	{$Cms_lists[page]} </div>
+<div id="list3" 
+<php> if($cate_id !=14){ echo 'style="display:none;"';}</php>
+>
+<volist name="Cms_lists[content]" id="vo">
+	<div class="item item-body" >
+		<div class="item">
+			<a href="{$vo.url}">
+				<p class="black">{$vo.title}</p>
+				<p class="margin-v-5 dark"></p>
+				<p class="font-size-12 gray date">
+					<php> echo date("Y-m-d",$vo[addtime]);</php>
+				</p>
+			</a>
+		</div>
+	</div>
+</volist>
+<div class="page"> {$Cms_lists[page]} </div>
+</div>
+<!--content end-->
+</div>
+</body>
+</html>

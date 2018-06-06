@@ -1,0 +1,14 @@
+<volist name="Cms_lists[content]" id="vo">
+		<a class="item  " style=" border:none; padding-bottom:2px; background:none; " href="{$vo.url}">
+			<div href="{$vo.url}" style="width:100%; display:block;border:#ddd 1px solid; border-radius:5px;background:#fff;  ">
+				<h2 class="dark-gray font-size-18" style="padding:10px; padding-bottom:0px; line-height:150%; font-weight:bold;">{$vo.title}</h2>
+				<div style="text-indent:15px;font-size:14px;text-indent:0;padding:10px; padding-top:0px;">
+					<p style="margin-top:5px;color:#999;" class="font-size-14">
+						<php> echo date("Y-m-d",$vo[addtime_1]);</php>
+					</p>
+					<p style="margin-top:5px;"> <img src="{$vo[image_thumb]}" width="100%;"></p>
+				</div>
+				 
+			</div>
+		</a>
+	</volist>

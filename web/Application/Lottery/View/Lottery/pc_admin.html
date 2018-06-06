@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>投放页面</title>
+
+    <link rel="stylesheet" href="{$config['static']}ionic/css/ionic.min.css"/>
+    <link rel="stylesheet" href="{$config['static']}ionic/css/stylepc.css"/>
+    <script type="text/javascript" src="{$config['static']}ionic/jquery.js"></script>
+    <style>
+        .quyu{
+            width: 20%;
+            border: 1px solid #cccccc;
+            padding: 5px 0;
+            float: left;
+        }
+        .weizhunbei{
+            background: #aaa;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+<span class="item item-divider">
+    各区域准备情况
+</span>
+
+<div class="item text-center" style="padding: 10px 0">
+
+<volist name="area" id="vo">
+ <if condition="$vo[status] eq 1 ">
+    <div class="quyu meihong-bg">
+        {$vo[area]}  <br/>
+        已准备
+    </div>
+</if>
+<if condition="$vo[status] eq 0 ">
+     <div class="quyu weizhunbei">
+      {$vo[area]}  <br/>
+      未准备
+     </div>
+</if>
+</volist>
+
+</div>
+
+
+<div class=" item text-center">
+    <if condition="$status1 eq 0">
+    <a id="zhunbei" class="meihong-bg" href="#" style="padding: 5px 10px;border-radius: 5px;" onclick="send()">
+        点击准备
+    </a>
+    </if>
+    <if condition="$status1 eq 1">
+        <a id="zhunbei" class="meihong-bg weizhunbei" href="#" style="padding: 5px 10px;border-radius: 5px;disabled:true;">
+        点击准备
+        </a>
+    </if>
+</div>
+
+
+
+</body>
+</html>
+
+<script type="text/javascript">
+function send(){
+    var lotteryId={$lotteryId};
+    $.ajax({
+        url: 'lottery.php?c=lottery&a=pc_admin&id='+lotteryId,
+        type: 'POST',
+        dataType: 'json',
+        data: {lotteryId:lotteryId},
+        success:function(data) {  
+           alert("已成功准备");
+           setTimeout(function(){ window.location.reload();},1000);
+        },  
+        error : function() {  
+            alert("失败");
+        }  
+    });
+}
+</script>

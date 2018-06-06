@@ -1,0 +1,58 @@
+<!--
+<style>
+    body {
+        background: none;
+    }
+    div p{
+        white-space: normal
+    }
+
+</style>
+<div class="list has-header" style=" overflow:hidden;">
+    <div style=" left:15%; position:relative; margin-top:130px; width:70%;">
+        <div style="border:#ddd 1px solid; height:auto; overflow:hidden">
+            <div style="line-height:100px; color:#fff; background:#d31145; padding-left:10px;font-size: 38px;">提示</div>
+            <div style="height:400px;font-size: 38px;display: flex;align-items: center;justify-content: center;
+                padding: 20px;white-space: normal">
+                {$msg}
+            </div>
+        </div>
+    </div>
+</div>
+<include file="Public/dailog"/>
+<script>
+    var url = '{$url}';
+    if (url != '-1') {
+        change_page(url, 2000);
+    }
+</script>
+-->
+
+<style>
+    body{ background:none;}
+
+</style>
+<div class="list has-header" style="padding-top:0; overflow:hidden;">
+    <div style="left:10%; position:relative; margin-top:30px; width:80%;">
+        <div style="border:#ccc 1px solid;  overflow:hidden;">
+            <div style="height: 100px; color:#fff; background:#d31145; padding:50px 0 0 10px;font-size: 38px !important;">提示</div>
+            <div style="white-space: normal !important;text-align:center;height: 400px;font-size: 38px !important;padding: 40px;display: flex;align-items: center;justify-content: center">
+                <p style="white-space: normal !important;">
+                    {$msg}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function change_page(url,time){
+        setTimeout("location.href='"+url+"';", time);
+    }
+    var url='{$url}';
+    if(url!='-1'){
+
+        change_page(url,2000);
+
+    }
+</script>
+

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html style="overflow: scroll">
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>数据查询</title>
+    <link rel="stylesheet" href="{$config['static']}ionic/css/ionic.min.css"/>
+</head>
+<body>
+
+<img src="{$back_image}" width="100%"/>
+<div class="item item-borderless">
+    <div class="row" style="margin-bottom: 5px">保单清单：</div>
+    <volist name="data[baodan]" id="vo">
+    <div class="row">{$vo}</div>
+    </volist>
+    <p></p>
+    <p></p>
+</div>
+
+<p class="text-center padding">
+    {$data[remark]}
+</p>
+
+
+<div class="item text-center" style="position:fixed;bottom: 0;white-space:normal;width: 100%">
+    （内容由后台提供，后台上传保单数据的时候提供）<br>
+    若对数据有疑问，请咨询活动主办方
+
+</div>
+
+</body>
+</html>

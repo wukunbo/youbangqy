@@ -1,0 +1,47 @@
+html{
+    overflow: scroll;
+    margin: 0;
+    padding: 0;
+}
+*{
+    box-sizing: border-box;
+}
+.meihong-bg{
+    color: #fff;
+    background:rgb(250,40,70);
+}
+.padding_0{
+    padding: 0;
+}
+a{
+    text-decoration: none;
+}
+.flex{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.fixed_bottom{
+    position: fixed;
+    bottom: 0;
+    z-index: 99999;
+}
+a{
+    color: #000;
+    text-decoration: none;
+}
+input[type=text]{
+    border: 1px solid #ccc;
+    padding-left: 5px;
+    border-radius: 5px;
+}
+.hong_cheng{
+    color: #fff;
+    background: -webkit-linear-gradient(left,rgb(200,50,50), rgb(250,40,70) , rgb(255,170,50)); /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(right,rgb(200,50,50), rgb(250,40,70) , rgb(255,170,50)); /* Opera 11.1 - 12.0 */
+    background: -moz-linear-gradient(right,rgb(200,50,50), rgb(250,40,70) , rgb(255,170,50)); /* Firefox 3.6 - 15 */
+    background: linear-gradient(to right,rgb(200,50,50), rgb(250,40,70) , rgb(255,170,50)); /* 标准的语法（必须放在最后） */
+}
+.rel{
+    position: relative;
+}

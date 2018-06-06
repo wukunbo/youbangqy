@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>排名</title>
+    <link rel="stylesheet" href="{$config['static']}/ionic/css/sort.min.css"/>
+    <script type="text/javascript" src="{$config['static']}/ionic/jquery.js"></script>
+    <style>
+        html{
+            overflow: scroll;
+        }
+        img{
+            width: 100%;
+        }
+        .title,.piao{
+            color: #f0186e;
+            font-size: 18px;
+        }
+        .num{
+            color: #f0186e;
+            font-size: 22px;
+            font-weight: bold;
+        }
+        .voteBtn{
+            float: right;
+            background: #f0186e;
+            color: #ffffff;
+            border: none;
+            padding:5px 10px;
+            border-radius: 5px;
+        }
+        .tijiao {
+            /*box-sizing: border-box;*/
+            padding: 30px 0 0 0;
+            display: none;
+            position: fixed;
+            bottom: 35%;
+            left: 15%;
+            width: 70%;
+            height: 150px;
+            background-color: white;
+            z-index: 1002;
+        }
+        .black_overlay{
+            display:none;
+            position:absolute;
+            bottom:0;
+            left:0;
+            width:100%;
+            height:100%;
+            background-color:black;
+            z-index:1001;
+            -moz-opacity:0.6;
+            opacity:.60;
+            filter:alpha(opacity=60);
+        }
+    </style>
+</head>
+<body>
+
+<div class="item">
+
+        <volist name="data[option_lists][content]" id="vo"  >
+
+        <eq name="mod" value="0">
+            <div class="row">
+            <div class="col text-center">
+                <span>{$key+1}</span>
+                <a href="vote.php?c=index&a=option_detail&id={$vo[vote_id]}&vote_id={$vo[id]}"><img src="{$vo['image_thumb']}" width="100px" height="150px" alt="人物图"/></a>
+                <p class="title">{$vo[truename]}</p>
+                <div>
+                    <span style="float: left">
+                        <span class="num" id="show_count_{$vo[id]}">{$vo[count_vote]}</span>
+                        <span class="piao">票</span>
+                    </span>
+                    <button class="voteBtn" onclick="vote({$vo[vote_id]},{$vo[id]})">投票</button>
+                </div>
+            </div>
+            &nbsp;
+        </eq>
+        <eq name="mod" value="1">
+            <div class="col text-center">
+                <span>{$key+1}</span>
+                <a href="vote.php?c=index&a=option_detail&id={$vo[vote_id]}&vote_id={$vo[id]}"><img src="{$vo['image_thumb']}" width="100px" height="150px" alt="人物图"/></a>
+                <p class="title">{$vo[truename]}</p>
+                <div>
+                    <span style="float: left">
+                        <span class="num" id="show_count_{$vo[id]}">{$vo[count_vote]}</span>
+                        <span class="piao">票</span>
+                    </span>
+                    <button class="voteBtn" onclick="vote({$vo[vote_id]},{$vo[id]})">投票</button>
+                </div>
+            </div>
+            </div>
+        </eq>
+        
+        </volist>
+        <if condition="count($data[option_lists][content])%2 eq 1">
+                <div class="col text-center">
+                </div>
+                </div>
+        </if>
+
+</div>
+
+<p></p>
+</body>
+</html>
+
+<div id="tijiao" class="tijiao" style="border-radius: 5px;background-color:  rgba(248, 246, 247, 0.5);">
+    <p class="text-center" id="tijiaomsg">
+        您已投票成功！
+    </p>
+    <div class="row text-center">
+        <div class="col">
+            <button onclick="sure()" class="button sure" style="padding:0 24px;background-color: #d31145;border: none;color: white">
+                确认
+            </button>
+        </div>
+    </div>
+</div>
+<div id="fade" class="black_overlay"></div>
+
+
+<script type="text/javascript">
+var tijiao=document.querySelector('#tijiao');
+var fade=document.querySelector('#fade');
+
+function voteBtn(msg){
+    $("#tijiaomsg").html(msg);
+    tijiao.style.display='block';
+    fade.style.display='block';
+}
+
+function sure(){
+    tijiao.style.display='none';
+    fade.style.display='none';
+}
+
+function vote(id,vote_id){
+    $.ajax({        
+        url: "vote.php?c=vote&a=vote_log&id="+id+"&vote_id="+vote_id,
+        type: "post",
+        dataType: "json", 
+        success:function(re){
+            if(re.status==10001){
+                voteBtn("您已投票成功！");
+                $("#show_count_"+vote_id).html(re.vote_count);
+            }else if(re.status==20001){
+                voteBtn("您今天已经投过票了，明天再过来投票吧!");
+            }else if(re.status==20003){
+                voteBtn("您需关注再过来投票吧!");
+            }else if(re.status==40001){
+                    voteBtn("您已投该人员了咯!，请投其他人吧！");
+            }
+
+        },error:function(e){
+            voteBtn("提交出错！");
+        }
+    });
+}
+</script>

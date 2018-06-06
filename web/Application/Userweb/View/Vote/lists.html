@@ -1,0 +1,200 @@
+<include file="Public/includeHeader" />
+
+﻿<div class="row">
+	<div class="col-lg-12">
+		<h3 class="page-header">投票列表</h3>
+		
+	</div>
+</div>
+
+
+<div class="col-md-12 input-group" style="margin-bottom: 15px;width: 100%">
+	<form action="userweb.php?c=vote&a=lists" method="post" style="width: 100%">
+		<select class="form-control  " name="post[partment]" style="width: 100px">
+			<option value="">请选择部门</option>
+			<volist name="partment_list" id="list">			
+				<option value="{$list.id}">{$list.title}</option>
+			</volist>
+		</select>
+
+		<select class="form-control  " name="post[type]" style="width: 150px">
+			<option value="">请选择活动类型</option>
+			<option value="1">可报名投票</option>
+			<option value="2">不可报名投票</option>
+		</select>
+
+		<select class="form-control  " name="post[status]" style="width: 100px">
+			<option value="">请选择状态</option>
+			<option value="0">未发布</option>
+			<option value="1">已发布</option>
+		</select>
+		&nbsp;
+		<script src="tool/My97DatePicker/WdatePicker.js"></script>	
+		<label for="text-input">活动时间:</label>
+		<input  type="text" name="post[time_start]" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+		-
+		<label for="text-input">结束时间:</label>
+		<input  type="text" name="post[time_end]" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+
+		<select class="form-control  " name="post[order]" style="width: 150px">
+			<option value="">排序</option>
+			<option value="start_time">报名开始时间排序</option>
+			<option value="end_time">报名截止时间排序</option>
+			<option value="time_start">活动开始时间排序</option>
+			<option value="time_end">活动结束时间排序</option>
+		</select>
+		
+
+		<button class="btn btn-success" type="submit" style="margin-left: 15px;"><i class="fa fa-dot-circle-o"></i>搜索</button>
+	</form>
+
+</div>
+
+
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h2><i class="fa fa-table red"></i><span class="break"></span><strong>列表</strong></h2>
+		 
+	</div>
+
+	<div class="panel-body">
+		<table class="table table-bordered table-striped table-condensed table-hover">
+			<thead>
+				<tr>
+					<th> 编号 </th>
+					<th>标题</th>
+					<th>部门</th>
+					<th>开始时间</th>
+					<th>结束时间</th>
+					<th>创建时间</th>
+					<!-- <th>浏览人数</th> -->
+					<th>活动地址</th>
+					<th>状态</th>
+					<th>类型</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php $total=count($data[content]);?>
+				<volist name="data[content]" id="lists">
+					<tr>
+						<td >{$total-$key}</td>
+						<td>
+							{$lists[title]}
+							<if condition="$lists[is_pc] eq 1 AND $lists[pc_status] neq 2">
+								<a href="vote.php?c=pcVote&a=index&id={$lists[id]}" target="_blank">开始链接</a>
+							<elseif condition="$lists[is_pc] eq 1 AND $lists[pc_status] eq 2"/>
+								（已结束投票）
+							</if>
+						</td>
+						<td>
+							{$lists[partment_title]}
+						</td>
+
+						<!-- <td>
+							
+							<if condition="$lists[type] eq 1">
+								<a href="vote.php?c=index&a=show&id={$lists[id]}">投票链接</a>
+								<a href="vote.php?c=index&a=add&id={$lists[id]}">报名</a>
+							</if>
+							<if condition="$lists[type] eq 2">
+								<a href="vote.php?c=index&a=novote&id={$lists[id]}">投票链接</a>
+								<a href="vote.php?c=index&a=novote_sort&id={$lists[id]}">排名链接</a>
+							</if>
+						</td> -->
+						<td>{$lists[time_start]|date='Y-m-d',###}</td>
+						<td>{$lists[time_end]|date='Y-m-d',###}</td>
+						<td>{$lists[addtime]|date='Y-m-d',###}</td>
+
+						<td><a target="_blank" href="{:U('vote_qrcode')}&id={$lists[id]}">二维码</a></td>
+					 
+						<!-- <td>{$lists[count_view]}</td>
+						<td>{$lists[count_vote]}</td> -->
+						<td>
+							<if condition="$lists[status] eq 0 OR $lists[status] eq 2">
+								未发布
+							</if> 
+							<if condition="$lists[status] eq 1">
+								已发布
+							</if> 
+
+							<if condition="$lists[status] eq -1">
+								已下架
+							</if> 
+
+						</td>
+						<td>
+							<if condition="$lists[is_pc] eq 2">
+								<if condition="$lists[type] eq 1">
+									可报名投票
+								</if> 
+								<if condition="$lists[type] eq 2">
+									不可报名投票
+								</if>
+							</if>
+							<if condition="$lists[is_pc] eq 1">
+								PC投票
+							</if>
+						</td>
+
+						<td>
+						<if condition="$lists[status] eq 0">
+							<i class="fa fa-plus"></i><a type="button" onclick="show_content('userweb.php?c=contacts&a=choose_contact&t=vote&id={$lists['id']}&back=check_apply')">选择名单</a>
+						</if>
+
+						<if condition="$lists[status] eq 2">
+							<a href="userweb.php?c=Vote&a=publish_vote&id={$lists[id]}">发布</a>
+							<a href="userweb.php?c=Vote&a=check_apply&id={$lists[id]}">已选通讯录</a>
+						</if>
+
+						<a href="userweb.php?c=Vote&a=preview&id={$lists[id]}">预览</a>
+
+						<!-- <if condition="$lists[type] eq 2 OR $lists[is_pc]  eq 1">
+						<a href="userweb.php?c=vote&a=option_add&vote_id={$lists[id]}">新增投票人</a>
+						</if> -->
+
+						<if condition="$lists[is_pc] eq 1">
+							<if condition="$lists[detail_status] eq 1">
+								<a href="{:U("detail_status")}&id={$lists.id}&status=2">关闭投票人详情</a>
+							<else/>
+								<a href="{:U("detail_status")}&id={$lists.id}&status=1">开启投票人详情</a>
+							</if>
+							
+						</if>
+
+						<a href="userweb.php?c=Vote&a=option_lists&vote_id={$lists[id]}">投票人列表</a>
+
+						<if condition="$lists[status] eq 1">
+							<a href="userweb.php?c=Vote&a=check_apply&id={$lists[id]}&show=1">已选通讯录</a>
+							<a href="userweb.php?c=Vote&a=again_publish&id={$lists[id]}">再次推送</a>
+							<a href="userweb.php?c=Vote&a=out_vote&id={$lists[id]}">下架</a>
+							<!-- <a href="userweb.php?c=Vote&a=add&id={$lists[id]}" class="btn btn-info">
+							<i class="fa fa-edit "></i></a> -->
+						</if>
+
+						
+						
+							<if condition="$lists[is_pc] eq 2">
+							<a href="userweb.php?c=Vote&a=add&id={$lists[id]}" class="btn btn-info">
+							<i class="fa fa-edit "></i>
+							</a>
+							</if>
+							<if condition="$lists[is_pc] eq 1">
+								<a href="userweb.php?c=Vote&a=pc_add&id={$lists[id]}" class="btn btn-info">
+								<i class="fa fa-edit "></i>
+								</a>
+							</if>
+						
+						<a href="userweb.php?c=Vote&a=del&id={$lists[id]}" class="btn btn-danger">
+							<i class="fa fa-trash-o "></i>
+						</a>
+						
+						</td>
+					</tr>
+				</volist>
+			</tbody>
+		</table>
+	</div>
+</div>	
+<include file="Public/pagination" />
+<include file="Public/includeFooter" />

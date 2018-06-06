@@ -1,0 +1,332 @@
+<include file="Public/includeHeader" />
+
+﻿<div class="row">
+	<div class="col-lg-12">
+		<h3 class="page-header">创建活动</h3>
+		
+	</div>
+</div>
+
+
+<div class="panel panel-default">
+	<form action="userweb.php?c=vote&a=addpc_action"  enctype="multipart/form-data"  method="post" onsubmit="return check()">
+		<input type="text" style="display:none;" name="post[id]"  class="form-control" value="{$data[detail]['id']}">
+		<div class="panel-body">
+
+			
+			<!-- <div class="form-group">
+				<label for="text-input" class="col-md-2 control-label">关联投票活动:</label>
+				<div class="col-md-4 input-group ">
+					<select name="post[vote_id]" class="form-control">
+						<volist name="vote" id="list">
+							<option value="{$list[id]}">{$list[title]}</option>
+						</volist>
+					</select>
+				</div>
+			</div> -->
+
+			<div class="form-group">
+				<label for="text-input" class="col-md-2 control-label">部门:</label>
+				<div class="col-md-4 input-group ">
+					<select name="post[partment]" id="partment" class="form-control">
+						<volist name="partment_list" id="list">
+							<option value="{$list[id]}" <if condition="$list.id eq $data[detail]['partment']">selected</if>>{$list[title]}</option>
+						</volist>
+					</select>
+
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="text-input" class="col-md-2 control-label">活动标题:</label>
+				<div class="col-md-4 input-group ">
+					<input id="act_title" type="text" name="post[title]"  class="form-control" value="{$data[detail]['title']}">
+				</div>
+			</div>
+
+			<script src="tool/My97DatePicker/WdatePicker.js"></script>
+			<div class="form-group">
+				<label for="text-input" class="col-md-2 control-label">开始时间:</label>
+				<div class="col-md-4 input-group ">
+					<input id="time_start" type="text" name="post[time_start]" value="<if condition="$data[detail][time_start] neq ''">{$data[detail][time_start]|date="Y-m-d H:m:s",###}</if>" class="form-control" onClick="WdatePicker({dateFmt:'yyyy-MM-dd H:m:s'})">
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="text-input" class="col-md-2 control-label">结束时间:</label>
+				<div class="col-md-4 input-group ">
+					<input id="time_end" type="text" name="post[time_end]" value="<if condition="$data[detail][time_end] neq ''">{$data[detail][time_end]|date="Y-m-d H:m:s",###}</if>" class="form-control" onClick="WdatePicker({dateFmt:'yyyy-MM-dd H:m:s'})">
+				</div>
+			</div>
+
+			<script src="tool/ajaxupload/js/ajaxupload.js" type="text/javascript"></script>
+			<!-- <script src="{$config["static"]}/public/js/ajaxupload_vote.js"></script> -->
+
+			<div class="form-group">
+				<label for="select" class="col-md-2 control-label">首页展示图:</label>
+				<div class="col-md-9 input-group ">
+					<a type="button" id="UploadImg_common_single1" data-type="pcvote"><img id="image_thumb_common_single1" src="{$data['detail']['image_thumb']}<if condition="$data['detail']['image_thumb'] eq ''">{$config['static']}/public/image/shangchuan.png</if>" width="100px" onerror="this.src='{$config['static']}/public/image//shangchuan.png'" width="100px" i >
+					</a>
+					<input type="hidden" name="post[image_thumb]" id="img_thumb_hidden_common_single1" value="{$data[detail]['image_thumb']}">
+					<p class="help-block" id="text_common_single"></p>
+					<if condition="$data['detail']['image_thumb'] neq ''">
+						<p class="help-block">点击图片，更换新的图片</p>
+					</if>
+					 
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="select" class="col-md-2 control-label">页面背景图:</label>
+				<div class="col-md-9 input-group ">
+					<a type="button" id="UploadImg_common_single2" data-type="pcvote"><img id="image_thumb_common_single2" src="{$data['detail']['image_back']}<if condition="$data['detail']['image_back'] eq ''">{$config['static']}/public/image/shangchuan.png</if>" width="100px" onerror="this.src='{$config['static']}/public/image//shangchuan.png'" width="100px" i >
+					</a>
+					<input type="hidden" name="post[image_back]" id="img_thumb_hidden_common_single2" value="{$data[detail]['image_back']}">
+					<p class="help-block" id="text_common_single"></p>
+					<if condition="$data['detail']['image_back'] neq ''">
+						<p class="help-block">点击图片，更换新的图片</p>
+					</if>
+					 
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<label for="text-input" class="col-md-2 control-label">投票方式:</label>
+				<div class="col-md-4 input-group  " >
+					<select size="1" class="form-control  " name="post[vote_type]" onchange="vote_type_change(this)" id="vote_type">
+						<!-- <option value="">请选择</option> -->
+						<option value="1" <if condition="$data['detail']['vote_type'] eq 1">selected</if>>每个账号仅可投票一次</option>
+						<option value="2" <if condition="$data['detail']['vote_type'] eq 2">selected</if>>每个账号每天多次</option>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group" <if condition="$data['detail']['vote_type'] eq 2"> style="display:block"<else/>style="display:none" </if>id="vote_count_div">
+				<label for="text-input" class="col-md-2 control-label">每个账号每天投票的次数</label>
+				<div class="col-md-4 input-group  " >
+					<input type="text" placeholder="" class="form-control" name="post[vote_count]" value="{$data[detail][vote_count]}" id="vote_count">
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="text-input" class="col-md-2 control-label">是否可重复投同一人</label>
+				<div class="col-md-4 input-group  " >
+					<!-- <input type="text" placeholder="" class="form-control" name="post[vote_count]" value="{$data[detail][vote_count]}" id="vote_count"> -->
+					<input type="checkbox" name="post[is_repeat]" value="1" <if condition='$data[detail][is_repeat] eq 1'>checked="checked"</if>>是否可重复投同一人
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="text-input" class="col-md-2 control-label">活动详情:</label>
+				<div class="col-md-4 input-group ">
+					<div style="display:block; float:left; width:800px;">
+						<link rel="stylesheet" href="tool/kindeditor-4.1.10//themes/default/default.css" />
+						<link rel="stylesheet" href="tool/kindeditor-4.1.10/plugins/code/prettify.css" />
+						<script charset="utf-8" src="tool/kindeditor-4.1.10/kindeditor.js"></script>
+						<script charset="utf-8" src="tool/kindeditor-4.1.10/lang/zh_CN.js"></script>
+						<script charset="utf-8" src="tool/kindeditor-4.1.10/plugins/code/prettify.js"></script>
+						<script>
+			 
+										KindEditor.ready(function(K) {
+											var editor1 = K.create('textarea[id="editor_id"]', {
+												cssPath : 'tool/kindeditor-4.1.10/plugins/code/prettify.css',
+												uploadJson : 'tool/kindeditor-4.1.10/php/upload_json.php',
+												fileManagerJson : 'tool/kindeditor-4.1.10/php/file_manager_json.php',
+												allowFileManager : true,
+											    filterMode : true,
+												afterCreate : function() {
+													 var self = this;
+													K.ctrl(document, 13, function() {
+														self.sync();
+														K('form[name=add_goods]')[0].submit();
+													});
+													K.ctrl(self.edit.doc, 13, function() {
+														self.sync();
+														K('form[name=add_goods]')[0].submit();
+														 
+													});
+												}
+											});
+											prettyPrint();
+										});
+	 
+								</script>
+						<textarea id="editor_id" name="post[content]" style="width:600px;height:400px;">{$data['detail']['content']}</textarea>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<label for="text-input" class="col-md-2 control-label">活动奖品:</label>
+				<div class="col-md-4 input-group ">
+					<script>
+			 
+							KindEditor.ready(function(K) {
+								var editor1 = K.create('textarea[id="editor_id1"]', {
+									cssPath : 'tool/kindeditor-4.1.10/plugins/code/prettify.css',
+									uploadJson : 'tool/kindeditor-4.1.10/php/upload_json.php',
+									fileManagerJson : 'tool/kindeditor-4.1.10/php/file_manager_json.php',
+									allowFileManager : true,
+								    filterMode : true,
+									afterCreate : function() {
+										 var self = this;
+										K.ctrl(document, 13, function() {
+											self.sync();
+											K('form[name=add_goods]')[0].submit();
+										});
+										K.ctrl(self.edit.doc, 13, function() {
+											self.sync();
+											K('form[name=add_goods]')[0].submit();
+											 
+										});
+									}
+								});
+								prettyPrint();
+							});
+
+					</script>
+					<textarea id="editor_id1" name="post[prize]" style="width:600px;height:400px;">{$data['detail']['prize']}</textarea>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="select" class="col-md-2 control-label">开始界面图片:</label>
+				<div class="col-md-9 input-group ">
+					<a type="button" id="UploadImg_common_single3" data-type="pcvote"><img id="image_thumb_common_single3" src="{$data['detail']['image_start']}<if condition="$data['detail']['image_start'] eq ''">{$config['static']}/public/image/shangchuan.png</if>" width="400px" height="200px" onerror="this.src='{$config['static']}/public/image//shangchuan.png'" width="400px" height="200px" i >
+					</a>
+					<input type="hidden" name="post[image_start]" id="img_thumb_hidden_common_single3" value="{$data[detail]['image_start']}">
+					<p class="help-block" id="text_common_single"></p>
+					<if condition="$data['detail']['image_start'] neq ''">
+						<p class="help-block">点击图片，更换新的图片</p>
+					</if>
+					 
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="select" class="col-md-2 control-label">投票界面背景图片:</label>
+				<div class="col-md-9 input-group ">
+					<a type="button" id="UploadImg_common_single4" data-type="pcvote"><img id="image_thumb_common_single4" src="{$data['detail']['image_votebg']}<if condition="$data['detail']['image_votebg'] eq ''">{$config['static']}/public/image/shangchuan.png</if>" width="400px" height="200px" onerror="this.src='{$config['static']}/public/image//shangchuan.png'" width="400px" height="200px" i >
+					</a>
+					<input type="hidden" name="post[image_votebg]" id="img_thumb_hidden_common_single4" value="{$data[detail]['image_votebg']}">
+					<p class="help-block" id="text_common_single"></p>
+					<if condition="$data['detail']['image_votebg'] neq ''">
+						<p class="help-block">点击图片，更换新的图片</p>
+					</if>
+					 
+				</div>
+			</div>
+
+		</div>
+
+		<div class="panel-footer">
+			<button class="btn btn-sm btn-success" type="submit"><i class="fa fa-dot-circle-o"></i> 保存</button>
+			<button class="btn btn-sm btn-danger" type="reset"><i class="fa fa-ban"></i> 重置</button>
+		</div>
+
+	</form>
+</div>
+
+<include file="Public/includeFooter" />
+
+<script type="text/javascript">
+
+function check(){
+	var act_title=$("#act_title").val();
+	if(act_title==""){
+		alert("请填写活动标题");
+		return false;
+	}
+
+	var time_start=$("#time_start").val();
+	if(time_start==""){
+		alert("请填写开始时间");
+		return false;
+	}
+
+	var time_end=$("#time_end").val();
+	if(time_end==""){
+		alert("请填写结束时间");
+		return false;
+	}
+
+	var content=$("#editor_id").val();
+	if(content==""){
+		alert("请填写活动详情");
+		return false;
+	}
+
+	return true;
+}
+
+
+function vote_type_change(obj){
+	tmp=$(obj).val()
+	if(tmp==2){
+		$("#vote_count").val(1);
+		$("#vote_count_div").fadeIn()	 
+	}else{
+		$("#vote_count_div").fadeOut()	
+	}
+}
+
+function type_change(obj){
+	tmp=$(obj).val()
+	if(tmp==2){
+		$("#vote_option_div").fadeIn()	 
+	}else{
+		$("#vote_option_div").fadeOut()	
+	}
+}
+
+
+window.onload = function() {  
+  init();  //初始化  
+}  
+function init() {  
+    //初始化图片上传  UploadImg
+    var UploadImg1 = document.getElementById("UploadImg_common_single1");
+    var UploadImg2 = document.getElementById("UploadImg_common_single2");
+    var UploadImg3 = document.getElementById("UploadImg_common_single3");     
+    var UploadImg4 = document.getElementById("UploadImg_common_single4");  
+    
+    AjxUploadImg_common_single(UploadImg1,"image_thumb_common_single1","img_thumb_hidden_common_single1");
+    AjxUploadImg_common_single(UploadImg2,"image_thumb_common_single2","img_thumb_hidden_common_single2");
+    AjxUploadImg_common_single(UploadImg3,"image_thumb_common_single3","img_thumb_hidden_common_single3");
+    AjxUploadImg_common_single(UploadImg4,"image_thumb_common_single4","img_thumb_hidden_common_single4"); 
+}
+
+//图片上传  
+function AjxUploadImg_common_single(btn,image_thumb,image_hidden) {  
+
+  	data_type="pcvote";
+    var button = btn;  
+    new AjaxUpload(button, {  
+        action: 'base.php?c=index&a=upload_img',  
+        data: {type:data_type},  
+        dataType:"json",
+        name: 'myfile',  
+        onSubmit: function(file, ext) {
+      $("#text_common_single").html("上传中……")
+            if (!(ext && /^(jpg|JPG|png|PNG|gif|GIF)$/.test(ext))) {  
+                alert("您上传的图片格式不对，请重新选择！"); 
+        $("#text_common_single").html("")
+                return false;  
+            }
+        },  
+
+        onComplete: function(file,response) {
+      $("#text_common_single").html("上传成功")
+          var data=jQuery.parseJSON(response);
+        
+      $('#'+image_thumb).attr('src',data.img_thumb);
+      $('#'+image_hidden).val(data.img_thumb);
+        
+             
+        }  
+    });  
+}  
+
+</script>

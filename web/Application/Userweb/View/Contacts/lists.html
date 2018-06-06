@@ -1,0 +1,255 @@
+<include file="Public/includeHeader" />
+
+﻿<div class="row">
+	<div class="col-lg-12">
+		<h3 class="page-header">通讯录列表</h3>
+	</div>
+</div>
+
+
+	
+<div class="col-md-12 input-group" style="margin-bottom: 15px;width: 100%">
+	<form action="userweb.php?c=Contacts&a=search_partment" method="post" style="width: 800px" name="form1">
+		<!-- <select class="form-control  " name="post[member]" style="width: 100px">
+			<option value="">请选择</option>
+			<option value="1">vip会员</option>
+			<option value="0">普通会员</option>
+		</select>
+ -->
+ 	<div id="allpartment">
+		<select class="form-control  sel" name="post[partment]" id="partment1" style="width: 100px" onchange="select_partment(1)">
+			<option value="">请选择</option>
+			<volist name="partment_list" id="partment">
+				<option value="{$partment[id]}">{$partment[name]}</option>
+			</volist>
+		</select>
+	</div>
+
+	<div class="form-group">
+		<div class="col-md-4 input-group ">
+			<input placeholder="输入代码" type="text" name="user_code"  class="form-control" value="{$_REQUEST[user_code]}">
+		</div>
+	</div>
+
+		<button class="btn btn-success" id="search_partment" type="submit" style="margin-left: 15px;"><i class="fa fa-dot-circle-o"></i>搜索</button>
+	</form>
+
+	<span style="float: left;margin-top: 5px;">选择记录:({$partmentUrl})</span>
+	<span class="input-group" style="float: right;">
+		<form id="xlsform" enctype="multipart/form-data">
+			<input onchange="submitxls()" id="oncontacts" name="xlsfile" type="file" value="导入用户信息" style="display: none;" accept="" />
+		</form>
+		<!-- <button onclick="selfile()">导入用户信息</button> -->
+		<button onclick="to_contact()">导入最新微信通讯录</button>
+		<button onclick="location.href='userweb.php?c=contacts&a=out_excel'">导出用户信息</button>
+	</span>
+
+</div>
+
+
+
+
+
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h2><i class="fa fa-table red"></i><span class="break"></span><strong>列表</strong></h2>
+	</div>
+
+	<div class="panel-body">
+		<table class="table table-bordered table-striped table-condensed table-hover">
+			<!-- <thead>
+				<tr>
+					<th> 编号 </th>
+					<th>姓名</th>
+					<th>电话</th>
+					<th>会员</th>
+					<th>身份证</th>
+					<th>代码</th>
+					<th>区域</th>
+					<th>组别</th>
+					<th>部门</th>
+					<th>职位</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<volist name="data[content]" id="lists">
+					<tr>
+						<td>{$lists[id]}</td>
+						<td>{$lists[name]}</td>
+						<td>{$lists[phone]}</td>
+						<td>
+							<if  condition="$lists[member] eq 1">
+								VIP会员
+							<else/>
+								普通会员
+							</if>
+						</td>
+						<td>{$lists[idcard]}</td>
+						<td>{$lists[code]}</td>
+						<td>{$lists[area]}</td>
+						<td>{$lists[work_group]}</td>
+						<td>{$lists[partment]}</td>
+						<td>{$lists[job]}</td>
+						<td>
+							<a href="userweb.php?c=contacts&a=add&id={$lists[id]}" class="btn btn-info">
+								<i class="fa fa-edit "></i>
+							</a>
+						</td>
+					</tr>
+				</volist>
+			</tbody> -->
+
+			<thead>
+				<tr>
+					<th> 编号 </th>
+					<th>姓名</th>
+					<!-- <th>头像</th> -->
+					<th>代码</th>
+					<th>电话</th>
+					<th>部门职位</th>
+					<th>email</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<volist name="data[content]" id="lists">
+					<tr>
+						<td>{$key+1}</td>
+						<td>{$lists[name]}</td>
+						<td>{$lists[wx_userid]}</td>
+<!-- 						<td><img src="{$lists[avatar_url]}" height="100px" width="100px"></td>
+ -->						<td>{$lists[phone]}</td>
+						<td>{$lists[partment]}</td>
+						<td>{$lists[email]}</td>
+						<td><a href="javascript:confirm_del('{:U('delete_contact')}&id={$lists.id}&p={$_REQUEST[p]}')" href="{:U('delete_contact')}&id={$lists.id}&p={$_REQUEST[p]}" ><i class="fa fa-trash-o"></i></a></td>
+					</tr>
+				</volist>
+			</tbody>
+
+
+
+
+
+
+
+		</table>
+	</div>
+</div>
+
+<include file="Public/pagination" />
+<include file="Public/includeFooter" />
+<script type="text/javascript">
+// $(function(){
+// 	$(".pagination a").click(function(event) {
+// 		var p=($(this).text());
+// 		var id={$partmentId};
+// 		var url="userweb.php?c=Contacts&a=lists&p="+p+"&partment="+id;
+// 		document.location=url;
+// 	});
+// })
+function select_partment(id){
+	var partment="partment"+id;
+	var partmentid=$("#partment"+id).val();	
+
+	$.ajax({  
+	  url: 'userweb.php?c=contacts&a=get_select_partment' ,  
+	  type: 'POST',
+	  data:{partmentid:partmentid},
+	  success: function (returndata) {
+	      $("#partment"+id).after(returndata);
+	  },  
+	  error: function (returndata) {  
+	      alert("失败");  
+	  }  
+	});
+	
+	var allpartment=document.getElementById('allpartment');
+	var sel=allpartment.getElementsByClassName('sel');
+  	for(var i=0;i<sel.length;i++){
+	 	if(partment==sel[i].id){
+	 		for(var n=i;n<sel.length;n++){
+	 		
+	 		// 	 sel[i].parentNode.removeChild(sel[i]);
+				// i--;
+	 			jj=i+1;
+	 			var vv=document.getElementById(sel[jj].id);
+	 			// console.log(allpartment.children());
+	 			vv.parentNode.removeChild(vv);
+	 			// n--;
+	 			// vv.parentNode.removeChild(vv);
+	 		}
+	 	}
+	 }
+	
+}
+
+function to_contact(){
+	$.ajax({  
+	  url: 'userweb.php?c=contacts&a=weixin_contacts' ,  
+	  type: 'POST',
+	  timeout:3600000,
+	  beforeSend:function(e){
+	  	show_content();
+	  },
+	  success: function (returndata) {
+	  	  show_content_close();
+	      alert("导入成功！");
+	      window.location.href="userweb.php?c=contacts&a=lists";
+	  },
+	  error: function(XMLHttpRequest, textStatus, errorThrown) {
+	  	if(XMLHttpRequest.readyState==4){
+	  	  show_content_close();
+	      alert("导入成功！");
+	      window.location.href="userweb.php?c=contacts&a=lists";
+	  	}else{
+	  		alert("失败");
+	  	}
+       }
+	});
+}
+
+function submitxls(){
+
+	var fileval=$('#oncontacts').val();
+	var regex=/(.+)\.xls|xlsx$/i;
+	if(regex.test(fileval)==false){
+		alert("文件格式不正确,请上传Excel文件");
+		return false;
+	}
+
+	var formData = new FormData($( "#xlsform" )[0]);  
+	$.ajax({  
+	  url: 'userweb.php?c=contacts&a=to_contacts' ,  
+	  type: 'POST',  
+	  data: formData,  
+	  async: false,  
+	  cache: false,  
+	  contentType: false,  
+	  processData: false,  
+	  success: function (returndata) {  
+	      alert("导入成功！");
+	      window.location.href="userweb.php?c=contacts&a=lists";
+	  },  
+	  error: function (returndata) {  
+	      alert("导入失败");  
+	  }  
+	});
+}
+
+function selfile(){
+	$('#oncontacts').click();
+}
+
+function submit_search(){
+	var allpartment=document.getElementById('allpartment');
+	var sel=allpartment.getElementsByClassName('sel');
+	var val=$("#"+sel[sel.length-1].id).val();
+	if(val == "" || val == null){
+		var val1=$("#"+sel[sel.length-2].id).val();
+		$("#"+sel[sel.length-1].id).val(val1);
+	}
+	alert($("#"+sel[sel.length-1].id).val());
+}
+</script>

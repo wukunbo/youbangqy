@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{$config['static']}ionic/css/CJ.css">
+    <script src="{$config['static']}ionic/jquery.js" type="text/javascript"></script>
+    <title>抽奖倒计时</title>
+</head>
+<body>
+<div class="w100" style="">
+<h1 class="text-center mtop_88" style="font-size: 80px">{$data[detail][title]}</h1>
+      <div class="count-down-circle margin-auto" style="position: relative">
+            <p style="position: absolute;top:20%;left: 25%;font-size: 20px" class="w50">倒计时</p>
+            <p style="position: absolute;top:50%;left: 25%;font-size: 20px" class="w50">
+                <span id="t_h"></span>
+                <span id="t_m"></span>
+                <span id="t_s"></span>
+            </p>
+      </div>
+</div>
+
+<div id="fade" style="display: none">
+    <div id="miao" style="font-size: 180px;color: white;position: absolute;top: 50%;left: 25%" class="w50 text-center">5</div>
+</div>
+
+
+<script>
+    function GetRTime(){
+        var EndTime= new Date('{$data[detail][start_time]|date="Y/m/d H:i:s",###}');
+        var NowTime = new Date();
+        var t =EndTime.getTime() - NowTime.getTime();
+        var h=0;
+        var m=0;
+        var s=0;
+        if(t>=0){
+
+            h=Math.floor(t/1000/60/60%24);
+            m=Math.floor(t/1000/60%60);
+            s=Math.floor(t/1000%60);
+
+            if(h==0 && m==0 && s<=5){
+               document.getElementById("miao").innerHTML=s;
+               $("#fade").show();
+            }
+        }
+
+        document.getElementById("t_h").innerHTML = h + "时";
+        document.getElementById("t_m").innerHTML = m + "分";
+        document.getElementById("t_s").innerHTML = s + "秒";
+    }
+    setInterval(GetRTime,0);
+
+    $(function(){
+        pc_start();
+    })
+    
+
+    function pc_start(){
+        $.ajax({
+        url: 'lottery.php?c=pc&a=pc_start&id={$_REQUEST[id]}',
+        type: 'GET',
+        dataType: 'json',
+        // data: {log_id: log_id,pay_pass:pay_pass},
+        success:function(data) {  
+            if(data){
+                window.location.href="lottery.php?m=Lottery&c=Pc&a=show_process&id={$_REQUEST[id]}";
+            }else{
+                window.setTimeout(pc_start,2000); 
+                // alert("支付成功");
+                // window.location.href="shop.php?c=order&a=pay_success&log_id="+log_id;
+            }
+        },  
+        error : function() {  
+            alert("失败");
+        }  
+    });
+    }
+</script>
+</body>
+</html>

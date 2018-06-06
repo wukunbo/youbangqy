@@ -1,0 +1,53 @@
+<include file="Public/includeHeader" />
+
+﻿<div class="row">
+	<div class="col-lg-12">
+		<h3 class="page-header">信息收集列表</h3>
+		
+	</div>
+</div>
+
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h2><i class="fa fa-table red"></i><span class="break"></span><strong>列表</strong></h2>
+		 
+	</div>
+
+	<div class="panel-body">
+		<table class="table table-bordered table-striped table-condensed table-hover">
+			<thead>
+				<tr>
+					<th>编号</th>
+					
+				
+					<th>提供代码</th>
+					<th>提供者姓名</th>
+					
+					<volist name="collect_extend" id="vo">
+					<th>{$vo.name}</th>
+					</volist> 
+
+					<th>收集时间</th>
+				</tr>
+			</thead>
+			<tbody>
+				<volist name="data[content]" id="lists">
+					<tr>
+						<td>{$key+1}</td>
+						<td>{$lists[user_id]}</td>
+						<td>{$lists[truename]}</td>
+						<volist name="lists[extend]" id="vo">
+						<td>{$vo.value}</td>
+						</volist>
+						<td>{$lists[addtime]|date="Y-m-d",###}</td>
+					</tr>
+				</volist>
+			</tbody>
+		</table>
+		<a class="btn btn-success" href="userweb.php?c=collect&a=report&id={$_REQUEST[id]}">返回</a>
+
+	</div>
+</div>
+
+<include file="Public/pagination" />
+<include file="Public/includeFooter" />

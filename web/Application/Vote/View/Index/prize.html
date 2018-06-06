@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>{$data[detail][title]}</title>
+    <link href="{$config['static']}ionic/css/ionic.min.css" rel="stylesheet" type="text/css"/>
+    <link href="{$config['static']}ionic/css/style.css" rel="stylesheet" type="text/css"/>
+    <!-- <link href="{$config['tool']}swipe/swiper.min.css" rel="stylesheet" type="text/css" />
+    <link href="{$config['static']}css/iconfont.css"rel="stylesheet" type="text/css" /> -->
+    <script type="text/javascript" charset="utf-8" src="{$config['static']}ionic/jquery.js"></script>
+    <!-- <script type="text/javascript" charset="utf-8" src="{$config['tool']}swipe/swiper.min.js"></script> -->
+</head>
+
+<body class="bg_f0">
+<div class="list" style="padding-top:0;overflow:hidden;">
+    <div class="padding-h-10" >
+        <h4>活动奖品</h4>
+        {$data[detail][prize]|default="暂无介绍"}
+</div>
+</body>
+</html>

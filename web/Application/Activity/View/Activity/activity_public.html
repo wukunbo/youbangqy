@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html style="overflow: scroll">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>{$data[detail][title]}</title>
+    <link href="{$config['static']}css/ionic.min.css" rel="stylesheet" type="text/css"/>
+    <link href="{$config['static']}css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="{$config['tool']}swipe/swiper.min.css" rel="stylesheet" type="text/css"/>
+    <link href="{$config['static']}css/iconfont.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" charset="utf-8" src="{$config['static']}js/jquery.js"></script>
+    <script type="text/javascript" charset="utf-8" src="{$config['tool']}swipe/swiper.min.js"></script>
+
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js?t=<?php echo time();?>"></script>
+    <script type="text/javascript" charset="utf-8" src="{$config['tool']}wxjs/weixin.js?t=<?php echo time();?>"></script>
+    <script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp&libraries=convertor"></script>
+    
+    <?php
+        $activity_desc = htmlspecialchars($data[detail][intro]);   
+    ?>
+
+    <script type="text/javascript">
+
+        wx_config('{$wxconfig.appid}','{$wxconfig.timestamp}','{$wxconfig.noncestr}','{$wxconfig.signature}');
+        wx.ready(function(){
+            ajax_url='';
+            link="http://{$_SERVER['SERVER_NAME']}/youbangqy/web/activity.php?id={$data[detail][id]}";
+            picurl="http://{$_SERVER['SERVER_NAME']}/youbangqy/web/{$data[detail][img_thumb]}";
+            activity_title="{$data[detail][title]}";
+            activity_desc="{$activity_desc}";
+            share_info(activity_title,activity_desc,link,picurl,ajax_url);
+
+        });
+
+    </script>
+
+    
+
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+        }
+    </style>
+</head>
+<body class="light-bg">
+<div class="list" style="padding:0;position: relative">
+
+<h4 class="text-center bold padding-v-10 qianfen light" style="margin: 0 !important;">
+        {$data[detail][title]}</h4>
+
+    <div class="light-bg padding">
+        <div class="padding-h-10">
+
+            <div style="width: 100%">
+                <p class="assertive" style="float: left;width: 28%;">报名截止：</p>
+                <div style="float: left;width: 72%">
+                    {$data[detail][time_apply]|date="Y-m-d H:i",###}
+                </div>
+            </div>
+
+            <div style="clear:both;"></div>
+
+            <div style="width: 100%">
+                <p style="width: 28%;float: left">
+                    <span class="assertive">签到开始：</span>
+
+                </p>
+
+                <p style="width: 72%;float: left">
+                    {$data[detail][signstart_time]|date="Y-m-d H:i",###}
+                </p>
+
+            </div>
+
+
+            <div style="width: 100%">
+                <p style="width: 28%;float: left">
+                    <span class="assertive">活动开始：</span>
+
+                </p>
+
+                <p style="width: 72%;float: left">
+                    {$data[detail][start_time]|date="Y-m-d H:i",###}
+                </p>
+
+            </div>
+
+
+            <div style="width: 100%">
+                <p class="assertive" style="float: left;width: 28%;">活动地址：</p>
+
+                <div style="float: left;width: 72%">
+                    {$data[detail][region_name]}
+                </div>
+
+
+	 <span class="float-right" style="">
+                 <!-- <a href="http://api.map.baidu.com/marker?location={$data[detail][lng]},{$data[detail][lat]}&amp;title={$data[detail][address]}&amp;content={$data[detail][address]}&amp;output=html"> -->
+        <button id="daohan" onclick="daohan('{$data[detail][lat]}','{$data[detail][lng]}','{$data[detail][address]}','{$data[detail][address]}')" class="button button-outline border-e5 button-block jiesuan margin-0" style="width: 70px;">
+         <i class="icon ion-ios-navigate-outline hong" style="display: block; float: left; margin-left: 6px; margin-top: -2px ! important;"></i>
+        导航
+      </button>
+      <!-- </a> -->
+             </span>
+            </div>
+
+                <div style="clear:both;"></div>
+
+                
+        </div>
+
+        <div class="row">
+            <div class="col col-50 text-left">
+                <a href="activity.php?c=activity&a=atv_detail&id={$data[detail][id]}">
+                    <button class="button qianfen light border-none" type="submit"
+                            style="width: 100px !important;min-height: 36px !important; line-height: 36px !important;">
+                        活动详情
+                    </button>
+                </a>
+            </div>
+            <div class="col col-50 text-right">
+                <a href="#">
+                <if condition="$show_report eq 1">
+                    <button onclick="window.location.href='activity.php?c=activity&a=report3&id={$data[detail][id]}'"
+                            class="button qianfen light border-none" type="submit"
+                            style="width: 100px !important;min-height: 36px !important; line-height: 36px !important;">
+                        查看报表
+                    </button>
+                </if>
+                </a>
+            </div>
+        </div>
+        </div>
+
+

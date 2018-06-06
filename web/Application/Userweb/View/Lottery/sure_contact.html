@@ -1,0 +1,123 @@
+<div class="row">
+	<div class="col-lg-12">
+		<h3 class="page-header">确认导入抽奖数据</h3>
+		
+	</div>
+</div>
+
+<!-- <div class="form-group">
+	<div class="col-md-4 input-group ">
+	<script>
+	select_province='{$data[detail][province]}';
+	select_city='{$data[detail][city]}';
+	select_area='{$data[detail][area]}';
+	select_district='{$data[detail][district]}';
+	select_estate='{$data[detail][estate]}';
+	</script>
+	<include file="Public/region" />
+	</div>
+</div> -->
+
+<table class="table table-bordered table-striped table-condensed table-hover">
+	<thead>
+		<tr>
+			<th>序号</th>
+			<th>姓名</th>
+			<th>电话</th>
+			<th>区域</th>
+			<th>组别</th>
+			<th>部门</th>
+			<th>职位</th>
+			<th>次数</th>
+			
+		</tr>
+	</thead>
+	<tbody>
+		<?php
+			$m=ceil(count($data)/10);
+			foreach ($data as $key => $vo) {
+				$current_page=ceil(($key+1)/10);
+		?>
+		<tr class='show_lists show_{$current_page}' style='display:none;'>
+			<td><?php echo $key+1;?></td>
+			<td><?php echo $vo[name];?></td>
+			<td><?php echo $vo[phone];?></td>
+			<td><?php echo $vo[area];?></td>
+			<td><?php echo $vo[work_group];?></td>
+			<td><?php echo $vo[partment];?></td>
+			<td><?php echo $vo[job];?></td>
+			<td><?php echo $vo[lottery_count];?></td>
+		</tr>
+		<?php } ?>
+	</tbody>
+</table>
+
+<div class="page1">
+	<p><a href="javascript:change_div('pre')">上一页</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:change_div('next')">下一页</a></p>
+	<p><span id='pp'>1</span>/<span id='p_t'>{$m}</span></p>
+</div>
+<p style='clear:both;'></p>
+
+<div class="panel-footer">
+<button class="btn btn-sm btn-success" type="button" onclick="save_select()"><i class="fa fa-dot-circle-o"></i>确认名单</button>
+<button class="btn btn-sm btn-success" type="button" onclick="delect_select('{$ids}')"><i class="fa fa-dot-circle-o"></i>撤销名单</button>
+
+</div>
+
+<script type="text/javascript">
+
+$(".show_1").show();
+
+
+function change_div(act){
+	var p=parseInt($("#pp").html());
+	var p_t=$("#p_t").html();
+	msg="";
+	if(act=="pre"){
+		p=p-1;
+	}
+	if(act=="next"){
+		p=p+1;
+	}
+	if(p<1){
+		p=1;
+		msg="pre";
+	}
+	if(p>parseInt(p_t)){
+		p=p_t;
+		msg="next";
+	}
+	if(msg=="pre"){
+		alert("已经是第一页");
+	}
+	if(msg=="next"){
+		alert("已经是最后一页");
+	}
+	if(msg==""){
+		$('.show_lists').hide();
+		$(".show_"+p).show();
+		$("#pp").html(p);
+	}
+}
+
+
+function save_select(){
+	window.location.href="userweb.php?c=lottery&a=lists";
+}
+
+function delect_select(ids){
+	$.ajax({  
+	  url: 'userweb.php?c=lottery&a=delect_contact&ids='+ids,  
+	  type: 'POST',  
+	  dataType: 'json',
+	  success: function (returndata) {  
+	      alert("撤销成功！");
+	      window.location.href="userweb.php?c=lottery&a=lists";
+	  },  
+	  error: function (returndata) {  
+	      alert("撤销失败");  
+	  }  
+	});
+}
+
+</script>

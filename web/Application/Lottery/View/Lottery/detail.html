@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html style="overflow: scroll">
+<head lang="en">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>{$data[detail][title]}</title>
+    <link rel="stylesheet" href="{$config['static']}ionic/css/ionic.min.css"/>
+    <style>
+
+    </style>
+</head>
+<body>
+<img src="{$data[detail][back_img]}" alt="" style="width: 100%"/>
+
+<div class="item">
+    <span>{$data[detail][title]}详情</span>
+</div>
+
+<div class="padding">
+    {$data[detail][content]}
+</div>
+</body>
+</html>

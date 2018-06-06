@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>人员明细</title>
+<link href="{$config['static']}css/ionic.min.css" rel="stylesheet" type="text/css" />
+<link href="{$config['static']}css/style.css"rel="stylesheet" type="text/css" />
+<link href="{$config['tool']}swipe/swiper.min.css" rel="stylesheet" type="text/css" />
+<link href="{$config['static']}css/iconfont.css"rel="stylesheet" type="text/css" />
+<script type="text/javascript" charset="utf-8" src="{$config['static']}js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="{$config['tool']}swipe/swiper.min.js"></script>
+
+<style>
+        table{
+            width: 100%;
+            margin: 0 auto;
+            border-collapse: collapse;
+        }
+        td,th{
+            font-size: 14px;
+            text-align: center;
+            border: 1px solid #cccccc;
+            margin: 0;
+            padding: 8px 0;
+        }
+        th{
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+<table style="table-layout:fixed;">
+    <tr>
+        <th>姓名</th>
+        <th>代码</th>
+        <th>抽奖次数</th>
+        <th>备注</th>
+    </tr>
+    <volist name="data[content]" id="lists">
+    <tr>
+        <td>{$lists['truename']}</td>
+        <td>{$lists['user_id']}</td>
+        <td>{$lists['lottery_count']}</td>
+        <td style="width:6em;word-break:keep-all;overflow:hidden;">{$lists['remark']|mb_substr=0,2,'utf-8'}..</td>
+    </tr>
+    </volist>
+   
+</table>
+
+
+</body>
+</html>

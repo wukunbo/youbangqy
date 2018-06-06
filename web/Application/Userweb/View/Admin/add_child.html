@@ -1,0 +1,98 @@
+<include file="Public/includeHeader" />
+<div class="panel panel-default">
+	<form action="userweb.php?c=Admin&a=add&id={$data[id]}"  enctype="multipart/form-data"  method="post" name="auth" id="auth">
+		<input type="text" style="display:none;" name="post_id"  class="form-control" value="{$data['id']}">
+		<div class="panel-body">
+			<!-- <div class="form-group">
+				<label for="text-input" class="col-md-2 control-label">登录名：</label>
+				<div class="col-md-4 input-group ">
+					 <input type="text" name="tl_adm_username" id='username' placeholder='' value="{$data[tl_adm_username]}" class="form-control" onClick="javascript:value='';">
+					 登录时,使用{$userinfo[username]}:用户名
+					 <input type="text" name="admin_username"  placeholder='{$userinfo[username]}' value="{$userinfo[username]}" class="form-control" style=" display:none" >
+				</div>
+			</div>
+ -->
+			<div class="form-group">
+				<label for="text-input" class="col-md-2 control-label">所属部门</label>
+				<div class="col-md-4 input-group ">
+					 <select name='partment_id' class="form-control">
+					 	<volist name='data[partment]' id='vo'>
+					 		<if condition="$data[partment_id] eq $vo[id]">
+						     <option value="{$vo[id]}"  selected="selected">{$vo[title]}</option>
+						     <else />
+						      <option value="{$vo[id]}">{$vo[title]}</option>
+						     </if>
+					 	</volist>
+					 </select>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="text-input" class="col-md-2 control-label">管理员选择：</label>
+				<div class="col-md-4 input-group ">
+					 <a onclick="show_content('userweb.php?c=contacts&a=select_contact')">选择</a>
+				</div>
+				<span id="admin_name" style="font-size: 12px;">{$data[admin_name]}</span>
+				<input type="hidden" name="wx_userid" value="{$data[wx_userid]}" id="wx_id"></input>
+				<input type="hidden" name="show_all" value="{$data[show_all]}" id="show_all"></input>
+			</div>
+			<div class="form-group">
+				<label for="text-input" class="col-md-2 control-label"></label>
+				<div class="col-md-4 input-group ">
+				<label><input <if condition="$data[show_all] eq 2">checked="checked"</if> id="sel_all" type="checkbox" name="show_all1" value="" onclick="check_all()">允许查看各部门手机报表</label>
+				</div>
+			</div>
+			<!-- <div class="form-group">
+				<label for="text-input" class="col-md-2 control-label">密码</label>
+				<div class="col-md-4 input-group ">
+				<input type="password" name="tl_adm_password" id='password' value="" class="form-control">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="text-input" class="col-md-2 control-label">真实姓名</label>
+				<div class="col-md-4 input-group ">
+					 <input type="text" name="tl_adm_truename" id="truename" value="{$data[tl_adm_truename]}" class="form-control" onClick="javascript:value='';">
+				</div>
+			</div>
+			 -->
+
+			
+			<div class="form-group">
+				<label for="text-input" class="col-md-2 control-label">所属权限组:</label>
+				<div class="col-md-4 input-group ">
+					 <select name='role_id' class="form-control">
+	                     <volist name='data[role]' id='vo'>
+						    <if condition="$data[role_id] eq $vo[role_id]">
+						     <option value="{$vo[role_id]}"  selected="selected">{$vo[role_name]}</option>
+						     <else />
+						      <option value="{$vo[role_id]}">{$vo[role_name]}</option>
+						     </if>
+					     </volist>
+	                    </select>
+				</div>
+			</div>
+			
+		</div>
+		<div class="panel-footer">
+			<button class="btn btn-sm btn-success" type="submit"><i class="fa fa-dot-circle-o"></i> 保存</button>
+		</div>
+	</form>
+</div>
+<include file="Public/includeFooter" />
+<script src="{$config_userweb['static']}assets/plugins/jquery-ui/js/jquery-ui-1.10.4.min.js"></script>
+<!--/container-->
+<div class="clearfix"></div>
+<include file="Public/footer" />
+<include file="Public/dailog" />
+
+<script type="text/javascript">
+//查看全部活动
+function check_all(){
+    checked=$("#sel_all").prop("checked"); 
+    if(checked==true){
+        $("#show_all").val(2);
+    }else{
+        $("#show_all").val(1);
+    }
+}
+</script>

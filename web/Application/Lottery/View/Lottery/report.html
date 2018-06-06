@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html style="overflow: scroll">
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>查看报表</title>
+    <link rel="stylesheet" href="{$config['static']}ionic/css/ionic.min.css"/>
+    <link rel="stylesheet" href="{$config['static']}ionic/css/style.css"/>
+    <script type="text/javascript" charset="utf-8" src="{$config['static']}ionic/jquery.js"></script>
+
+    <style>
+        .bor{
+            border: 1px solid #aaa
+        }
+        .sel_nobor{
+            width: 100%;    height: 100%;   border: none
+        }
+        .th{
+            font-size: 18px;
+            padding: 10px;
+        }
+        .row {
+            border-collapse:collapse
+        }
+    </style>
+</head>
+<body>
+<div class="list">
+
+<div class="row no-padding">
+      <div class="col col-25 hong text-center item">
+        区域
+      </div>
+      <div class="col hong text-center item">
+        参与人数
+      </div>
+      <div class="col hong text-center item">
+        保单件数
+      </div>
+</div>
+<?php
+  foreach ($data as $key => $value) {
+?>
+<div class="row no-padding">
+  <div class="col col-25 text-center item" onClick="display('area<?php echo $key;?>')">
+     <?php echo $value[area]?>
+       <i class="icon ion-android-arrow-dropright"></i>
+  </div>
+ 
+  <div class="col text-center item">
+      <?php echo $value[allcontact]?>
+  </div>
+
+  <div class="col text-center item">
+        <?php echo $value[allcount]?>
+  </div>
+</div>
+<div id="item_area<?php echo $key;?>" class="disitem" style="display:none" data-sattus=0>
+<?php foreach ($value[persons] as $k => $person) { ?>
+
+    <div class="row no-padding">
+     <div class="col col-25 text-center item">
+         
+     </div>
+     <div class="col text-center item">
+          <?php echo $person[name];?>
+     </div>
+
+     <div class="col text-center item">
+          <?php echo $person[lottery_count];?>
+     </div>
+     
+    </div>
+<?php } ?>
+
+</div>
+<?php } ?>
+
+</div>
+
+</body>
+</html>
+
+<script>
+  function display(id){
+      
+      tmp_id="#item_"+id;
+      sattus=$(tmp_id).attr("data-sattus");
+      if(sattus==0){
+           $(tmp_id).fadeIn();
+          $(tmp_id).attr("data-sattus",1);
+          document.getElementById('i'+id).className="icon ion-android-arrow-dropdown";
+     }else{
+         $(tmp_id).fadeOut();
+          $(tmp_id).attr("data-sattus",0);
+          document.getElementById('i'+id).className="icon ion-android-arrow-dropright";
+    }
+      
+  }
+
+
+  </script>

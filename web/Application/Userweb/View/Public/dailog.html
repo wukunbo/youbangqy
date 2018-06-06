@@ -1,0 +1,21 @@
+﻿<link href="tool/dailog/dailog.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="tool/dailog/dailog.js"></script>
+<div style="display: none; height: 591px;" id="show_tips_bg"></div>
+<div style="display: none; height: 591px;" id="show_content_bg"></div>
+<div id="show_tips" class="box" style="display: none; top: 213px;">
+	<h2 style="cursor:pointer;" onClick="show_tips_close()"><a href="javascript:void(0);" class="close">关闭</a>
+	</h2>
+	<div class="show_tips_title">温馨提示</div>
+	<div id="show_tips_msg" class="mainlist">
+	</div>
+</div>
+<div id="show_content" class="show_content_box" style="display: none; left: 320px; top: 213px;   z-index:100000;height: 700px;overflow: auto;">
+	<h2 style="cursor:pointer;" onClick="show_content_close()"><a href="javascript:void(0);" class="close">关闭</a>
+	</h2>
+	<div id="show_content_msg" class="mainlist" style="overflow: hidden!important;">
+	</div>
+</div>
+<div style="height: 1324px; display:none; opacity: 0;" id="show_loading_bg" class="overlay"></div>
+<div style="opacity:0;display:none;"   id="show_loading"  class="showbox">
+	<div class="loadingWord"><img src="tool/dailog/waiting.gif">加载中，请稍候...</div>
+</div>

@@ -1,0 +1,46 @@
+<include file="Public/includeHeader" />
+
+﻿<div class="row">
+	<div class="col-lg-12">
+		<h3 class="page-header">反馈意见列表</h3>
+		
+	</div>
+</div>
+
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h2><i class="fa fa-table red"></i><span class="break"></span><strong>列表</strong></h2>
+		 
+	</div>
+
+	<div class="panel-body">
+		
+		<table class="table">
+			<thead>
+				<tr>
+					<th>序号</th>
+					<th>姓名</th>
+					<th>区域</th>
+					<!-- <th>部门</th> -->
+					<th>反馈内容</th>
+					<th>反馈时间</th>
+				</tr>
+			</thead>
+			<tbody>
+				<volist name="data[content]" id="lists">
+					<tr>
+						<td>{$key+1}</td>
+						<td>{$lists[name]}</td>
+						<!-- <td>{$lists[area]}</td> -->
+						<td>{$lists[partment]}</td>
+						<td width="650px">{$lists[advice_content]}</td>
+						<td>{$lists[advicetime]|date="Y-m-d",###}</td>
+					</tr>
+				</volist>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<include file="Public/pagination" />
+<include file="Public/includeFooter" />

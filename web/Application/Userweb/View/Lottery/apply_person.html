@@ -1,0 +1,73 @@
+<include file="Public/includeHeader" />
+
+﻿<div class="row">
+	<div class="col-lg-12">
+		<h3 class="page-header">详细统计列表</h3>
+		
+	</div>
+</div>
+
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h2><i class="fa fa-table red"></i><span class="break"></span><strong>列表</strong></h2>
+		 
+	</div>
+
+	<div class="panel-body">
+		<table class="table table-bordered table-striped table-condensed table-hover">	
+			<thead>
+				<tr>
+					<th>编号</th>
+					<th>代码</th>
+					<th>姓名</th>
+				<!-- 	<th>区域</th>
+					<th>组别</th> -->
+					<!-- <th>职位</th> -->
+					<!-- <th>报名时间</th> -->
+					<th>抽奖次数</th>
+
+					<!-- <th>扫描出席</th> -->
+					<th>备注</th>
+				</tr>
+			</thead>
+			<tbody>
+				<volist name="data[content]" id="lists">
+					<tr>
+						<td>{$key+1}</td>
+						<td>{$lists['user_id']}</td>
+						<td>{$lists['truename']}</td>
+						<!-- <td>{$lists['partment']}</td> -->
+						<!-- <td>{$lists['work_group']}</td> -->
+						<!-- <td >
+							<if condition="$lists[applytime] neq '' ">
+							{$lists['applytime']|date="Y-m-d",###}
+							</if>
+						
+						</td>
+						<td>
+							<if condition="$lists[is_able] eq 0">
+								未报名
+							</if>
+							<if condition="$lists[is_able] eq 1">
+							已报名
+							</if>
+							<if condition="$lists[is_able] eq -1">
+								已撤销
+							</if>
+						</td> -->
+						<td>
+							{$lists['lottery_count']}
+
+						</td>
+						<td>{$lists['remark']}</td>
+					</tr>
+				</volist>
+			</tbody>
+		</table>
+		<!-- <a href="javascript:history.go(-1);location.reload()">返回</a> -->
+		<a class="btn btn-success" href="userweb.php?c=lottery&a=report&id={$_REQUEST[id]}">返回</a>
+	</div>
+</div>
+
+<include file="Public/pagination" />
+<include file="Public/includeFooter" />

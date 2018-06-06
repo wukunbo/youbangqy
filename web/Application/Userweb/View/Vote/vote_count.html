@@ -1,0 +1,97 @@
+<include file="Public/includeHeader" />
+
+﻿<div class="row">
+	<div class="col-lg-12">
+		<h3 class="page-header">投票情况列表</h3>
+		
+	</div>
+</div>
+
+
+<div class="col-md-12 input-group" style="margin-bottom: 15px;width: 100%">
+	<form action="userweb.php?c=vote&a=vote_count" method="post" style="width: 100%">
+		<select class="form-control  " name="post[partment]" style="width: 100px">
+			<option value="">请选择部门</option>
+			<volist name="partment_list" id="list">			
+				<option value="{$list.id}">{$list.title}</option>
+			</volist>
+		</select>
+
+		<select class="form-control  " name="post[type]" style="width: 150px">
+			<option value="">请选择活动类型</option>
+			<option value="1">可报名投票</option>
+			<option value="2">不可报名投票</option>
+		</select>
+
+		<select class="form-control  " name="post[status]" style="width: 100px">
+			<option value="">请选择状态</option>
+			<option value="0">未发布</option>
+			<option value="1">已发布</option>
+		</select>
+		&nbsp;
+		<script src="tool/My97DatePicker/WdatePicker.js"></script>	
+		<label for="text-input">活动时间:</label>
+		<input  type="text" name="post[time_start]" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+		-
+		<label for="text-input">结束时间:</label>
+		<input  type="text" name="post[time_end]" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+
+		<select class="form-control  " name="post[order]" style="width: 150px">
+			<option value="">排序</option>
+			<option value="start_time">报名开始时间排序</option>
+			<option value="end_time">报名截止时间排序</option>
+			<option value="time_start">活动开始时间排序</option>
+			<option value="time_end">活动结束时间排序</option>
+		</select>
+		
+
+		<button class="btn btn-success" type="submit" style="margin-left: 15px;"><i class="fa fa-dot-circle-o"></i>搜索</button>
+	</form>
+
+</div>
+
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h2><i class="fa fa-table red"></i><span class="break"></span><strong>列表</strong></h2>
+		 
+	</div>
+
+	<div class="form-group" style="margin-top: 20px">
+        <a class="btn btn-primary" href="userweb.php?c=vote&a=excel_count" target="_blank">
+			导出统计表
+		</a>  
+	</div>
+
+	<div class="panel-body">
+		<table class="table table-bordered table-striped table-condensed table-hover">
+			<thead>
+				<tr>
+					<th> 编号 </th>
+					<th>标题</th>
+					<th>部门</th>
+					<th>投票时间</th>
+					<th>访问量</th>
+					<th>已投数量</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+			<?php $total=count($data[content]);?>
+				<volist name="data[content]" id="lists">
+					<tr>
+						<td >{$total-$key}</td>
+						<td>{$lists[title]}</td>
+						<td>{$lists[partment_title]}</td>
+						<td>{$lists[time_start]|date='Y-m-d',###}</td>
+						<td>{$lists[count_view]}</td>
+						<td>{$lists[count_vote]}</td>
+						<td><a href="userweb.php?c=vote&a=vote_log&id={$lists[id]}">查看统计</a></td>
+					</tr>
+				</volist>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<include file="Public/pagination" />
+<include file="Public/includeFooter" />

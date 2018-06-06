@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>活动详情</title>
+<link href="{$config['static']}css/ionic.min.css" rel="stylesheet" type="text/css" />
+<link href="{$config['static']}css/style.css"rel="stylesheet" type="text/css" />
+<link href="{$config['tool']}swipe/swiper.min.css" rel="stylesheet" type="text/css" />
+<link href="{$config['static']}css/iconfont.css"rel="stylesheet" type="text/css" />
+<script type="text/javascript" charset="utf-8" src="{$config['static']}js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="{$config['tool']}swipe/swiper.min.js"></script>
+</head>
+  <body class="light-bg">
+	<div class="list" style="padding-top:0px;overflow:hidden;">
+<div class="padding">
+		<h4 class="bold padding-v-10" style="margin-top: 0 !important;">{$data[detail][title]}活动</h4>
+    <if condition="$data[detail][show_content] eq 'on' ">
+  	 <img src="{$data[detail][img_thumb]}" width="100%">
+    </if>
+
+<style type="text/css">
+  #activity_detatil img{
+    width: 100%;
+  }
+</style>
+
+<div class="padding" style="width: 100%;white-space: normal !important;" id="activity_detatil">
+ <!-- <p class="font-size-16 hong">主题：</p>
+   <p style="text-align: justify;text-indent: 20px;">
+    {$data[detail][title]}
+   </p> -->
+    <!-- <p class="font-size-16 hong">活动信息：</p>
+    {$data[detail][intro]}
+  
+     <p class="font-size-16 hong">活动流程：</p> -->
+      {$data[detail][content]}
+    <!-- <p class="font-size-16 hong">现场照片：</p>
+    <div class="row no-padding">
+    	  <div class="col col-25">
+    	  	<img src="{$config['static']}image/de_01.png" width="100%">
+    	  </div>
+    	 <div class="col col-25">
+    	  	<img src="{$config['static']}image/de_02.png" width="100%">
+    	  </div>
+    	  <div class="col col-25">
+    	  	<img src="{$config['static']}image/de_03.png" width="100%">
+    	  </div>
+    	 <div class="col col-25">
+    	  	<img src="{$config['static']}image/de_04.png" width="100%">
+    	  </div>
+    </div> -->
+</div>
+</div>
+     <!--content end-->
+    </div> 
+ 
+</body>
+
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html style="overflow: scroll">
+<head lang="en">
+    <meta charset="UTF-8">
+    <script src="tool/loongchart/excanvas.js" type="text/javascript"></script>
+    <script src="tool/loongchart/loongchart.core.js" type="text/javascript"></script>
+    <script src="tool/loongchart/loongchart.histogram3d.js" type="text/javascript"></script>
+    <script src="Application/Survey/View/static/ionic/jquery.js" type="text/javascript"></script>
+    <script src="Application/Survey/View/static/ionic/jquery.qrcode.min.js" type="text/javascript"></script>
+</head>
+<style type="text/css">
+    .div_img div {
+        height: 150px;
+        width: 150px;
+        float: left;
+        margin-left: 10px;
+        margin-top: 10px;
+        position: relative;
+    }
+
+    .div_img p {
+        margin: 0;
+        padding: 0;
+    }
+
+    .div_img div div {
+        position: absolute;
+        background-color: #666666;
+        width: 100%;
+        height: 40px;
+        margin-left: 0px;
+        bottom: 0;
+    }
+
+    #div_footer {
+        position: absolute;
+        margin: 0px;
+        width: 100%;
+        height: 120px;
+        margin-left: 0px;
+        bottom: 0;
+    }
+
+    #div_footer div {
+        width: 150px;
+        height: 120px;
+        border: 1px solid #666666;
+        float: left;
+        font-size: 50px;
+        margin-left: 25px;
+        text-align: center;
+    }
+
+    .histogram-container {
+        margin-top: 60px;
+        margin-bottom: 25px;
+    }
+
+    .Rectangle-canvas {
+        width: 70%;
+        height: 20px;
+        border-radius: 5px;
+        background-color: #e8ecf2;
+        margin-bottom: 20px;
+    }
+    .draw{
+        height: 20px;border-radius: 5px;background-color: #e4603c;
+    }
+</style>
+<body>
+<div style="width: 100%">
+    <div style="border: 1px solid #d31145; position: relative">
+        <!--头部 start-->
+        <div style="text-align: center;background-color: #d31145;color: white;height: 50px;position: relative">
+            <span style="position: absolute;top: 16px">在线出题</span>
+            <img src="Application/Survey/View/static/logo.gif" style="width: 50px;height: 50px;float: right"/>
+        </div>
+        <div style="margin: 15px;text-align: center;">
+            <h3><span>{$_REQUEST[next]}: &nbsp; &nbsp;</span>{$data[title]}</h3>
+            <p>
+                <volist name="data[option]" id="vo">
+                    <span style="font-size: 18px">{$vo[label]}.{$vo[title]}</span>&nbsp; &nbsp;&nbsp;
+                </volist>
+            </p>
+        </div>
+        <!--头部 end-->
+        <!--动态生成二维码层 start-->
+        <div id="code" style="height: 300px;width: 300px;margin: 0 auto;padding-top: 60px">
+
+        </div>
+        <!--动态生成二维码层 end-->
+        <!--答案统计图形层 start-->
+            <div class="histogram-container" id="histogram-container" style="display: none">
+                <div id="divCanvas" style="width: 600px; height: 400px;margin: auto">
+
+                    <div style="width: 100%;position: relative">
+                    <volist name="data[option]" id="vo">
+                        <div style="margin-bottom: 10px">{$vo[label]}.{$vo[title]}</div>
+                    <div  class="Rectangle-canvas" style="display: inline-block">
+                        <div  class="draw">
+                        </div>
+                    </div>
+                        <div style="position: absolute;right: 0;display: inline-block" >
+                            <span id="rate{$key}" style="color: #e4603c"></span>&nbsp;&nbsp;&nbsp;&nbsp;<span id="renshu{$key}"></span>
+                        </div>
+                    </volist>
+                    </div>
+                </div>
+            </div>
+        <!--答案统计图形层 end-->
+        <!--下一题 公布答案 start-->
+        <div style="width: 100%">
+            <div>
+                <h1></h1>
+                <div id="daan">
+                </div>
+                <div style="margin-top: 50px;margin-bottom: 50px;margin-right:50px;z-index: 99999;position: relative;text-align: right">
+                    <button id="next_ti" style="font-size: 15px;background-color: #d31145;border: none;color: white;">下一题</button>
+                    <button id="pc_daan" onclick="show_daan()" style="font-size: 15px;margin-top: 50px;background-color: #d31145;border: none;color: white;">公布答案</button>
+                    <button id="up_ti" style="font-size: 15px;background-color: #d31145;border: none;color: white;">上一题</button>
+                </div>
+            </div>
+        </div>
+        <!--下一题 公布答案 end-->
+    </div>
+</div>
+</body>
+</html>
+
+<script type="text/javascript">
+    window.onload = function () {
+        var str = "http://{$_SERVER['HTTP_HOST']}/youbangqy/web/survey.php?c=index&a=pc_survey&id={$_REQUEST[id]}&sort={$_REQUEST[next]}";
+        $('#code').qrcode(
+                {
+                    width: 300, //二维码宽度
+                    height: 300, //二维码高度
+                    text: str, //要生成二维码的链接
+                }
+        );
+    };
+    function get_data() {
+        $.ajax({
+            url: 'survey.php?c=pc&a=ajax_data&id=' + {$_REQUEST[id]} + '&questionId=' + {$data[id]},
+            type: 'POST',
+            dataType: 'json',
+            success: function (data) {
+                lchart.Draw(data);
+            },
+            error: function () {
+                alert("失败");
+            }
+        });
+    }
+
+    function show_daan() {
+        $("#code").hide();
+        $('.histogram-container').css({display:'block'});
+          $.ajax({
+            url: 'survey.php?c=pc&a=ajax_data&id=' + {$_REQUEST[id]} + '&questionId=' + {$data[id]},
+            type: 'POST',
+            dataType: 'json',
+            success: function (data) {
+                // data=eval("("+data+")");
+                // alert(data);
+                $.each(data, function(index,val) {
+                    // alert(index);
+                    $("#rate"+index).html(val.rate+"%");
+                    $("#renshu"+index).html(val.value+"人");
+                    drawRectangle(val.rate,'draw',index,'#e4603c');
+                });
+                
+            },
+            error: function () {
+                alert("失败");
+            }
+        });
+        
+
+    }
+
+    function next() {
+        window.location.href = "survey.php?c=pc&a=show_survey&id={$_REQUEST[id]}&next={$_REQUEST[next]+1}";
+    }
+
+    function drawRectangle(width,draw,con,bg){
+        this.draw=draw;//当前需要绘制百分比类
+        this.con=con;//当前绘制百分比类名类
+        var drawClass=document.getElementsByClassName(this.draw);//得到需要绘制百分比的类名
+        drawClass[con].style.backgroundColor=bg;//设置背景色
+        drawClass[con].style.width=width+'%';//设置当前百分比宽度
+    }
+
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        $("#next_ti").click(function (event) {
+            window.location.href = "survey.php?c=pc&a=show_survey&id={$_REQUEST[id]}&next={$_REQUEST[next]+1}";
+        });
+        $("#up_ti").click(function (event) {
+            window.location.href = "survey.php?c=pc&a=show_survey&id={$_REQUEST[id]}&next={$_REQUEST[next]-1}";
+        });
+    })
+</script>

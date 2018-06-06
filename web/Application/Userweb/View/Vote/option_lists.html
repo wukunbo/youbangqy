@@ -1,0 +1,151 @@
+<include file="Public/includeHeader" />
+
+﻿<div class="row">
+	<div class="col-lg-12">
+		<h3 class="page-header">报名列表</h3>
+		
+	</div>
+</div>
+
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h2><i class="fa fa-table red"></i><span class="break"></span><strong>投票名单</strong></h2>
+		 
+	</div>
+
+	<div class="form-group" style="margin-top: 20px">
+
+		<a class="btn btn-primary" href="userweb.php?c=vote&a=option_add&vote_id={$_REQUEST[vote_id]}" target="_blank">
+			新增投票人
+		</a> 
+		
+        <a style="margin-left:55px" class="btn btn-success" href="userweb.php?c=vote&a=excel_option&id={$_REQUEST[vote_id]}" target="_blank">
+			导出详细记录
+		</a> 
+
+		<a class="btn btn-success" href="userweb.php?c=vote&a=excel_result&id={$_REQUEST[vote_id]}" target="_blank">
+			导出结果记录
+		</a>
+
+		<a class="btn btn-primary" onclick="to_option({$_REQUEST[vote_id]});" style="display: none;">导入投票人</a>
+		
+		<form id="xlsform" enctype="multipart/form-data">
+			<input onchange="submitxls({$_REQUEST[vote_id]})" id="oncontacts" name="xlsfile" type="file" value="导入名单" style="display: none;" accept="" />
+		</form>
+
+
+	</div>
+
+	<div class="panel-body">
+		<table class="table table-bordered table-striped table-condensed table-hover">
+			<thead>
+				<tr>
+					<th> 编号 </th>
+					<!-- <th>图片</th> -->
+				<!-- 	<th>标题</th> -->
+					<th>联系人</th>
+					<!-- <th>电话</th> -->
+				 
+		 
+					<th>创建时间</th>
+					<th>浏览人数</th>
+					<th>票数</th>
+					<th>排序</th>
+					<!-- <th>状态</th> -->
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<volist name="data[content]" id="lists">
+					<tr>
+						<!-- <td>{$lists[id]}</td> -->
+						<td>{$key+1}</td>
+						<!-- <td><a href="{$lists[image_origin]}"><img src="{$lists[image_thumb]}" width="100"></a></td> -->
+						<!-- <td>{$lists[title]}</td> -->
+						
+						<td>{$lists[truename]}</td>
+						
+						<!-- <td>{$lists[phone]}</td> -->
+					 
+						<td>{$lists[addtime]|date='Y-m-d',###}</td>
+						<td>{$lists[count_view]}</td>
+						<td>{$lists[count_vote]}</td>
+						<td>{$lists[paiming]}</td>
+						<!-- <td><if  condition="$lists[status] eq 0">未审核</if>
+							<if  condition="$lists[status] eq 1">审核通过</if>
+							<if  condition="$lists[status] eq 2">审核没通过</if></td> -->
+						 
+						<td>
+
+							<a href="userweb.php?c=vote&a=option_add&vote_id={$lists[vote_id]}&option_id={$lists[id]}" class="btn btn-info">
+							<i class="fa fa-edit "></i>
+							</a>
+							<a href="userweb.php?c=vote&a=del_option&id={$lists[id]}" class="btn btn-danger">
+								<i class="fa fa-trash-o "></i>
+							</a>
+
+							
+							<if condition="$type eq 1">
+								<if  condition="$lists[status] eq 0">
+									<a href="userweb.php?c=vote&a=option_status&id={$lists[id]}&to_status=1">审核通过</a>
+									<a href="userweb.php?c=vote&a=option_status&id={$lists[id]}&to_status=2">审核不通过</a>
+								<else/>
+									已审核
+								</if>
+							</if>
+							<!-- <if  condition="$lists[status] eq 1">
+								<a href="userweb.php?c=vote&a=option_status&id={$lists[id]}&to_status=2">审核不通过</a>
+								</if>
+							<if  condition="$lists[status] eq 2">
+								<a href="userweb.php?c=vote&a=option_status&id={$lists[id]}&to_status=1">审核通过</a>
+								</if> -->
+							</td>
+					</tr>
+				</volist>
+			</tbody>
+		</table>
+		<a class="btn btn-success" href="userweb.php?c=Vote&a=lists&menu_app=Activity">返回列表</a>
+	</div>
+</div>
+
+<include file="Public/pagination" />
+<include file="Public/includeFooter" />
+
+
+<script type="text/javascript">
+function submitxls(id){
+
+	var fileval=$('#oncontacts').val();
+	var regex=/(.+)\.xls|xlsx$/i;
+	if(regex.test(fileval)==false){
+		alert("文件格式不正确,请上传Excel文件");
+		return false;
+	}
+
+	var formData = new FormData($( "#xlsform" )[0]);  
+	$.ajax({  
+	  url: 'userweb.php?c=vote&a=to_option&vote_id='+id ,  
+	  type: 'POST',  
+	  data: formData,  
+	  async: false,  
+	  cache: false,  
+	  contentType: false,  
+	  processData: false,
+	  beforeSend:function(e){
+	  	show_content();
+	  },
+	  success: function (returndata) {
+	  	 show_content_close();
+	     alert("导入成功！");
+	     location.reload();
+	  },  
+	  error: function (returndata) {  
+	      alert("导入失败");  
+	  }  
+	});
+}
+
+function to_option(vote_id){
+	$('#oncontacts').click();
+}
+</script>

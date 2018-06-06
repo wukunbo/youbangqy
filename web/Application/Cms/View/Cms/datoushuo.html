@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+<title>大头说</title>
+<link href="{$config['view']}static/css/ionic.min.css" rel="stylesheet" type="text/css" />
+<link href="{$config['view']}static/css/style.css"rel="stylesheet" type="text/css" />
+<link href="{$config['view']}static/css/accordion_all.css" rel="stylesheet" type="text/css" />
+<link href="{$config['view']}static/css/accordion.css" rel="stylesheet" type="text/css" />
+<link href="{$config['view']}static/css/theme.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" charset="utf-8" src="{$config['view']}static/js/jquery.js"></script>
+<script type="text/javascript" src="{$config['view']}static/js/core.js"></script>
+<script type="text/javascript" src="{$config['view']}static/js/widget.js"></script>
+<script type="text/javascript" src="{$config['view']}static/js/accordion.js"></script>
+</head>
+<body>
+<style>
+ body{background:url(add/mmexport1443168532494.jpg); background-attachment:fixed;}
+</style>
+<div class="list" style="margin-bottom:0px; background:none;">
+	<!--content start-->
+	<div class="menu_two" style="margin-top:0;">
+		<div class="item tabs tabs-secondary"  style="margin:-1px 0 -1px 0;">
+			<a class="tab-item dark-gray <php> if($cate_id ==14){ echo "active";}
+			
+			
+			</php>
+			" href="{:U('cms_lists')}&cate_id=14" >     
+			敢动态 </a>
+			<a class="tab-item dark-gray <php> if($cate_id ==5){ echo "active";}
+			
+			
+			</php>
+			" href="{:U('cms_lists')}&cate_id=5" style="border-right:none !important;">
+			敢活动</a>
+		</div>
+	</div>
+ 
+	 <div id="lists_content">
+	</div>
+ </div>
+   
+<!--content end-->
+</div>
+<script>
+scroll_obj="lists_content";
+scroll_url=window.location.href+"&ajax=1";
+scroll_int=1;
+</script>
+<script type="text/javascript" charset="utf-8" src="tool/scroll_page/scroll.js"></script>
+</body>
+</html>

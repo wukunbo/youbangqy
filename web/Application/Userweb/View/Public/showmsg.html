@@ -1,0 +1,23 @@
+﻿<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+
+<include file="Public/header" />
+<style>
+body{ background:none;}
+ 
+</style>
+<div class="list has-header" style="padding-top:0px; overflow:hidden;">
+	<div style=" left:15%; position:relative; margin-top:30px; width:70%;">
+		<div style="border:#ddd 1px solid; height:auto; overflow:hidden">
+			<div style="line-height:35px; color:#fff; background:#c29e62; padding-left:10px;">提示</div>
+			<div style="text-align:center; line-height:100px;">{$msg}</div>
+		</div>
+	</div>
+</div>
+<include file="Public/footer" />
+<include file="Public/dailog" />
+<script>
+var url='{$url}';
+if(url!='-1'){
+	 change_page(url,2000);
+}
+</script>

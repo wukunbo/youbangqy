@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html style="overflow: scroll">
+<head lang="en">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>{$data[detail][title]}</title>
+    <link rel="stylesheet" href="{$config['static']}ionic/css/ionic.min.css"/>
+    <script type="text/javascript" src="{$config['static']}ionic/jquery.js"></script>
+    <style>
+        .hea_bar{
+            border: none;
+        }
+        .right_bor{
+            border-right: 1px solid #fff;
+        }
+        a{
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<img src="{$data[detail][back_img]}" alt="" style="width: 100%"/>
+
+<div class="item">
+    <div class="row" style="margin-bottom: 20px">
+        <a href="lottery.php?c=lottery&a=detail&id={$data[detail][id]}" class="col assertive-bg light text-center right_bor hea_bar padding">抽奖详情</a>
+        <a href="lottery.php?c=lottery&a=award&id={$data[detail][id]}" class="col assertive-bg light text-center right_bor hea_bar padding">查看奖品</a>
+       <!--  <a href="lottery.php?id={$data[detail][id]}" class="col assertive-bg light text-center hea_bar padding">抽奖</a> -->
+       <a href="lottery.php?c=lottery&a=shuju&id={$data[detail][id]}" class="col assertive-bg light text-center hea_bar padding">数据</a>
+    </div>
+
+  <!--   <p class="row">组别：{$data[user][partment]}</p> -->
+    <p class="row">代码：{$data[user][user_id]}</p>
+    <p class="row">姓名：{$data[user][truename]}</p>
+</div>
+
+
+<if condition="$pc_admin eq 1">
+<div class="item item-borderless text-right">
+    <a href="{:U('pc_lottery')}&id={$data[detail][id]}" style="border-radius: 10px;padding: 8px 25px;border: none;
+            height: 40px;color:  #fff;background:#f00;">区域总控</a>
+</div>
+</if>
+
+
+ <if condition="$pc_is eq 1">
+<div class="item item-borderless text-right">
+    <a href="{:U('pc_admin')}&id={$data[detail][id]}" style="border-radius: 10px;padding: 8px 25px;border: none;
+            height: 40px;color:  #fff;background:#f00;">区域准备</a>
+</div>
+</if>
+
+ <if condition="$show_report eq 1">
+<div class="item item-borderless text-right">
+    <a href="{:U('report2')}&id={$data[detail][id]}" style="border-radius: 10px;padding: 8px 25px;border: none;
+            height: 40px;color:  #fff;background:#f00;">查看报表</a>
+</div>
+    </if>
+<p style="margin-bottom: 110px"></p>
+<div class="item text-center" style="position:fixed;bottom: 0;width: 100%">
+    <div style="margin: 0 0 10px">
+        可抽奖次数
+        <span style="color:#f0186e " id="lottery_count">{$data[user][lottery_count]}</span>
+        次
+    </div>
+    <if condition="$data[detail][end_time] lt time()">
+     <button style="border:1px solid #f0186e;border-radius: 10px;padding: 8px;width: 80%;
+            height: 40px;color: #f0186e;background: #fff;">活动已结束</button>
+    </if>
+    <if condition="$data[detail][start_time] gt time()">
+    <button style="border:1px solid #f0186e;border-radius: 10px;padding: 8px;width: 80%;
+            height: 40px;color: #f0186e;background: #fff;">距 离 抽 奖 <?php echo floor(($data[detail][start_time]-time())/(3600*24));?> 天<?php echo floor(($data[detail][start_time]-time())%(3600*24)/3600);?>小时</button>
+    </if>
+
+    <if condition="$data[detail][start_time] lt time() AND $data[detail][end_time] gt time()">
+    <button style="border:1px solid #f0186e;border-radius: 10px;padding: 8px;width: 80%;
+            height: 40px;color: #f0186e;background: #fff;" onclick="to_href({$data[detail][type]})">立即抽奖</button>
+    </if>
+</div>
+
+</body>
+</html> 
+
+<script type="text/javascript">
+function to_href(type){
+    if(type==1){
+        window.location.href="lottery.php?c=index&a=index&id={$_REQUEST[id]}";
+    }
+    if(type==2){
+        var lotteryId={$_REQUEST[id]};
+        $.ajax({
+            url: 'lottery.php?c=lottery&a=pc_lottery_start&id='+lotteryId,
+            type: 'POST',
+            dataType: 'json',
+            data: {lotteryId:lotteryId},
+            success:function(data) {  
+                if(data.code=="20000"){
+                    alert("已成功参与本轮抽奖");
+                    $("#lottery_count").html(data.lottery_count);
+                }
+                if(data.code=="30000"){
+                    alert("您已参与本轮抽奖，请等待一下轮开始");
+                }
+                if(data.code=="10000"){
+                    alert("抽奖次数已用完");
+                }
+                if(data.code=="10001"){
+                    alert("抽奖未开始或已结束");
+                }
+            },  
+            error : function() {  
+                alert("失败");
+            }  
+        });
+    }
+}
+</script>

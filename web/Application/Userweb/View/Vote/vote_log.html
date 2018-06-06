@@ -1,0 +1,60 @@
+<include file="Public/includeHeader" />
+
+﻿<div class="row">
+	<div class="col-lg-12">
+		<h3 class="page-header">投票统计列表</h3>
+		
+	</div>
+</div>
+
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h2><i class="fa fa-table red"></i><span class="break"></span><strong>列表</strong></h2>
+		 
+	</div>
+
+	<div class="form-group" style="margin-top: 20px">
+        <a class="btn btn-primary" href="userweb.php?c=vote&a=excel_votelog&id={$_REQUEST[id]}" target="_blank">
+			导出投票记录
+		</a>  
+	</div>
+
+	<div class="panel-body">
+		<table class="table table-bordered table-striped table-condensed table-hover">
+			<thead>
+				<tr>
+					<th> 编号 </th>
+					<th>投票时间</th>
+					<th>姓名</th>
+					<!-- <th>手机号码</th> -->
+					<th>代码</th>
+					<!-- <th>部门</th>
+					<th>职位</th> -->
+				</tr>
+			</thead>
+			<tbody>
+				<volist name="data[content]" id="lists">
+				<tr>
+					<td>{$key+1}</td>
+					<td>{$lists['day']}</td>
+					<td>
+						<if condition="$lists['name'] eq '' ">
+						{$lists[log_user]}
+						<else/>
+						{$lists['name']}
+						</if>
+					</td>
+					<!-- <td>{$lists['phone']}</td> -->
+					<td>{$lists['wx_userid']}</td>
+					<!-- <td>{$lists['partment']}</td> -->
+					<!-- <td>{$lists['job']}</td> -->
+				</tr>
+				</volist>
+			</tbody>
+		</table>
+		<a class="btn btn-success" href="userweb.php?c=Vote&a=vote_count&menu_app=Activity">返回列表</a>
+	</div>
+</div>
+
+<include file="Public/pagination" />
+<include file="Public/includeFooter" />

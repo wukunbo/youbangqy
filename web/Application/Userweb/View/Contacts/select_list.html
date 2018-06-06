@@ -1,0 +1,223 @@
+<div class="row">
+	<div class="col-lg-12">
+		<h3 class="page-header">选择名单</h3>
+		
+	</div>
+</div>
+
+<!-- <div class="form-group">
+	<div class="col-md-4 input-group ">
+	<script>
+	select_province='{$data[detail][province]}';
+	select_city='{$data[detail][city]}';
+	select_area='{$data[detail][area]}';
+	select_district='{$data[detail][district]}';
+	select_estate='{$data[detail][estate]}';
+	</script>
+	<include file="Public/region" />
+	</div>
+</div> -->
+
+
+<div class="form-group">
+	<div class="col-md-5 input-group ">
+		<div id="allpartment">
+			<select class="form-control  sel" name="post[partment]" id="partment1" style="width: 100px" onchange="select_partment(1)">
+				<option value="1">请选择</option>
+				<volist name="partment_list" id="partment">
+					<option value="{$partment[id]}">{$partment[name]}</option>
+				</volist>
+			</select>
+		</div>
+	   <button onclick="select_partment1()" class="btn btn-sm btn-success">查询</button>
+	</div>
+</div>
+
+<table class="table table-bordered table-striped table-condensed table-hover">
+	<thead>
+		<tr>
+			<th width="70px"><input name="allselect" type="checkbox" value="" id="allselect" onclick="selectbtn()" />全选</th>
+			<th>序号</th>
+			<th>姓名</th>
+			<th>电话</th>
+			<!-- <th>区域</th>
+			<th>组别</th>
+			<th>部门</th> -->
+			<th>代码</th>
+			<th>职位</th>
+			
+		</tr>
+	</thead>
+	<tbody>
+		<?php
+			$m=ceil(count($data)/10);
+			foreach ($data as $key => $vo) {
+				$current_page=ceil(($key+1)/10);
+		?>
+		<?php if($current_page == 1){ ?>
+			<tr class='show_lists show_{$current_page}'>
+		<?php }else{ ?>
+			<tr class='show_lists show_{$current_page}' style='display:none;'>
+		<?php } ?>
+			<td><input name="namelist" type="checkbox" value="<?php echo $vo[id];?>" /></td>
+			<td><?php echo $key+1;?></td>
+			<td><?php echo $vo[name];?></td>
+			<td><?php echo $vo[phone];?></td>
+			<!-- <td><?php echo $vo[area];?></td>
+			<td><?php echo $vo[work_group];?></td>
+			<td><?php echo $vo[partment];?></td> -->
+			<td><?php echo $vo[wx_userid];?></td>
+			<td><?php echo $vo[job];?></td>
+		</tr>
+		<?php } ?>
+	</tbody>
+</table>
+
+<div class="page1">
+	<p><a href="javascript:change_div('pre')">上一页</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:change_div('next')">下一页</a></p>
+	<p><span id='pp'>1</span>/<span id='p_t'>{$m}</span></p>
+</div>
+<p style='clear:both;'></p>
+
+<div class="panel-footer">
+<button class="btn btn-sm btn-success" type="button" onclick="save_select()"><i class="fa fa-dot-circle-o"></i>确认名单</button>
+</div>
+
+<script type="text/javascript">
+
+$(".show_1").show();
+
+function select_partment(id){
+	
+	var partment="partment"+id;
+	var partmentid=$("#partment"+id).val();	
+
+	$.ajax({  
+	  url: 'userweb.php?c=contacts&a=get_select_partment' ,  
+	  type: 'POST',
+	  data:{partmentid:partmentid},
+	  success: function (returndata) {
+	      $("#partment"+id).after(returndata);
+	  },  
+	  error: function (returndata) {  
+	      alert("失败");  
+	  }  
+	});
+	
+	var allpartment=document.getElementById('allpartment');
+	var sel=allpartment.getElementsByClassName('sel');
+  	for(var i=0;i<sel.length;i++){
+	 	if(partment==sel[i].id){
+	 		for(var n=i;n<sel.length;n++){
+	 			jj=i+1;
+	 			var vv=document.getElementById(sel[jj].id);
+	 			vv.parentNode.removeChild(vv);
+	 		}
+	 	}
+	 }
+	
+}
+
+function change_div(act){
+	var p=parseInt($("#pp").html());
+	var p_t=$("#p_t").html();
+	msg="";
+	if(act=="pre"){
+		p=p-1;
+	}
+	if(act=="next"){
+		p=p+1;
+	}
+	if(p<1){
+		p=1;
+		msg="pre";
+	}
+	if(p>parseInt(p_t)){
+		p=p_t;
+		msg="next";
+	}
+	if(msg=="pre"){
+		alert("已经是第一页");
+	}
+	if(msg=="next"){
+		alert("已经是最后一页");
+	}
+	if(msg==""){
+		$('.show_lists').hide();
+		$(".show_"+p).show();
+		$("#pp").html(p);
+	}
+}
+
+function selectbtn(){
+
+	if($("input[name='allselect']").attr("checked")){
+		selectall();
+	}else{
+		cacelall(); 
+	}
+}
+
+function save_select(){
+	var str="";
+    $("input[name='namelist']:checkbox").each(function(){ 
+        if($(this).attr("checked")){
+            str += $(this).val()+","
+        }
+    });
+    str=str.substring(0,str.length-1);
+    if(str == ""){
+    	alert("请选择名单！！");
+    	return;
+    }
+    var id={$_REQUEST[id]};
+    $.ajax({
+    	url: 'userweb.php?c=contacts&a=save_contact&t='+{$_REQUEST[t]},
+    	type: 'POST',
+    	dataType: 'json',
+    	data: {id: id,contactIds: str},
+    	success:function(data) {  
+			alert("发布成功");
+    		window.location.href="userweb.php?c=collect&a=lists";
+		},  
+		error : function() {  
+			alert("发布失败");
+		}  
+    });
+}
+
+function selectall()  
+{  
+	var obj=document.all.namelist;  
+	for(var i=0;i<obj.length;i++)  
+	{  
+		obj[i].checked=true;  
+	}  
+}  
+function cacelall()  
+{  
+	var obj=document.all.namelist;  
+	for(var i=0;i<obj.length;i++)  
+	{  
+		obj[i].checked=false;  
+	}  
+}  
+
+
+function select_partment1(){
+	var allpartment=document.getElementById('allpartment');
+	var sel=allpartment.getElementsByClassName('sel');
+	var partment=document.getElementById(sel[sel.length-1].id).value;
+
+	if(partment != ""){
+		var url='userweb.php?c=contacts&a=select_list&id={$_REQUEST[id]}&t={$_REQUEST[t]}&add=1&partment='+partment;
+		show_content(url);
+	}
+}
+</script>
+
+<script>
+$(function(){
+	$(".show_1").show();
+})
+ </script>

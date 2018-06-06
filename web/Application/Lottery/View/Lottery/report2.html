@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html style="overflow: scroll">
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>查看报表</title>
+    <link rel="stylesheet" href="{$config['static']}ionic/css/ionic.min.css"/>
+    <link rel="stylesheet" href="{$config['static']}ionic/css/style.css"/>
+    <script type="text/javascript" charset="utf-8" src="{$config['static']}ionic/jquery.js"></script>
+
+    <style>
+        .bor{
+            border: 1px solid #aaa
+        }
+        .sel_nobor{
+            width: 100%;    height: 100%;   border: none
+        }
+        .th{
+            font-size: 18px;
+            padding: 10px;
+        }
+        .row {
+            border-collapse:collapse
+        }
+    </style>
+</head>
+<body>
+  <div class="list">
+    <!--content start-->
+     <div class="row no-padding">
+      <div class="col col-25 hong text-center item">
+        区域
+      </div>
+      <div class="col hong text-center item">
+        参与人数
+      </div>
+      <div class="col hong text-center item">
+        抽奖次数
+      </div>
+      
+       <div class="col hong text-center item">
+        详情
+      </div>
+     </div>
+      <?php foreach($data as $vo): ?>
+      <?php if(!empty($vo['all'])):?>
+     <div class="row no-padding">
+      <div class="col col-25 text-center item" onClick="display({$vo[id]})">
+        {$vo[name]}
+        <i class="icon ion-android-arrow-dropright" id="i1"></i>
+      </div>
+      <div class="col text-center item">
+        {$vo[all]}
+      </div>
+      <div class="col text-center item">
+       {$vo[lottery_count]|default=0}
+      </div>
+      
+      <div class="col text-center item">
+        <a href="lottery.php?c=lottery&a=apply_person&id={$_REQUEST[id]}&partment={$vo[id]}">详情</a>
+      </div>
+     </div>
+
+     <?php if($vo['list'] != null):?>
+        <?php foreach($vo['list'] as $v1): ?>
+          <?php if(!empty($v1['all'])):?>
+     <div id="item_{$vo[id]}" class="disitem_{$vo[id]}" style="display:none" data-sattus=0>
+      <div class="row no-padding">
+      <div class="col col-25 text-center item" onClick="display({$v1[id]})">
+       {$v1[name]}
+        <i class="icon ion-android-arrow-dropright" id="i2"></i>
+      </div>
+      <div class="col text-center item">
+         {$v1[all]}
+      </div>
+      <div class="col text-center item">
+        {$v1[lottery_count]|default=0}
+      </div>
+      
+      <div class="col text-center item">
+        <a href="lottery.php?c=lottery&a=apply_person&id={$_REQUEST[id]}&partment={$v1[id]}">详情</a>
+      </div>
+     </div>
+
+     <?php if($v1['list'] != null):?>
+          <?php foreach($v1['list'] as $v2): ?>
+              <?php if(!empty($v2['all'])):?>
+     <div id="item_{$v1[id]}" class="disitem_{$v1[id]}" style="display:none" data-sattus=0>
+        <div class="row no-padding">
+      <div class="col col-25 text-center item" onClick="display({$v2[id]})">
+       {$v2[name]}
+        <i class="icon ion-android-arrow-dropright" id="i2"></i>
+      </div>
+      <div class="col text-center item">
+         {$v2[all]}
+      </div>
+      <div class="col text-center item">
+        {$v2[lottery_count]|default=0}
+      </div>
+     
+      <div class="col text-center item">
+        <a href="lottery.php?c=lottery&a=apply_person&id={$_REQUEST[id]}&partment={$v2[id]}">详情</a>
+      </div>
+     </div>
+
+     <?php if($v2['list'] != null):?>
+          <?php foreach($v2['list'] as $v3): ?>
+              <?php if(!empty($v3['all'])):?>
+     <div id="item_{$v2[id]}" class="disitem_{$v2[id]}" style="display:none" data-sattus=0>
+        <div class="row no-padding">
+      <div class="col col-25 text-center item">
+       {$v3[name]}
+        <i class="icon ion-android-arrow-dropright" id="i2"></i>
+      </div>
+      <div class="col text-center item">
+         {$v3[all]}
+      </div>
+      <div class="col text-center item">
+        {$v3[lottery_count]|default=0}
+      </div>
+      
+      <div class="col text-center item">
+        <a href="lottery.php?c=lottery&a=apply_person&id={$_REQUEST[id]}&partment={$v3[id]}">详情</a>
+      </div>
+     </div>
+     </div>
+
+      <?php endif; ?>
+          <?php endforeach; ?>
+        <?php endif; ?>
+
+     </div>
+
+     <?php endif; ?>
+          <?php endforeach; ?>
+        <?php endif; ?>
+        
+     </div>
+     <?php endif; ?>
+          <?php endforeach; ?>
+        <?php endif; ?>
+
+     <?php endif; ?>
+
+          <?php endforeach; ?>
+    <!--content end-->  
+  </div>  
+
+ </body>
+  <script>
+ //  function display(id){
+    
+  //   tmp_id="#item_"+id;
+  //   sattus=$(tmp_id).attr("data-sattus");
+  //   if(sattus==0){
+  //     $(tmp_id).fadeIn();
+  //    $(tmp_id).attr("data-sattus",1);
+  //    document.getElementById('i'+id).className="icon ion-android-arrow-dropdown";
+  //  }else{
+  //   $(tmp_id).fadeOut();
+  //    $(tmp_id).attr("data-sattus",0);
+  //    document.getElementById('i'+id).className="icon ion-android-arrow-dropright";
+  // }
+    
+ //  }
+ //  
+ function display(id){
+    
+    tmp_id=".disitem_"+id;
+    sattus=$(tmp_id).attr("data-sattus");
+    if(sattus==0){
+       $(tmp_id).fadeIn();
+      $(tmp_id).attr("data-sattus",1);
+      document.getElementById('i'+id).className="icon ion-android-arrow-dropdown";
+   }else{
+     $(tmp_id).fadeOut();
+      $(tmp_id).attr("data-sattus",0);
+      document.getElementById('i'+id).className="icon ion-android-arrow-dropright";
+  }
+    
+  }
+
+
+  </script>
+ 
+</html>

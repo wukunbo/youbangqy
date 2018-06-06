@@ -1,0 +1,272 @@
+<div class="row">
+	<div class="col-lg-12">
+		<h3 class="page-header">选择测试题目</h3>
+		
+	</div>
+</div>
+
+<div class="row" style="text-align: left;margin-bottom: 10px">
+		<label for="text-input">请选择题库:</label>
+		<select name="category" id="category" style="width: 200px" onchange="select_category()">
+			<option value="">请选择题库</option>
+	    	<volist name="category" id="v">
+	    		<option value="{$key}" <if condition='$_REQUEST[categoryid] eq $key'>selected</if>>{$v}</option>
+	    	</volist>
+	    </select>
+	    <input id="search_name" type="text" value="" placeholder="输入要查找的关键字" >
+	    <button onclick="search_name()" class="btn btn-sm">搜索</button>
+
+	    <button onclick="show_sel()" class="btn btn-sm btn-success">查看已选题目</button>
+</div>
+
+
+<table class="table table-bordered table-striped table-condensed table-hover" style="height: 800px;">
+	<thead>
+		<tr>
+			<th width="70px">全选<input name="allselect" type="checkbox" value="all" onclick="selectbtn()" /></th>
+			<th>序号</th>
+			<th>题目</th>
+			<th>选项</th>
+			<th>所属题库</th>
+		</tr>
+	</thead>
+	<tbody id="show_tbody">
+	<php>$m=ceil($data[total]/$data_page[per_num]);</php>
+	 <volist name='data[content]' id='vo'>
+		<php>$current_page=ceil($vo[xulie]/$data_page[per_num]);</php>
+		<tr class='show_lists show_{$current_page}' id="{$vo[id]}" <if condition="$current_page neq 1">style='display:none;'</if>>
+			<td><input name="namelist" type="checkbox" value="{$vo[id]}" /></td>
+			<td>{$vo[xulie]}</td>
+			<td>{$vo[title]}</td>
+			<td><volist name='vo[option]' id='vo2'>{$vo2[label]}.{$vo2[option_title]}&nbsp;&nbsp;&nbsp;&nbsp;</volist></td>
+			<td>
+				<if condition="$_REQUEST[categoryid] neq ''">
+					{$tiku_name}
+				<else/>
+					{$vo[tiku]}
+				</if>
+				
+			</td>
+		<tr>
+	</volist>
+	</tbody>
+</table>
+
+	<div class="page1">
+	<p><a href="javascript:change_div('pre')">上一页</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:change_div('next')">下一页</a></p>
+	<p><span id='pp'>1</span>/<span id='p_t'>{$m}</span></p>
+	</div>
+	<p style='clear:both;'></p>
+
+
+<div class="panel-footer">
+<button class="btn btn-sm btn-success" type="button" onclick="save_select()"><i class="fa fa-dot-circle-o"></i>确认题目</button>
+</div>
+
+<script type="text/javascript">
+
+$(function(){
+	var ids=$("#select_question_id").val();
+	
+	var categoryid='{$_REQUEST[categoryid]}';
+	// console.log(categoryid);
+	// 
+	var sel_all="{$_REQUEST[sel_all]}";
+	var sel_id="{$_REQUEST[ids]}";
+
+	if(sel_all && sel_id==""){
+		$("#show_tbody").hide();
+	}
+
+	if(ids != ""){
+		$("input[name='namelist']:checkbox").each(function(){
+			var id=$(this).val();
+			if(categoryid == ""){
+				// $("#"+id).hide();
+				// console.log(1);
+				// console.log(categoryid);
+			}
+			
+
+			if(ids.indexOf(id) != -1 )
+			{
+			    $(this).attr("checked", true);
+			    // $("#"+id).show();
+			    console.log(id);
+			}
+			
+		});
+	}
+
+	// if(sel_all && sel_id==""){
+	// 	$(".show_lists").hide();
+	// }
+
+	if(categoryid != ""){
+		selectall();
+	}
+
+})
+
+
+function selectbtn(){
+
+	if($("input[name='allselect']").attr("checked")){
+		selectall();
+	}else{
+		cacelall(); 
+	}
+}
+
+function save_select(){
+	var ids=$("#select_question_id").val();
+
+	var str="";
+	var all="";
+    $("input[name='namelist']:checkbox").each(function(){ 
+        if($(this).attr("checked")){
+        	var id=$(this).val();
+        	if(ids.indexOf(id)==-1){
+        		str += id+",";
+        	}
+        	all += id+",";
+            
+        }
+    });
+    str=str.substring(0,str.length-1);
+    all=all.substring(0,all.length-1);
+  	console.log(str);
+
+  	var sel_all='{$_REQUEST[sel_all]}';
+   
+    if(ids != ""){
+    	if(str!=""){
+    		str=ids+","+str;
+    	}else{
+    		str=ids;
+    	}
+    	
+    	$("#select_question_id").val(str);
+
+    	//已选题目
+    	if(sel_all!=""){
+    		$("#select_question_id").val(all);
+    	}
+
+    }else{
+    	$("#select_question_id").val(str);
+    }
+
+    //设置已选题库显示
+    var tiku=$("#category").find("option:selected").text();
+    console.log(tiku);
+    if(tiku!='请选择题库'){
+    	var sel_tiku=$("#sel_tiku").html();
+	    if(sel_tiku.indexOf(tiku)==-1){
+	    	sel_tiku=sel_tiku+','+tiku;
+	    }
+	    $("#sel_tiku").html(sel_tiku);
+    }
+
+    if(all==''){
+    	$("#sel_tiku").html('');
+    }
+    
+
+    //设置题库的选择id
+    var tikuid=$("#category").val();
+    var question_cateid=$("#question_cateid").val();
+    if(question_cateid==""){
+    	$("#question_cateid").val(tikuid);
+    }else{
+    	tikuid=question_cateid+","+tikuid;
+    	$("#question_cateid").val(tikuid);
+    }
+
+    alert("选择成功！");
+    show_content_close();
+}
+
+function selectall()  
+{  
+	var obj=document.all.namelist;  
+	for(var i=0;i<obj.length;i++)  
+	{  
+		obj[i].checked=true;  
+	}  
+}  
+function cacelall()  
+{  
+	var obj=document.all.namelist;  
+	for(var i=0;i<obj.length;i++)  
+	{  
+		obj[i].checked=false;  
+	}  
+}
+
+function change_div(act){
+	var p=parseInt($("#pp").html());
+	var p_t=$("#p_t").html();
+	msg="";
+	if(act=="pre"){
+		p=p-1;
+	}
+	if(act=="next"){
+		p=p+1;
+	}
+	if(p<1){
+		p=1;
+		msg="pre";
+	}
+	if(p>parseInt(p_t)){
+		p=p_t;
+		msg="next";
+	}
+	if(msg=="pre"){
+		alert("已经是第一页");
+	}
+	if(msg=="next"){
+		alert("已经是最后一页");
+	}
+	if(msg==""){
+		$('.show_lists').hide();
+		$(".show_"+p).show();
+		$("#pp").html(p);
+	}
+}
+
+
+function select_category(){
+	var categoryid=$("#category").val();
+	if(categoryid != ""){
+		var url='userweb.php?c=survey&a=select_question&categoryid='+categoryid;
+		show_content(url);
+		// selectall();
+	}else{
+		alert("请选择题库");
+	}
+}
+
+//查看已选题目
+function show_sel(){
+	var ids=$("#select_question_id").val();
+	var url='userweb.php?c=survey&a=select_question&sel_all=1&ids='+ids;
+	show_content(url);
+}
+
+function search_name(){
+	var keyword=$("#search_name").val();
+	if(keyword==""){
+		alert("请输入要查找的关键字");
+		return;
+	}
+
+	var url='userweb.php?c=survey&a=select_question&keyword='+keyword;
+	show_content(url);
+}
+
+</script>
+
+<script>
+// $(".show_1").show();
+ </script>

@@ -1,0 +1,45 @@
+<include file="Public/includeHeader" />
+
+﻿<div class="row">
+    <div class="col-lg-12">
+        <h3 class="page-header">报名列表</h3>
+        
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h2><i class="fa fa-table red"></i><span class="break"></span><strong>投票名单</strong></h2>
+         
+    </div>
+
+    <div class="panel-body">
+        <table class="table table-bordered table-striped table-condensed table-hover">
+            <thead>
+                <tr>
+                    <th> 编号 </th>
+                    <th>代码</th>
+                    <th>姓名</th>
+                    <th>浏览次数</th>
+                    <th>首次浏览时间</th>
+                </tr>
+            </thead>
+            <tbody>
+                <volist name="data[content]" id="lists">
+                    <tr>
+                       
+                        <td>{$key+1}</td>
+                        <td>{$lists.user_id}</td>
+                        <td>{$lists[truename]}</td>
+                        <td>{$lists[read_count]}</td>
+                        <td>{$lists[addtime]|date='Y-m-d',###}</td>
+                    </tr>
+                </volist>
+            </tbody>
+        </table>
+        <a class="btn btn-success" href="userweb.php?c=Cms&a=lists&menu_app=Artcle">返回列表</a>
+    </div>
+</div>
+
+<include file="Public/pagination" />
+<include file="Public/includeFooter" />

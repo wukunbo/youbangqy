@@ -1,0 +1,207 @@
+<include file="Public/includeHeader" />
+
+﻿<div class="row">
+	<div class="col-lg-12">
+		<h3 class="page-header">抽奖活动列表</h3>
+		
+	</div>
+</div>
+
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h2><i class="fa fa-table red"></i><span class="break"></span><strong>列表</strong></h2>
+		 
+	</div>
+
+	<div class="col-md-12 input-group" style="margin-bottom: 15px;width: 100%;margin-top: 20px">
+	<form action="userweb.php?c=lottery&a=lists" method="post" style="width: 100%">
+		<select class="form-control  " name="post[partment]" style="width: 100px">
+			<option value="">请选择部门</option>
+			<volist name="partment_list" id="list">			
+				<option value="{$list.id}">{$list.title}</option>
+			</volist>
+		</select>
+
+		<select class="form-control  " name="post[type]" style="width: 150px">
+			<option value="">请选择活动类型</option>
+			<option value="1">即使抽奖</option>
+			<option value="2">pc抽奖</option>
+		</select>
+
+		<select class="form-control  " name="post[status]" style="width: 100px">
+			<option value="">请选择状态</option>
+			<option value="0">未发布</option>
+			<option value="1">已发布</option>
+		</select>
+		&nbsp;
+		<script src="tool/My97DatePicker/WdatePicker.js"></script>	
+		<label for="text-input">活动时间:</label>
+		<input  type="text" name="post[time_start]" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+		-
+		<label for="text-input">结束时间:</label>
+		<input  type="text" name="post[time_end]" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+
+		<select class="form-control  " name="post[order]" style="width: 150px">
+			<option value="">排序</option>
+			<!-- <option value="start_time">报名开始时间排序</option>
+			<option value="end_time">报名截止时间排序</option> -->
+			<option value="start_time">活动开始时间排序</option>
+			<option value="end_time">活动结束时间排序</option>
+		</select>
+		
+
+		<button class="btn btn-success" type="submit" style="margin-left: 15px;"><i class="fa fa-dot-circle-o"></i>搜索</button>
+	</form>
+
+</div>
+
+
+	<div class="form-group" style="margin-top: 20px">
+        <a href="Uploads/excel/lottery.xlsx" target="_blank">
+			下载抽奖数据导入表格样式
+		</a>  
+	</div>
+
+	<div class="panel-body">
+		
+		<table class="table">
+			<thead>
+				<tr>
+					<th>序号</th>
+					 
+					<th>抽奖标题</th>
+					<!-- <th>抽奖地址</th> -->
+					<!-- <th>活动背景图</th> -->
+
+					<th>部门</th>
+					<th>活动类型</th>
+					<th>活动时间</th>
+					<th>结束时间</th>
+		 
+					<th >状态</th>
+					<th >操作</th>
+				</tr>
+			</thead>
+			<tbody>
+			<?php $total=count($data[content]);?>
+				<volist name="data[content]" id="lists">
+					<tr >
+						<td >{$total-$key}</td>
+						<td >{$lists['title']}
+							 <if condition="$lists.type eq 2">
+							 	<a href="lottery.php?c=pc&a=login&id={$lists.id}" target="_blank">pc连接</a>
+							 </if>
+						</td>
+					<!-- 	<td >
+							<a href="lottery.php?c=lottery&a=index&id={$lists[id]}">前台链接</a>
+							<a href="lottery.php?id={$lists[id]}">抽奖</a>
+						</td> -->
+						<td >{$lists['partment_title']}</td>
+						<td>
+							<if condition="$lists[type] eq 1">即使抽奖</if>
+							<if condition="$lists[type] eq 2">pc抽奖</if>
+						</td>
+						<!-- <td >
+							<if condition="$lists[type] eq 1">
+							<img src="{$lists['back_img']}" width="100">
+							</if>
+							<if condition="$lists[type] eq 2">
+							<img src="{$lists['image_back']}" width="100">
+							</if>
+						</td> -->
+						<td >{$lists['start_time']|date="Y-m-d",###}</td>
+						<td >{$lists['end_time']|date="Y-m-d",###}</td>
+						<td >
+							<if condition="$lists[status] eq 1">
+								已发布
+							<else/>
+								未发布
+							</if> 
+						 </td>
+						 
+						<td>
+
+							<form id="xlsform{$lists.id}" enctype="multipart/form-data">
+								<input onchange="submitxls({$lists[id]})" id="oncontacts{$lists.id}" name="xlsfile" type="file" value="导入用户信息" style="display: none;" accept="" />
+							</form>
+
+							<if condition="$lists[status] eq 0">
+							<!-- <i class="fa fa-plus"></i><a type="button" onclick="show_content('userweb.php?c=lottery&a=select_list&id={$lists['id']}')">选择名单</a> -->
+
+							<i class="fa fa-plus"></i><a type="button" onclick="show_content('userweb.php?c=contacts&a=choose_contact&t=lottery&id={$lists['id']}&back=check_apply')">选择名单</a>
+
+							
+							<else/>
+							<if condition="$lists[status] eq 1">
+							<a href="{:U('again_publish')}&id={$lists.id}">再推送</a> &nbsp;
+							<else/>
+							<a href="{:U('change_status')}&id={$lists.id}">发布</a> &nbsp;
+							</if>
+							
+							<a href="{:U('check_apply')}&id={$lists[id]}">已选择通讯录</a>
+							
+							</if> 
+							<if condition="$lists[data_status] eq 0">
+								<button onclick="selfile({$lists.id})">抽奖数据导入</button>
+							<else/>
+								<a href="{:U('apply_data')}&id={$lists[id]}">已导入数据</a>
+							</if>
+							<if condition="$lists[status] eq 1">
+								<a href="{:U('win_person')}&id={$lists.id}">查看中奖信息</a>
+							</if>
+							<a href="{:U('report')}&id={$lists.id}">查看统计</a>
+							
+							<if condition="$lists[type] eq 1"><a href="{:U('add')}&id={$lists.id}"><i class="fa fa-pencil"></i></a> </if>
+							<if condition="$lists[type] eq 2"><a href="{:U('pcadd')}&id={$lists.id}"><i class="fa fa-pencil"></i></a> </if>
+							
+							<!-- <a href="{:U('add')}&id={$lists.id}"><i class="fa fa-pencil"></i></a> --> &nbsp;
+							<a  href="javascript:confirm_del('userweb.php?c=lottery&a=del&id={$lists[id]}')" ><i class="fa fa-trash-o"></i></a>
+						</td>
+					</tr>
+				</volist>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<include file="Public/pagination" />
+<include file="Public/includeFooter" />
+
+<script type="text/javascript">
+
+function submitxls(lottery_id){
+
+	var fileval=$('#oncontacts'+lottery_id).val();
+	var regex=/(.+)\.xls|xlsx$/i;
+	if(regex.test(fileval)==false){
+		alert("文件格式不正确,请上传Excel文件");
+		return false;
+	}
+
+	var formData = new FormData($("#xlsform"+lottery_id)[0]);  
+	$.ajax({  
+	  url: 'userweb.php?c=lottery&a=to_lotteryData&id='+lottery_id ,  
+	  type: 'POST',  
+	  data: formData,  
+	  async: false,  
+	  cache: false,  
+	  contentType: false,  
+	  processData: false,
+	  beforeSend:function(e){
+	  	show_content();
+	  },
+	  success: function (returndata) {  
+	    show_content_close();
+	    alert("导入成功！");
+	    window.location.href="";
+	  },  
+	  error: function (returndata) {  
+	      alert("导入失败");  
+	  }  
+	});
+}
+
+function selfile(id){
+	$('#oncontacts'+id).click();
+}
+</script>

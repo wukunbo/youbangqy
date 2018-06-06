@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+<title>最新资讯</title>
+<link href="{$config['view']}static/css/ionic.min.css" rel="stylesheet" type="text/css" />
+<link href="{$config['view']}static/css/style.css"rel="stylesheet" type="text/css" />
+<link href="{$config['view']}static/css/accordion_all.css" rel="stylesheet" type="text/css" />
+<link href="{$config['view']}static/css/accordion.css" rel="stylesheet" type="text/css" />
+<link href="{$config['view']}static/css/theme.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" charset="utf-8" src="{$config['view']}static/js/jquery.js"></script>
+<script type="text/javascript" src="{$config['view']}static/js/core.js"></script>
+<script type="text/javascript" src="{$config['view']}static/js/widget.js"></script>
+<script type="text/javascript" src="{$config['view']}static/js/accordion.js"></script>
+<script type="text/javascript" charset="utf-8" src="tool/swipe/swiper.min.js"></script>
+ 
+<link href="tool/swipe/swiper.min.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<style>
+ body{background:url(add/mmexport1443168532494.jpg); background-attachment:fixed;}
+</style>
+<div class="swiper-container swiper1">
+		<div class="swiper-wrapper" >
+			<volist name="data[ad_lists1]" id="lists">
+				<div class="swiper-slide "><a href="{$lists.url}">
+						<img class="display_img" src="{$lists.img_thumb}" width="100%" >
+					</a>
+				</div>
+			</volist>
+			<div class="swiper-slide "><a href="#">
+					<img class="display_img" src="Uploads/demo_ad.jpg" width="100%" >
+				</a>
+			</div>
+			<div class="swiper-slide "><a href="#">
+					<img class="display_img" src="Uploads/demo_ad.jpg" width="100%" >
+				</a>
+			</div>
+		</div>
+	</div>
+<div class="list" style="margin-bottom:0px; background:none;">
+	<div style=""  id="list1"    >
+		<div id="lists_content">
+		</div>
+	</div>
+	<style>
+ .item iframe{ width:100%; height:250px;}
+ .item embed { width:100%; height:250px;}
+ </style>
+	<script>
+ w=$(window).width();
+ h=w*(9/16)
+ $("embed").height(h);
+  $("iframe").height(h);
+ </script>
+	<!--content end-->
+</div>
+<script>
+scroll_obj="lists_content";
+scroll_url=window.location.href+"&ajax=1";
+scroll_int=1;
+</script>
+<script type="text/javascript" charset="utf-8" src="tool/scroll_page/scroll.js"></script>
+</body>
+</html>

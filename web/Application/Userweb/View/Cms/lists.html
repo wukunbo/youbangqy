@@ -1,0 +1,82 @@
+<include file="Public/includeHeader" />
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h2><i class="fa fa-table red"></i><span class="break"></span><strong>列表</strong></h2>
+		 
+	</div>
+	<div class="panel-body">
+		
+		<table class="table">
+			<thead>
+				<tr>
+					<th>文章ID</th>
+					<th>文章标题</th>
+					<th>图标</th>
+					<th>浏览次数</th>
+					<!-- <th>分类</th> -->
+					 
+					<!-- <th>发布者</th> -->
+					<th>状态</th>
+			 		<th style="width:5.5em;"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<volist name="data['content']" id="vo" >
+					<tr >
+						<td >{$vo['id']}</td>
+						<td >{$vo['title']}</td>
+						<td><img src="{$vo['image_thumb']}" width="50px"></td>
+						<td>{$vo.click_count}</td>
+							<!-- <td>{$vo.cate_title}</td> -->
+							<!-- <td >{$vo['shop_title']}({$vo['loginname']})</td> -->
+						<td>
+						
+						 <if condition="$vo.status eq 1">
+								 发布
+								<else/>
+							 未发布 
+							</if>
+						 
+					 
+						 
+						</td>
+					 
+						 
+						<td> 
+						<!-- <if condition="$user_id eq 1">
+						<if condition="$vo.status eq 1">
+								<a  href="{:U('change_status')}&id={$vo.id}&status=0"  ><i class="fa fa-arrow-down"></i>下线</a>
+								<else/>
+								<a href="{:U('change_status')}&id={$vo.id}&status=1"  ><i class="fa fa-arrow-up"></i>上线</a>
+							</if>
+						</if>  -->
+						<if condition="$vo.status eq 0">
+							<i class="fa fa-plus"></i><a type="button" onclick="show_content('userweb.php?c=contacts&a=choose_contact&t=Cms&id={$vo['id']}&back=check_apply')">选择名单</a>
+							<a href="{:U('publish')}&id={$vo.id}">发布</a>
+						</if>
+
+						<if condition="$vo.status eq 2">
+							<a href="{:U('check_apply')}&id={$vo.id}">名单</a>
+							<a href="{:U('publish')}&id={$vo.id}">发布</a>
+						</if>
+
+
+						<a href="{:U('preview')}&id={$vo.id}">预览</a>
+						<a href="{:U('read_msg')}&id={$vo.id}">已读人员</a>
+						<a href="{:U('add')}&id={$vo.id}&p={$_REQUEST[p]}"><i class="fa fa-pencil"></i></a>
+						<a onClick="return del_sure()"  href="{:U('delete')}&id={$vo.id}&p={$_REQUEST[p]}&cate_id={$cate_id}"   ><i class="fa fa-trash-o"></i></a>
+						</td>
+					</tr>
+					
+				</volist>
+			</tbody>
+		</table>
+ 
+	</div>
+	<div class="panel-footer">
+		<a class="btn btn-primary" href="userweb.php?c=Cms&a=add" ><i class="fa fa-plus"></i>新增</a>
+		 
+	</div>
+</div>
+<include file="Public/pagination" />
+<include file="Public/includeFooter" />

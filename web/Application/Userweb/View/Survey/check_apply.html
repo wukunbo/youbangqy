@@ -1,0 +1,264 @@
+<include file="Public/includeHeader" />
+
+﻿<div class="row">
+	<div class="col-lg-12">
+		<h3 class="page-header">已导入数据列表</h3>
+		
+	</div>
+</div>
+
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h2><i class="fa fa-table red"></i><span class="break"></span><strong>列表</strong></h2>
+		 
+	</div>
+
+	
+	<div class="form-group" style="margin-top: 20px">
+        <a class="btn btn-primary" onclick="show_content('userweb.php?c=contacts&a=choose_contact&t=survey&id={$_REQUEST['id']}&back=check_apply')" >
+			添加人员名单
+		</a>
+		 <a class="btn btn-primary" onclick="del_apply()" >
+			批量删除
+		</a>
+
+		<label style="margin-left: 15px"><input <if condition="$repeat eq 2">checked="checked"</if> type="checkbox" id="repeat" name="repeat" value="" onclick="is_repeat()">允许重复答题</label>
+
+		<label style="margin-left: 15px"><input <if condition="$open_status eq 2">checked="checked"</if> type="checkbox" id="open_other" name="open_other" value="" onclick="open_other()">允许对外开放</label>
+        
+        <span id="biaoq" <if condition="$open_status neq 2">style="display:none"</if>>
+            标签一:<input type="text" name="post[value1]" value="{$survey_value1}" id="value1" onchange="change_value('value1',this)" />
+            标签二:<input type="text" name="post[value2]" value="{$survey_value2}" id="value2" onchange="change_value('value2',this)" />
+            标签三:<input type="text" name="post[value3]" value="{$survey_value3}" id="value3" onchange="change_value('value3',this)" />
+        </span>
+	</div>
+
+
+	<div class="panel-body">
+		<table class="table">
+			<thead>
+				<tr>
+					<th><input name="allselect" type="checkbox" value="" id="allselect" onclick="selectbtn()" />全选</th>
+					<th>ID</th>
+					<td >代码</td>
+					<th>姓名</th>
+					<!-- <th>部门</th> -->
+					
+		 
+					<td >导入时间</td>
+					<th style="width:15.5em;">操作</th>
+				</tr>
+			</thead>
+			
+			<tbody>
+				<volist name="data" id="lists">
+					<tr >
+						<td><input name="namelist" type="checkbox" value="{$lists['id']}" /></td>
+						<td >{$key+1}</td>
+						<td >{$lists[user_id]}</td>
+						<td >{$lists[truename]}</td>
+						<!-- <td >{$lists[partment]}</td> -->
+						
+						 <td >
+						 	{$lists[addtime]|date="Y-m-d",###}
+						 </td>
+						<td>
+								<a  href="javascript:confirm_del('userweb.php?c=survey&a=del_apply&id={$lists[id]}')" ><i class="fa fa-trash-o"></i></a>
+						</td>
+					</tr>
+				</volist>
+				 
+				 
+			</tbody>
+		</table>
+
+		<a href="Uploads/excel/to_vote.xlsx" target="_blank">
+			下载导入表格样式
+		</a>  
+
+		<div class="form-group" style="margin-top: 15px">
+		<a class="btn btn-success" href="userweb.php?c=Survey&a=lists&menu_app=Activity">返回列表</a>
+
+		<a class="btn btn-primary" onclick="to_apply();" >导入名单</a>
+
+<!-- 		<label style="margin-left: 15px"><input <if condition="$open_status eq 2">checked="checked"</if> type="checkbox" id="open_other" name="open_other" value="" onclick="open_other()">是否对外开放</label>	
+ -->		</div>
+
+		<form id="xlsform" enctype="multipart/form-data">
+			<input onchange="submitxls({$_REQUEST[id]})" id="oncontacts" name="xlsfile" type="file" value="导入名单" style="display: none;" accept="" />
+		</form>
+
+	</div>
+</div>
+
+<include file="Public/pagination" />
+<include file="Public/includeFooter" />
+
+<script type="text/javascript">
+
+
+function change_value(value_id,t){
+    // alert(value_id);
+    var id={$_REQUEST[id]};
+
+    var content=$(t).val();
+    // alert(content);
+     $.ajax({
+        url: 'userweb.php?c=survey&a=change_value',
+        type: 'GET',
+        dataType: 'json',
+        data: {value: value_id,content:content,id:id},
+        success:function(data) {  
+            alert("更改成功");
+
+        },  
+        error : function() {  
+            alert("失败");
+        }  
+    });
+}
+
+function del_apply(){
+	var str="";
+    $("input[name='namelist']:checkbox").each(function(){ 
+        if($(this).attr("checked")){
+            str += $(this).val()+","
+        }
+    });
+    str=str.substring(0,str.length-1);
+    if(str == ""){
+    	alert("请选择名单！！");
+    	return;
+    }
+  
+    $.ajax({
+    	url: 'userweb.php?c=survey&a=del_allapply',
+    	type: 'POST',
+    	dataType: 'json',
+    	data: {ids: str},
+    	success:function(data) {  
+			alert("删除成功");
+    		window.location.href="userweb.php?c=survey&a=check_apply&id={$_REQUEST[id]}";
+		},  
+		error : function() {  
+			alert("发布失败");
+		}  
+    });
+}
+
+
+function submitxls(id){
+
+	var fileval=$('#oncontacts').val();
+	var regex=/(.+)\.xls|xlsx$/i;
+	if(regex.test(fileval)==false){
+		alert("文件格式不正确,请上传Excel文件");
+		return false;
+	}
+
+	var formData = new FormData($( "#xlsform" )[0]);  
+	$.ajax({  
+	  url: 'userweb.php?c=survey&a=to_apply&id='+id ,  
+	  type: 'POST',  
+	  data: formData,  
+	  async: false,  
+	  cache: false,  
+	  contentType: false,  
+	  processData: false,
+	  beforeSend:function(e){
+	  	show_content();
+	  },
+	  success: function (returndata) {
+	  	 show_content_close();
+	     alert("导入成功！");
+	     location.reload();
+	  },  
+	  error: function (returndata) {  
+	      alert("导入失败");  
+	  }  
+	});
+}
+
+function to_apply(){
+	$('#oncontacts').click();
+}
+
+
+//是否允许重复答题
+function is_repeat(){
+    checked=$("#repeat").prop("checked"); 
+    if(checked==true){
+        var repeat=2
+    }else{
+        var repeat=1;
+    }
+    var id={$_REQUEST[id]};
+
+    $.ajax({
+        url: 'userweb.php?c=survey&a=is_repeat',
+        type: 'GET',
+        dataType: 'json',
+        data: {id: id,repeat:repeat},
+        success:function(data) {  
+            alert("更改成功");
+        },  
+        error : function() {  
+            alert("选择成功");
+        }  
+    });
+}
+
+//对外开放
+function open_other(){
+    checked=$("#open_other").prop("checked"); 
+    if(checked==true){
+        var open_status=2
+        $("#biaoq").show();
+    }else{
+        var open_status=1;
+        $("#biaoq").hide();
+    }
+    var id={$_REQUEST[id]};
+
+    $.ajax({
+        url: 'userweb.php?c=survey&a=open_status',
+        type: 'GET',
+        dataType: 'json',
+        data: {id: id,open_status:open_status},
+        success:function(data) {  
+            alert("更改成功");
+        },  
+        error : function() {  
+            alert("选择成功");
+        }  
+    });
+}
+
+
+function selectall()  
+{  
+	var obj=document.all.namelist;  
+	for(var i=0;i<obj.length;i++)  
+	{  
+		obj[i].checked=true;  
+	}  
+}  
+function cacelall()  
+{  
+	var obj=document.all.namelist;  
+	for(var i=0;i<obj.length;i++)  
+	{  
+		obj[i].checked=false;  
+	}  
+}  
+
+function selectbtn(){
+
+	if($("input[name='allselect']").attr("checked")){
+		selectall();
+	}else{
+		cacelall(); 
+	}
+}
+
+</script>

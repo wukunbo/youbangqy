@@ -1,0 +1,19 @@
+<div id="pp{$ii}" style="border-bottom:1px solid #cccccc">
+
+  <volist name="collect_extend" id="lists">
+  <div class="row">
+    <div class="col col-33 text-right">
+      <p class="gray" style="margin-top: 10px;">{$lists.name}</p>
+    </div>
+    <div class="col">
+      <label class="item item-input">
+        <input type="hidden" name="post[{$ii}][{$key}][extend_id]" value="{$lists.id}" />
+        <input type="hidden" name="post[{$ii}][{$key}][collect_id]" value="{$lists.collect_id}" />
+        <input type="hidden" name="post[{$ii}][{$key}][name]" value="{$lists.name}" />
+        <input class="gray postname" type="text" placeholder="{$lists.hint}" id="name" name="post[{$ii}][{$key}][value]">
+      </label>
+    </div>
+  </div>
+  </volist>
+
+</div>

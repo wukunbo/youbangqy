@@ -1,0 +1,190 @@
+ <style>
+        .tanchuang {
+            width: 400px;
+            height: 550px;
+            background: #e0e0e0;
+            position: fixed;
+            top: 45%;
+            left: 75%;
+            margin: -250px 0 0 -600px;
+            z-index: 999999;
+            overflow: scroll;
+        }
+
+        .td_25 {
+            height: 25px;
+            text-align: left;
+            cursor: hand;
+        }
+        .td_20 {
+            height: 25px;
+            text-align: left;
+            cursor: hand;
+        }
+        .table1 {
+            width: 300px;
+        }
+        /*
+        .table1 table {
+            text-align:left;
+            width:100%;
+            padding-left: 10em;
+        }
+        .table1 table td{
+            text-align: right;
+        }*/
+        .table2 {
+            text-align:left;
+            width:300px;
+            padding-left: 10em;
+        }
+        .table3 {
+            text-align:left;
+            width:300px;
+            padding-left: 10em;
+        }
+
+        .table4 {
+            text-align:left;
+            width:200px;
+            padding-left: 10em;
+        }
+        select{
+            background: none;
+            border: none;
+        }
+
+    </style>
+
+<div id="tanchuceng" class="tanchuang" style="padding: 10px;border-radius: 10px">
+       
+        <volist name="data" id="vo">
+            <table class="table1" style="overflow:scroll;">
+                <tr>
+                    <td class='menu_title td_25' id='menuTitle1' onclick="showsubmenu({$vo[id]})"
+                        onmouseover=this.className='menu_title2'; onmouseout=this.className='menu_title';>
+                        <span style="font-family:'Times New Roman';" id="span_{$vo[id]}">{$vo[name]}</span>
+                    </td>
+                    <td><span><input name="namelist" class="select_p" onclick="select_p({$vo[id]})"  type="checkbox" value="{$vo[id]}"></span></td>
+                </tr>
+
+                <if condition="$vo.list neq null ">
+                <tr id='submenu{$vo[id]}' style="display: none">
+                    <td>
+                        <table class="table2">
+                        <volist name="vo.list" id="v1">
+                            <tr>
+                                <td class="td_20" onclick="showsubmenu({$v1[id]})">
+                                    
+                                    <span style="font-family:'Times New Roman';" id="span_{$v1[id]}">&nbsp;&nbsp;&nbsp;&nbsp;{$v1[name]}</span>
+                                </td>
+                                <td> <span><input class="select_p p_{$vo[id]} " onclick="select_p({$v1[id]})"  name="namelist" type="checkbox" value="{$v1[id]}"></span></td>
+                            </tr>
+                            <if condition="$v1.list neq null ">
+                            <tr>
+                                <td id="submenu{$v1[id]}" style="display: none" >
+                                    <table class="table3">
+                                         <volist name="v1.list" id="v2">
+                                            <tr>
+                                                <td class="td_20" onclick="showsubmenu({$v2[id]})">
+                                                
+                                                <span style="font-family:'Times New Roman';" id="span_{$v2[id]}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{$v2[name]}</span>
+                                               
+                                                </td>
+                                                <td> <span><input class="select_p p_{$vo[id]} p_{$v1[id]}" onclick="select_p({$v2[id]})"  name="namelist" type="checkbox" value="{$v2[id]}"></span></td>
+                                            </tr>
+                                            <if condition="$v2.list neq null ">
+												 
+                                            </if>
+                                         </volist>
+                                    </table>
+                                </td>
+                            </tr>
+                            </if>
+                        </volist>
+                        </table>
+                    </td>
+                </tr>
+                </if>
+                
+
+               
+            </table>
+        </volist>
+		 
+    <button onclick="get_partment()" style="bottom: 0"><i class="fa fa-dot-circle-o"></i>确认</button>
+
+
+</div>
+
+<script type="text/javascript">
+
+function select_p(id){
+
+     var arrUl = jQuery(".select_p");     
+     var tmp=new Array();
+     var ids='';
+     jQuery.each(arrUl, function(){  
+        checked=jQuery(this).prop("checked"); 
+        if(checked==true){
+			id= this.value;//获得当前的ID 忽略下属的ID
+			ids=ids+","+id;
+            $(".p_"+id).each(function(){
+                ids=ids+","+ this.value; 
+            });
+            // alert(ids);
+        }
+            
+    });  
+	console.log(ids)
+	$("#ids").val(ids);
+}
+    
+function showsubmenu(sid) {
+    whichEl = eval("submenu" + sid);
+    if (whichEl.style.display == "none") {
+        eval("submenu" + sid + ".style.display=\"\";");
+    }
+    else {
+        eval("submenu" + sid + ".style.display=\"none\";");
+    }
+}
+
+function get_partment(){
+    var str="";
+    var name="";
+    $("input[name='namelist']:checkbox").each(function(){ 
+        if($(this).attr("checked")){
+            str += $(this).val()+",";
+            var id=$(this).val();
+            name +=$("#span_"+id).text()+",";
+        }
+    });
+    str=str.substring(0,str.length-1);
+    if(str == ""){
+        alert("请选择名单！！");
+        return;
+    }
+    $("#partment_name").html(name);
+	show_content_close();
+
+   // alert(str);
+    
+    // var controller="{$_REQUEST[t]}";
+    // $.ajax({
+    //     url: 'userweb.php?c='+controller+'&a=save_contact',
+    //     type: 'POST',
+    //     dataType: 'json',
+    //     data: {id: id,contactIds: str},
+    //     success:function(data) {  
+    //         alert("选择成功");
+    //     },  
+    //     error : function() {  
+    //         alert("选择成功");
+    //     }  
+    // });
+}
+
+
+
+</script>

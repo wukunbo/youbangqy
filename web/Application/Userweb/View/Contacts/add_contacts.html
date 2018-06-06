@@ -1,0 +1,105 @@
+<include file="Public/includeHeader" />
+
+﻿<div class="row">
+    <div class="col-lg-12">
+        <h3 class="page-header">添加通讯录人员</h3>
+        
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <form action="{:U('contacts_action')}"  enctype="multipart/form-data"  method="post" name="myform">
+        <div class="panel-body">
+
+
+            <div class="form-group">
+                <label for="text-input" class="col-md-2 control-label">部门:</label>
+                <div class="col-md-6 input-group " id="allpartment">
+                    <select class="form-control  sel" name="post[partment]" id="partment1" style="width: 100px" onchange="select_partment(1)">
+                        <option value="">请选择</option>
+                        <volist name="partment_list" id="partment">
+                            <option value="{$partment[id]}">{$partment[name]}</option>
+                        </volist>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="text-input" class="col-md-2 control-label">姓名:</label>
+                <div class="col-md-4 input-group ">
+                    <input type="text" name="post[name]"  class="form-control" value="">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="text-input" class="col-md-2 control-label">代码:</label>
+                <div class="col-md-4 input-group ">
+                    <input type="text" name="post[wx_userid]"  class="form-control" value="">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="text-input" class="col-md-2 control-label">电话:</label>
+                <div class="col-md-4 input-group ">
+                    <input type="text" name="post[phone]"  class="form-control" value="">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="text-input" class="col-md-2 control-label">邮箱:</label>
+                <div class="col-md-4 input-group ">
+                    <input type="text" name="post[email]"  class="form-control" value="">
+                </div>
+            </div>
+
+
+        </div>
+
+        <div class="panel-footer">
+            <button class="btn btn-sm btn-success" type="submit"><i class="fa fa-dot-circle-o"></i> 保存</button>
+            <button class="btn btn-sm btn-danger" type="reset"><i class="fa fa-ban"></i> 重置</button>
+        </div>
+
+    </form>
+</div>
+
+
+<include file="Public/includeFooter" />
+
+<script type="text/javascript">
+function select_partment(id){
+    var partment="partment"+id;
+    var partmentid=$("#partment"+id).val(); 
+
+    $.ajax({  
+      url: 'userweb.php?c=contacts&a=get_select_partment' ,  
+      type: 'POST',
+      data:{partmentid:partmentid},
+      success: function (returndata) {
+          $("#partment"+id).after(returndata);
+      },  
+      error: function (returndata) {  
+          alert("失败");  
+      }  
+    });
+    
+    var allpartment=document.getElementById('allpartment');
+    var sel=allpartment.getElementsByClassName('sel');
+    for(var i=0;i<sel.length;i++){
+        if(partment==sel[i].id){
+            for(var n=i;n<sel.length;n++){
+            
+            //   sel[i].parentNode.removeChild(sel[i]);
+                // i--;
+                jj=i+1;
+                var vv=document.getElementById(sel[jj].id);
+                // console.log(allpartment.children());
+                vv.parentNode.removeChild(vv);
+                // n--;
+                // vv.parentNode.removeChild(vv);
+            }
+        }
+     }
+    
+}
+</script>

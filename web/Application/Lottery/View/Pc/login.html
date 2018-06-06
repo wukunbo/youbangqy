@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{$config['static']}ionic/css/CJ.css">
+    <title>扫描二维码登录</title>
+</head>
+<body style="">
+<div class="w100 mtop_140">
+     <div class="w50" style="margin: auto;text-align: center" id="code">
+         <!-- <img src="img/erwei.png" style="max-width:240px;max-height: 240px"> -->
+     </div>
+</div>
+<script>
+    var a=document.body.clientHeight;
+    // alert(a);
+     document.body.height=a+'px';
+</script>
+</body>
+</html>
+
+<script src="{$config['static']}ionic/jquery.js" type="text/javascript"></script>
+<script src="{$config['static']}/ionic/js/jquery.qrcode.min.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+var ID;
+window.onload = function() {
+    ID=setInterval("get_data()", 2000);//定时接收
+	var str = "http://{$_SERVER['HTTP_HOST']}/youbangqy/web/lottery.php?c=lottery&a=lottery_login&id={$_REQUEST[id]}&uid={$uid}";
+	$('#code').qrcode(str);
+}
+
+function get_data(){
+       
+    $.ajax({
+        url: 'lottery.php?c=pc&a=read_txt&uid={$uid}',
+        type: 'GET',
+        dataType: 'json',
+        success:function(data) {  
+          if(data){
+            clearTimeout(ID);
+            window.location.href='lottery.php?c=pc&a=daojishi&id={$_REQUEST[id]}';
+          }
+        },  
+        error : function() {  
+         
+        }  
+    });
+}
+</script>

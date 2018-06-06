@@ -1,0 +1,368 @@
+<!-- <!DOCTYPE html>
+<html> -->
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>弹出层</title>
+    <style>
+       /* *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        a {
+            text-decoration: none;
+            color: #000;
+        }*/
+
+        .tanchuang {
+            width: 1200px;
+            height: 500px;
+           /* background: #e0e0e0;*/
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            margin: -250px 0 0 -600px;
+            z-index: 999999;
+        }
+
+        .menu_title2 {
+            background: #ccc;
+        }
+
+        .td_25 {
+            height: 25px;
+            text-align: left;
+            cursor: hand;
+        }
+        .td_20 {
+            height: 20px;
+            text-align: left;
+            cursor: hand;
+        }
+        .table1 {
+            width: 300px;
+        }
+        .table2 {
+            text-align:left;
+            width:200px;
+            padding-left: 10em;
+        }
+        .table3 {
+            text-align:left;
+            width:200px;
+            padding-left: 10em;
+        }
+        select{
+            background: none;
+            border: none;
+        }
+        .left{
+            width: 300px;
+            height: 100%;
+            border-right: 1px solid #ccc;
+        }
+        .leftTop{
+            margin-top: 13px;
+            height: 40px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ccc;
+        }
+        .over_scroll{
+            /*overflow: scroll;*/
+            /*height: 100%;*/
+        }
+        .f-r{
+            float: right;
+        }
+        .right{
+            /*overflow: scroll;*/
+        }
+        table.content{
+            width: 850px;
+            /*height: 750px;*/
+        }
+        table.content tr,table.content th{
+            height: 30px !important;
+
+        }
+        table.content td{
+            /*width: 121px;*/
+            text-align: center;
+            height: 30px !important;
+            border-top: 1px solid #ccc;
+        }
+        table.content td img{
+            position: relative;
+            top: 8px;
+            width: 25px;
+            height: 25px;
+        }
+
+        .rightTop{
+            margin-top: 13px;
+            height: 40px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ccc;
+        }
+    </style>
+</head>
+
+
+<!-- <button id="btn">点击弹出</button> -->
+
+<div id="tanchuceng" class="tanchuang" style="padding: 10px;border-radius: 10px">
+
+    <div class="left" style="float: left;overflow:scroll;">
+
+        <div class="leftTop">
+            <input placeholder="使用姓名搜索" name="name" id="contact_name"></input>
+            <button onClick="select_name()">搜索</button>
+        </div>
+       
+        <div class="over_scroll">
+        <?php foreach($data as $vo): ?>
+            
+            <?php if($vo['is_show'] == 1):?>
+            <table class="table1" style="overflow:scroll; display:  ">
+                <tr>
+                    <td class='menu_title td_25' id='menuTitle1' onClick="showsubmenu({$vo[id]})"
+                        onmouseover=this.className='menu_title2'; onmouseout=this.className='menu_title';>
+                        <img src="{$config['Public']}static/images/nav.gif"/>
+                        <span style="font-family:'Times New Roman';">{$vo[name]}</span>
+                    </td>
+                </tr>
+
+                <?php if($vo['list'] != null):?>
+                <tr id='submenu{$vo[id]}' style="display: none">
+                    <td>
+                        <table class="table2">
+                        <?php foreach($vo['list'] as $v1): ?>
+                             <?php if($v1['is_show'] == 1):?>
+                            <tr>
+                                <td class="td_20" onClick="showsubmenu({$v1[id]})">
+                                    <img src="{$config['Public']}static/images/nav.gif"/>
+                                    <span style="font-family:'Times New Roman';" id="menuTitle{$v1[id]}">&nbsp;&nbsp;&nbsp;&nbsp;{$v1[name]}</span>
+                                </td>
+                            </tr>
+                            <?php if($v1['list'] != null):?>
+                            <tr>
+                                <td id="submenu{$v1[id]}" style="display: none" >
+                                    <table class="table3">
+                                         <?php foreach($v1['list'] as $v2): ?>
+                                            <?php if($v2['is_show'] == 1):?>
+                                            <tr>
+                                                <td class="td_20" onClick="showsubmenu({$v2[id]})">
+                                                <img src="{$config['Public']}static/images/nav.gif"/>
+                                                <span style="font-family:'Times New Roman';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{$v2.name}</span>
+                                                </td>
+                                            </tr>
+                                            <?php if($v2['list'] != null):?>
+                                                <tr>
+                                                    <td id="submenu{$v2[id]}" style="display: none" >
+                                                        <table class="table4">
+                                                        <?php foreach($v2['list'] as $v3): ?>
+                                                            <?php if($v2['is_show'] == 1):?>
+                                                                <tr>
+                                                                    <td class="td_20" onClick="showsubmenu({$v3[id]})">
+                                                                    <img src="{$config['Public']}static/images/nav.gif"/>
+                                                                    <span style="font-family:'Times New Roman';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{$v3.name}</span>
+                                                                    </td>
+                                                                </tr>
+                                                            <?php endif; ?>
+                                                        <?php endforeach; ?>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            <?php endif; ?>
+                                            <?php endif; ?>
+                                         <?php endforeach; ?>
+                                    </table>
+                                </td>
+                            </tr>
+                            <?php endif; ?>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                        </table>
+                    </td>
+                </tr>
+                <?php endif; ?>
+                
+
+               
+            </table>
+            <?php endif; ?>
+        <?php endforeach; ?>
+        </div>
+    </div>
+
+    <div class="right" style="float: left;overflow:scroll;height: 500px">
+        <table class="content">
+            <thead>
+                <th>
+                    <input type="checkbox" name="all_select" id="all_select" onClick="selectbtn()" />
+                </th>
+                <th>
+                    姓名
+                </th>
+                <th>
+                    代码
+                </th>
+                <th>
+                    职位
+                </th>
+                <th>
+                    手机
+                </th>
+                <th>
+                    邮箱
+                </th>
+            </thead>
+            <tbody id="person_list">
+                
+            </tbody>
+        </table>
+
+    </div>
+
+    <!-- <label><input type="checkbox" id="open_other" name="open_other" value="" onclick="open_other()">是否对外开放</label> -->
+    <button onClick="save_select()" style="bottom: 0"><i class="fa fa-dot-circle-o"></i>确认</button>
+    <button onClick="window.location.href='userweb.php?c={$_REQUEST[t]}&a={$_REQUEST[back]}&id={$_REQUEST[id]}'" style="bottom: 0"><i class="fa fa-dot-circle-o"></i>退出</button>
+
+
+</div>
+<script src="Application/Userweb/View/Public/js/jquery.js"></script>
+
+
+<script type="text/javascript">
+
+    function showsubmenu(sid) {
+        ajax_contact(sid);
+        whichEl = eval("submenu" + sid);
+        if (whichEl.style.display == "none") {
+            eval("submenu" + sid + ".style.display=\"\";");
+        }
+        else {
+            eval("submenu" + sid + ".style.display=\"none\";");
+        }
+    }
+
+    function ajax_contact(sid){
+
+        var load_str='<div class="loadingWord"><img src="tool/dailog/waiting.gif">加载中，请稍候...</div>';
+        $("#person_list").html(load_str);
+
+         $.ajax({  
+          url: 'userweb.php?c=contacts&a=ajax_contact' ,  
+          type: 'POST',
+          data:{partmentid:sid},
+          success: function (returndata) {
+              $("#person_list").html(returndata);
+          },  
+          error: function (returndata) {  
+              alert("失败");  
+          }  
+        });
+    }
+
+    function select_name(){
+        var name=$("#contact_name").val();
+        $.ajax({
+            url:'userweb.php?c=contacts&a=ajax_name',
+            type: 'POST',
+            data:{name:name},
+            success: function (returndata) {
+              $("#person_list").html(returndata);
+            },  
+            error: function (returndata) {  
+              alert("失败");  
+            }  
+        });
+    }
+
+    function save_select(){
+        var str="";
+        $("input[name='namelist']:checkbox").each(function(){ 
+            if($(this).attr("checked")){
+                str += $(this).val()+","
+            }
+        });
+        str=str.substring(0,str.length-1);
+        if(str == ""){
+            alert("请选择名单！！");
+            return;
+        }
+        var id='{$_REQUEST[id]}';
+        var controller="{$_REQUEST[t]}";
+        $.ajax({
+            url: 'userweb.php?c='+controller+'&a=save_contact',
+            type: 'POST',
+            dataType: 'json',
+            data: {id: id,contactIds: str},
+            success:function(data) {  
+                alert("选择成功");
+            },  
+            error : function() {  
+                alert("选择成功");
+            }  
+        });
+    }
+    
+    
+
+
+    function selectbtn(){
+
+        if($("input[name='all_select']").attr("checked")){
+            selectall();
+        }else{
+            cacelall(); 
+        }
+    }
+
+    //全选
+    function selectall(){
+        var obj=document.all.namelist;  
+        for(var i=0;i<obj.length;i++)  
+        {  
+            obj[i].checked=true;  
+        }  
+    }
+
+    //取消全选
+    function cacelall(){
+        var obj=document.all.namelist;  
+        for(var i=0;i<obj.length;i++)  
+        {  
+            obj[i].checked=false;  
+        }
+    }
+
+    //对外开放
+    function open_other(){
+        checked=$("#open_other").prop("checked"); 
+        if(checked==true){
+            var open_status=2
+        }else{
+            var open_status=1;
+        }
+        var id="{$_REQUEST[id]}";
+        var controller="{$_REQUEST[t]}";
+        $.ajax({
+            url: 'userweb.php?c='+controller+'&a=open_status',
+            type: 'GET',
+            dataType: 'json',
+            data: {id: id,open_status:open_status},
+            success:function(data) {  
+                alert("更改成功");
+            },  
+            error : function() {  
+                alert("选择成功");
+            }  
+        });
+    }
+
+</script>
+
+<!-- </body>
+</html> -->

@@ -1,0 +1,69 @@
+﻿<div class="sidebar  " style="    box-shadow:#aaaaaa 4px 0px 4px; height:auto; overflow:hidden">
+	<div class="sidebar-collapse"    >
+		<div class="sidebar-header t-center" style="background:#f8f8f8; border-bottom:#666 1px solid ">
+			<span style=" color:#000; line-height:40px; font-size:24px;">友邦</span>
+		</div>
+		<div class="nav_main" style="width:60px; float:left;  "> 
+			<!-- <a href="javascript:selecte_app('basic')" id="nav_basic" >基础</a> -->
+			<volist name="left[app_lists]" id="lists">
+			<a href="javascript:selecte_app('{$lists[val]}')" id="nav_{$lists[val]}" >{$lists[title]}</a>
+			</volist>
+		</div>
+		<div class="sidebar-menu" style="width:180px; float:left; height:100%;height:auto;overflow-y:auto">
+			<ul class="nav nav-sidebar">
+				<volist name="auth" id="vo">
+					<if condition="$vo[is_show] eq 1">
+						<li class="{$vo[app]} app_menu">
+							<a href="#">
+								<i class="fa  {$vo.icon}"></i><span class="text"> {$vo.auth_name}</span>
+								<if condition="$vo[sub] neq ''">
+									<span class="fa fa-angle-down pull-right"></span>
+								</if>
+							</a>
+							<if condition="$vo[sub] neq ''">
+							<ul class="nav sub "  <if condition="$vo[cur] eq 1">style=" display:block"</if> >
+								<volist name="vo[sub]" id="v">
+									<if condition="$v[is_show] eq 1">
+										<li  <if condition="$v[cur] eq 1">class="active_test active opened"</if> ><a href="<if condition='$vo[auth_id] eq 518'>userweb.php?c=Wxadmin&a=index&m_1={$v.auth_c}&a_1={$v.auth_a}<else />__APP__?c={$v.auth_c}&a={$v.auth_a}</if>{$v.parameters}&menu_app={$vo[app]}"><i class="fa {$v.icon}"></i><span class="text"> {$v.auth_name}</span></a>
+										</li>
+									</if>
+								</volist>
+							</ul>
+			 				</if>
+						</li>
+					</if>
+				</volist>
+			</ul>	
+		</div>
+	</div>
+	<script>
+		h=$(window).height();
+		$(".sidebar-menu").height(h-60);
+	$(".app_menu").hide();
+	$(".basic").show();
+	  
+	function selecte_app(app){
+		$(".app_menu").hide();
+		$("."+app+"").show();
+		$(".nav_main > a").removeClass("cur");
+		$("#nav_"+app+"").addClass("cur");
+	}
+	selecte_app("{$auth_all["cur"]["app"]}")
+	h=$(window).height();
+	//$(".sidebar-menu").height(h-60);
+ /*
+	$(".sidebar-menu").css({
+		"height":"1990px!important" 
+	});
+	*/
+	</script>
+	
+	<div class="sidebar-footer" style="display:none">
+		<div class="sidebar-brand"> 友邦 </div>
+		<div class="copyright text-center">
+			<small>
+			<i class="fa fa-coffee"></i> from <a href="http://www.tuolve.com/" title="拓略计算机" target="_blank">友邦</a>
+			</small>
+		</div>
+	</div>
+</div>

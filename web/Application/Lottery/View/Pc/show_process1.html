@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{$config['static']}ionic/css/CJ.css">
+    <script src="{$config['static']}ionic/jquery.js" type="text/javascript"></script>
+    <title>抽奖过渡</title>
+</head>
+<body>
+<div style="background-image:url({$image_back});position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;z-index: -1;background-size: 100% 100%;"></div>
+<div style="border: 1px solid #ddd;padding: 5px" class="waikuang">
+<div class="w100" style="display: flex">
+    <div class="w80  text-center" style="border: solid 1px #ddd;margin-right: -1px;" >
+        <div id="show_process">
+            <h1 class="text-center">
+                <if condition="$data[type] eq 1">
+                    一
+                    <elseif condition="$data[type] eq 2"/>
+                    二
+                    <elseif condition="$data[type] eq 3"/>
+                    三
+                    <elseif condition="$data[type] eq 4"/>
+                    四
+                    <elseif condition="$data[type] eq 5"/>
+                    五
+                    <elseif condition="$data[type] eq 6"/>
+                    六
+                    <else/>
+                    七
+                </if>
+                等奖抽奖
+            </h1>
+            <h1 class="text-center" id="percent">0%</h1>
+            <div class="mtop_44">
+                <div id="pro_100" class="nengliangtiao-10 margin-auto draw" style="display: none;"></div>
+                <div style="height: 10px"></div>
+                <div id="pro_90" class="nengliangtiao-20 margin-auto draw" style="display: none;"></div>
+                <div style="height: 10px"></div>
+                <div id="pro_80" class="nengliangtiao-30 margin-auto draw" style="display: none;"></div>
+                <div style="height: 10px"></div>
+                <div id="pro_70" class="nengliangtiao-40 margin-auto draw" style="display: none;"></div>
+                <div style="height: 10px"></div>
+                <div id="pro_60" class="nengliangtiao-50 margin-auto draw" style="display: none;"></div>
+                <div style="height: 10px"></div>
+                <div id="pro_50" class="nengliangtiao-60 margin-auto draw" style="display: none;"></div>
+                <div style="height: 10px"></div>
+                <div id="pro_40" class="nengliangtiao-70 margin-auto draw" style="display: none;"></div>
+                <div style="height: 10px"></div>
+                <div id="pro_30" class="nengliangtiao-80 margin-auto draw" style="display: none;"></div>
+                <div style="height: 10px"></div>
+                <div id="pro_20" class="nengliangtiao-90 margin-auto draw" style="display: none;"></div>
+                <div style="height: 10px"></div>
+                <div id="pro_10" class="nengliangtiao-100 margin-auto draw" style="display: none;"></div>
+                <h1 class="text-center">聚能量,齐抽奖</h1>
+            </div>
+        </div>
+
+    </div>
+    <div style="width: 20%">
+        <div class="w100" style="border: solid 1px #ddd;margin-bottom: -1px">
+            <img src="{$data[image]}" style="width: 100%">
+            <p>{$data[content]}</p>
+        </div>
+        <div class="w100" style="border: solid 1px #ddd;">
+            <h1>抽奖滚动信息</h1>
+            <span style="margin-left: 20px">姓名</span>
+            <span style="margin-left: 20px">代码</span>
+            <div id="up_zzjs" style="height:500px;overflow: hidden">
+
+                <div id="marqueebox">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<div id="fade" style="display: none">
+    <div id="miao" style="font-size: 180px;color: white;position: absolute;top: 50%;left: 25%" class="w50 text-center">
+        5
+    </div>
+</div> 
+
+<script>
+    //文字轮播
+    function startmarquee(lh, speed, delay) {
+        var p = false;
+        var t;
+        var o = document.getElementById("marqueebox");
+        o.innerHTML += o.innerHTML;
+        o.style.marginTop = 0;
+        o.onmouseover = function () {
+            p = true;
+        };
+        o.onmouseout = function () {
+            p = false;
+        };
+
+        function start() {
+            t = setInterval(scrolling, speed);
+            if (!p) o.style.marginTop = parseInt(o.style.marginTop) - 1 + "px";
+        }
+
+        function scrolling() {
+            if (parseInt(o.style.marginTop) % lh != 0) {
+                o.style.marginTop = parseInt(o.style.marginTop) - 1 + "px";
+                if (Math.abs(parseInt(o.style.marginTop)) >= o.scrollHeight / 2) o.style.marginTop = 0;
+            } else {
+                clearInterval(t);
+                setTimeout(start, delay);
+            }
+        }
+
+        setTimeout(start, delay);
+    }
+    startmarquee(20, 20, 1000);
+    var time = 5;
+    show_time();
+
+    function show_time() {
+        $("#miao").html(time);
+        $("#fade").show();
+        if (time >= 0) {
+            time--;
+            window.setTimeout(show_time, 1000);
+        } else {
+            $("#fade").hide();
+        }
+
+    }
+
+    lottery_log();
+
+    function lottery_log() {
+        $.ajax({
+            url: 'lottery.php?c=pc&a=lottery_log&id={$_REQUEST[id]}&prize={$data[type]}',
+            type: 'GET',
+            dataType: 'json',
+            // data: {log_id: log_id,pay_pass:pay_pass},
+            success: function (data) {
+                // alert(data);
+                if (data.users) {
+                    $("#marqueebox").html(data.users);
+                }
+                displayNengLiang(data.rate);
+                $("#percent").html(data.percent + "%");
+                if (data.status == 10001) {
+                    window.location.href = "lottery.php?c=pc&a=show_prize&id={$_REQUEST[id]}&prize={$data[type]}";
+                }
+                if (data.status == 10000) {
+                    window.setTimeout(lottery_log, 2000);
+                    // alert("支付成功");
+                    // window.location.href="shop.php?c=order&a=pay_success&log_id="+log_id;
+                }
+            },
+            error: function () {
+                alert("失败");
+            }
+        });
+    }
+
+
+    var a = document.getElementsByClassName("draw");
+    function displayNengLiang(n) {
+        switch (n) {
+            case 1:
+                for (var j = 0; j < 1; j++) {
+                    a[j].style.display = "block";
+                }
+                break;
+            case 2:
+                for (var j1 = 0; j1 < 2; j1++) {
+                    a[j1].style.display = "block";
+                }
+                break;
+            case 3:
+                for (var j2 = 0; j2 < 3; j2++) {
+                    a[j2].style.display = "block";
+                }
+                break;
+            case 4:
+                for (var j3 = 0; j3 < 4; j3++) {
+                    a[j3].style.display = "block";
+                }
+                break;
+            case 5:
+                for (var j4 = 0; j4 < 5; j4++) {
+                    a[j4].style.display = "block";
+                }
+                break;
+            case 6:
+                for (var j5 = 0; j5 < 6; j5++) {
+                    a[j5].style.display = "block";
+                }
+                break;
+            case 7:
+                for (var j6 = 0; j6 < 7; j6++) {
+                    a[j6].style.display = "block";
+                }
+                break;
+            case 8:
+                for (var j7 = 0; j7 < 8; j7++) {
+                    a[j7].style.display = "block";
+                }
+                break;
+            case 9:
+                for (var j8 = 0; j8 < 9; j8++) {
+                    a[j8].style.display = "block";
+                }
+                break;
+            case 10:
+                for (var j9 = 0; j9 < 10; j9++) {
+                    a[j9].style.display = "block";
+                }
+                break;
+            default:
+                alert("传参错误");
+        }
+    }
+</script>
+</body>
+</html>

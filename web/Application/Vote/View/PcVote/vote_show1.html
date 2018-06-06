@@ -1,0 +1,163 @@
+<html>
+
+<head lang="en">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>{$vote[title]}互动投票</title>
+    <script src="tool/loongchart/excanvas.js" type="text/javascript"></script>
+    <script src="tool/loongchart/loongchart.core.js" type="text/javascript"></script>
+    <script src="tool/loongchart/loongchart.histogram3d.js" type="text/javascript"></script>
+</head>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+    ul, li, dl, dd, dt, p {
+        margin: 0;
+        padding: 0;
+    }
+
+    ul, li {
+        list-style: none;
+    }
+
+    .histogram-container {
+        position: relative;
+        margin-left: 60px;
+        margin-top: 10px;
+        margin-bottom: 25px;
+    }
+</style>
+<body>
+<div style="border: 1px solid #d31145;padding: 20px;margin: 20px;">
+    <div class="histogram-container" id="histogram-container" style="position: relative;display:flex;">
+        <div id="divCanvas" style="width: 800px; height: 400px;">
+        </div>
+        <div style="width: 400px;position: relative">
+        <div style="width: 400px;text-align: center;">
+            <p style="margin-bottom: 10px">
+                <span>第一名</span>&nbsp;&nbsp;<span id="truename1"></span>&nbsp;&nbsp;<span id="sort1"></span></p>
+            <p style="margin-bottom: 10px">
+                <span>第二名</span>&nbsp;&nbsp;<span id="truename2"></span>&nbsp;&nbsp;<span id="sort2"></span></p>
+            <p style="margin-bottom: 10px">
+                <span>第三名</span>&nbsp;&nbsp;<span id="truename3"></span>&nbsp;&nbsp;<span id="sort3"></span></p>
+        </div>
+        <div style="width: 300px;height: 50px;background-color: red;display:flex;padding: 5px;border-radius: 5px;position: absolute;bottom: 10px;right: 5px">
+            <div style="width: 33.3%;text-align: center;font-size: 16px;padding: 5px;border-right: 1px solid white;color: white">
+                <p style="margin-bottom: 10px">参与选手</p>
+                <span id="all_option"></span>
+            </div>
+            <div style="width: 33.3%;text-align: center;font-size: 16px;padding: 5px;border-right: 1px solid white;color: white">
+                <p style="margin-bottom: 10px">累计投票</p>
+                <span id="count_vote"></span>
+            </div>
+            <div style="width: 33.3%;text-align: center;font-size: 16px;padding: 5px;color: white">
+                <p style="margin-bottom: 10px">访问次数</p>
+                <span id="count_view"></span>
+            </div>
+        </div>
+        </div>
+    </div>
+    <br/>
+    <button onclick="end_vote()" style="background-color:#d31145;border: none;color: white">
+        结束投票
+    </button>
+    <br/>
+    <button onclick="javascript:history.go(-1);"
+            style="background-color:#d31145;border: none;color: white;float: right">
+        返回
+    </button>
+</div>
+</body>
+</html>
+
+<script type="text/javascript" src="Application/Vote/View/static/ionic/jquery.js"></script>
+
+<script type="text/javascript">
+    window.onload = function () {
+        var data = {$data};
+        var options = {
+            animation: false,
+            histogram: {
+                colors: ["#FFCCCC", "#f9343a", "#70dcdc", "#00b5e5", "#25b257", "#e6b8dc", "#7db500", "#778899", "#6c6c6c", "#c6e2f4", "#ff6600", "", "rgba(135,206,250,0.4)", "rgba(175,238,238,0.4)"],
+                length: null,
+                gap: null,
+                useSameColor: false
+            },
+            title: {content: "现场投票结果"},
+            scale: {
+                linewidth: 1,
+                linecolor: null,
+                backcolors: ["rgba(175,238,238,0.4)", "rgba(135,206,250,0.4)"]
+            },
+            cross: {linewidth: 3, linecolor: '#ffffff'},
+            shadow: {show: true, color: 'rgba(10,10,10,1)', blur: 3, offsetX: -3, offsetY: 3},
+        };
+
+        window.lchart = new LChart.Histogram3D('divCanvas', 'CN');
+        lchart.SetSkin('BlackAndWhite');
+        lchart.SetOptions(options);
+        lchart.Draw(data);
+        setInterval("get_data()", 2000);//定时接收
+    };
+
+    function end_vote() {
+        var voteId = {$vote[id]};
+        $.ajax({
+            url: 'vote.php?c=pcVote&a=start_vote&status=2&id=' + voteId,
+            type: 'POST',
+            dataType: 'json',
+            data: {voteId: voteId},
+            success: function (data) {
+                window.location.href = "vote.php?c=pcVote&a=vote_sort&id=" + voteId;
+            },
+            error: function () {
+                alert("失败");
+            }
+        });
+    }
+
+    function get_data() {
+        var voteId = {$vote[id]};
+        $.ajax({
+            url: 'vote.php?c=pcVote&a=ajax_vote&id=' + voteId,
+            type: 'POST',
+            dataType: 'json',
+            data: {voteId: voteId},
+            success: function (data) {
+                lchart.Draw(data);
+            },
+            error: function () {
+                alert("失败");
+            }
+        });
+
+        get_sort(voteId);
+    }
+
+    function get_sort(voteId){
+        $.ajax({
+            url: 'vote.php?c=pcVote&a=ajax_sort&id=' + voteId,
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                // alert(data[0].truename)
+                $("#truename1").html(data.sort[0].truename);
+                $("#truename2").html(data.sort[1].truename);
+                $("#truename3").html(data.sort[2].truename);
+
+                $("#sort1").html(data.sort[0].count_vote+"票");
+                $("#sort2").html(data.sort[1].count_vote+"票");
+                $("#sort3").html(data.sort[2].count_vote+"票");
+
+                $("#all_option").html(data.sum.all_option);
+                $("#count_vote").html(data.sum.count_vote);
+                $("#count_view").html(data.sum.count_view);
+            },
+            error: function () {
+                alert("失败");
+            }
+        });
+    }
+</script>

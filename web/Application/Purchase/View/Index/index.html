@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>{$data[purchase][title]}</title>
+    <link href="{$config['static']}css/ionic.min.css" rel="stylesheet" type="text/css" />
+    <link href="{$config['static']}css/style.css"rel="stylesheet" type="text/css" />
+    <link href="{$config['tool']}swipe/swiper.min.css" rel="stylesheet" type="text/css" />
+    <link href="{$config['static']}css/iconfont.css"rel="stylesheet" type="text/css" />
+    <script type="text/javascript" charset="utf-8" src="{$config['static']}js/jquery.js"></script>
+    <script type="text/javascript" charset="utf-8" src="{$config['tool']}swipe/swiper.min.js"></script>
+</head>
+  <body class="bg_f0">
+	<div class="list" style="padding-top:0px;overflow:hidden;">
+  	 <img src="{$data[purchase][image_thumb]}" width="100%">
+<div class="padding-h-10">
+ <h4>采购日期</h4>
+</div>
+ <div class="padding light-bg">
+ <div class="row no-padding ">
+ 	<div class="col no-padding col-50 hong">
+ 		开始：{$data[purchase][time_start]|date="Y-m-d",###}
+ 	</div>
+ 	<div class="col no-padding col-50 hong">
+ 		截至：{$data[purchase][time_end]|date="Y-m-d",###}
+ 	</div>
+ </div>
+ </div>
+ <div class="padding-h-10">
+ <h4>采购商品</h4>
+  <form action="purchase.php?c=index&a=sure_purchase" method="post">
+    <volist name="data[goods]" id="vo">
+    <div class="item item-icon-right border-none margin-top" href="#" style="padding: 10px;position: relative;">
+      <img class="float-left" width="80px" height="80px" style="border: 1px solid #da1145;" src="{$vo[image_thumb]}">
+      <div class="content">
+      <h2>{$vo[title]}</h2>
+     <span class="gray font-size-14">单价：{$vo[price]/100}</span> 
+      <!--  <input type="hidden" value="{$vo[id]}" name="purchase[]" /> -->
+       <input name="num[{$vo[id]}]" class="border-ddd" type="number" placeholder="输入采购数量" style="width: 100px;"/> 
+       <a onclick="detail({$vo[id]})" class="button qianfen float-right light border-none" style="width: 100px !important;min-height: 36px !important; line-height: 36px !important;position: absolute; bottom: 0;right: 0;">查看详情</a>
+      </div> 
+    </div>
+    </volist>
+   
+</div>
+ <div class="text-center margin-v-30">
+		<button type="submit" class="button qianfen light border-none" style="width: 100px !important;min-height: 36px !important; line-height: 36px !important;">
+      	 提交申请
+    </button>
+	</div>	
+  </form>
+     <!--content end-->
+    </div> 
+    
+  <div id="tijiao" class="tijiao">
+ <p class="padding text-center" id="msg">非本次申购名单会员请联系在线客服进行咨询</p>
+ 
+<div class="text-center margin-top-20">
+	 <a href="javascript:void(1)" onclick="document.getElementById('tijiao').style.display='none';document.getElementById('fade').style.display='none'">
+   <button class="button qianfen border-e5 jiesuan light border-none" style="padding:0px 24px !important;">
+      	确认
+      </button>
+   </a>
+   <button type="submit" value="提交" />
+   </div>
+  </div>
+<div id="fade" class="black_overlay"></div>   
+</body>
+
+</html>
+
+<script type="text/javascript">
+function detail(id){
+  location.href="purchase.php?c=index&a=detail&id="+id;
+}
+
+function showmsg(msg){
+  $("#msg").html(msg);
+  document.getElementById('tijiao').style.display='block'; 
+  document.getElementById('fade').style.display='block'
+}
+</script>

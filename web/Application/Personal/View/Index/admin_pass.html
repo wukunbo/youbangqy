@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>登录密码设置</title>
+    <link rel="stylesheet" href="{$config['static']}ionic/css/ionic.min.css"/>
+    <script type="text/javascript" charset="utf-8" src="{$config['static']}js/jquery.js"></script>
+
+    <style>
+        input[type=password]{
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        a{
+
+        }
+    </style>
+</head>
+<body style="background: #e0e0e0">
+
+<div class="text-center padding">
+    <img src="{$config['static']}img/youbang.jpg" alt="logo" style="width: 30%"/>
+    <p style="margin-top: 15px;font-size: 20px">友邦深圳企业号</p>
+</div>
+
+<div class="padding">
+    <form action="personal.php?c=index&a=action_pass" method="post" onsubmit="return checksub()">
+    <p>密码：</p>
+    <input type="password" name="pass" id="pass" style="width: 100%" placeholder="包含字母和数字,至少8位"/>
+
+    <p style="margin-top: 30px">密码确认：</p>
+    <input type="password" name="pass_agin" id="pass_agin" style="width: 100%" placeholder="包含字母和数字,至少8位"/>
+
+    <button type="submit" class="button button-block button-positive" style="margin-top: 30px">确定</button>
+    </form>
+</div>
+
+
+
+</body>
+</html>
+<script type="text/javascript">
+function checksub(){
+    var pass=document.getElementById("pass").value;
+    var pass_agin=document.getElementById("pass_agin").value;
+    if(pass == "" || pass_agin == ""){
+        alert("密码不能为空");
+        return false;
+    }
+    if(pass != pass_agin){
+        alert("两次密码不一致");
+        return false;
+    }
+    if(pass.length < 8){
+        alert("密码长度至少8位");
+        return false;
+    }
+    
+    var repPass = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$/;
+    if(!repPass.test(pass)){
+        alert("密码需字母和数字组合");
+        return false;
+    }
+
+}
+
+</script>
+

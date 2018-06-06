@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>友邦保险</title>
+    <link href="{$config['static']}css/ionic.min.css" rel="stylesheet" type="text/css" />
+    <link href="{$config['static']}css/style.css"rel="stylesheet" type="text/css" />
+    <link href="{$config['tool']}swipe/swiper.min.css" rel="stylesheet" type="text/css" />
+    <link href="{$config['static']}css/iconfont.css"rel="stylesheet" type="text/css" />
+    <script type="text/javascript" charset="utf-8" src="{$config['static']}js/jquery.js"></script>
+    <script type="text/javascript" charset="utf-8" src="{$config['tool']}swipe/swiper.min.js"></script>
+
+    <style>
+
+
+a {
+  text-decoration: underline !important;
+  color: blue!important
+}
+    </style>
+</head>
+  <body class="bg_f0">
+	<div class="list" style="margin-bottom: 100px;">
+		<!--content start-->
+<div class="padding">
+    <!-- <p class="font-size-16">订单编号：A00000001</p>	 -->
+	 <p class="font-size-16">组别：{$data[user][partment]}</p>
+	 <p class="font-size-16">代码：{$data[user][user_id]}</p>	
+	 <p class="font-size-16">姓名：{$data[user][truename]}</p>
+	 <p class="font-size-16">日期：{$data[purchase][time_start]|date="Y-m-d",###}截至：{$data[purchase][time_end]|date="Y-m-d",###}</p>	
+	
+</div>
+<form method="post" name="form1">
+<div class="padding-h-10">
+  <volist name="data[good]" id="vo">
+   <input type="hidden" name="goods[{$vo[id]}]" value="{$vo[total]}" />
+   <div class="item item-icon-right border-none margin-top" href="#" style="padding: 10px;position: relative;">
+      <img class="float-left" width="80px" height="80px" style="border: 1px solid #da1145;" src="{$vo[image_thumb]}">
+      <div class="content">
+      <h2>{$vo[title]}</h2>
+     <p>数量<span class="hong font-size-14 float-right">{$vo[total]}件</span> </p>
+      </div> 
+    </div>
+  </volist>
+</div>
+</form>
+
+		<!--content end-->	
+	</div>
+	
+  <div class="footer_02 bg_f0" style="height: auto;line-height: 16px;bottom:5px;">	
+  	<div class=" bg_f0" style="width: 100%;">
+      <div style="width:100%" class="text-center">
+      <a href="{:U('protocol')}" style="width: 100%;display:inline-block;margin-bottom:10px">{$protocol}</a>
+      </div>
+   <div class="item item-checkbox bg_f0 item-borderless" style="margin: 0 auto;width: 260px;">
+    <label class="checkbox">
+       <input name="allselect" type="checkbox" value="" id="allselect" />
+     </label>
+    同意以上内容请勾选
+  </div></div>
+<div class="text-center bg_f0">
+<a href="javascript:void(1)">
+ <button onclick="submit_order()" class="button qianfen light border-none" type="button" style="width: 100px !important;min-height: 36px !important; line-height: 36px !important;">
+  确认订单
+</button>
+</a>
+</div>
+</div>
+   <div id="tijiao" class="tijiao">
+ <p class="padding text-center" id="msg">您的信息已提交成功</p>
+ 
+<div class="text-center margin-top-20">
+	 <a href="javascript:void(1)" onclick="document.getElementById('tijiao').style.display='none';document.getElementById('fade').style.display='none'">
+   <button class="button qianfen border-e5 jiesuan light border-none" style="padding:0px 24px !important;">
+      	确认
+      </button>
+   </a>
+   </div>
+  </div>
+<div id="fade" class="black_overlay"></div>    
+</body>
+</html>
+
+<script type="text/javascript">
+
+function submit_order(){
+
+  if($('#allselect').get(0).checked){
+    document.form1.action="purchase.php?c=index&a=sumbit_purchase";
+    document.form1.submit();
+  }else{
+    show_msg("请勾选同意");
+  }
+}
+
+function show_msg(msg){
+  $("#msg").html(msg);
+  document.getElementById('tijiao').style.display='block'; 
+  document.getElementById('fade').style.display='block'
+}
+</script>

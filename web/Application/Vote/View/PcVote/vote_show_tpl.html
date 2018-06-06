@@ -1,0 +1,14 @@
+<volist name="data" id="vo">
+    <div style="position: relative;margin-bottom: 20px">
+        <div style="float:left;font-size: 2vh;width: 20%">{$vo.truename}&nbsp;</div>
+        <div class="Rectangle-canvas">
+            <div class="draw" style="width: {$vo.rate}%;background-color:{$vo.color} ">
+            </div>
+        </div>
+        <div style="float:left;width: 20%;font-size: 2vh">
+            <p id="rate{$key}" style="color: #e4603c;width:40%;display: inline-table;">{$vo.rate}%</p>
+            <p id="renshu{$key}" style="width:40%;display: inline-table;text-align: right;">{$vo.count_vote}&nbsp;票</p>
+        </div>
+        <div class="clear-both"></div>
+    </div>
+</volist>

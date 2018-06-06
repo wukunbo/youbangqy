@@ -1,0 +1,33 @@
+<include file="Public/includeHeader" />
+
+﻿<div class="row">
+    <div class="col-lg-12">
+        <h3 class="page-header">添加通讯录人员</h3>
+        
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <form action="{:U('add_contacts')}"  enctype="multipart/form-data"  method="post" name="myform">
+        <div class="panel-body">
+
+
+            <div class="form-group">
+                <label for="text-input" class="col-md-2 control-label">部门:</label>
+                <div class="col-md-4 input-group " id="allpartment">
+                    <select class="form-control  sel" name="post[partment]" id="partment1" style="width: 100px" onchange="select_partment(1)">
+                        <option value="">请选择</option>
+                        <volist name="partment_list" id="partment">
+                            <option value="{$partment[id]}">{$partment[name]}</option>
+                        </volist>
+                    </select>
+                </div>
+            </div>
+
+
+        </div>
+    </form>
+</div>
+
+
+<include file="Public/includeFooter" />

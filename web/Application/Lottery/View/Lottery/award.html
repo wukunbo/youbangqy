@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html style="overflow: scroll">
+<head lang="en">
+     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>查看奖品</title>
+    <link rel="stylesheet" href="{$config['static']}ionic/css/ionic.min.css"/>
+    <style>
+        .titleNum{
+            font-size: 18px;
+        }
+        img{
+            width: 100px;
+            height: 100px;
+            border-radius: 5px;
+        }
+        .jiangpinName{
+            color: #f0186e;
+        }
+    </style>
+</head>
+<body>
+
+<volist name="data[detail]" id="vo">
+<div class="item">
+    <span class="titleNum">{$data[award][$key]}</span>
+    <div class="row">
+
+        <div class="col">
+            <div class="row">
+                <span class="col text-center jiangpinName">
+                    {$vo[title]}
+                </span>
+                 <span class="col text-center jiangpinName">数量:{$vo[amount]}</span>
+            </div>
+            <div class="row">
+                <img src="{$vo[image]}" alt=""/>
+                <p>{$vo[content]}</p>
+            </div>
+        </div>
+    </div>
+</div>
+</volist>
+
+<p class="item"></p>
+</body>
+</html>

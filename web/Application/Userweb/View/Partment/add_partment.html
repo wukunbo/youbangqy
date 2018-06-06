@@ -1,0 +1,107 @@
+<include file="Public/includeHeader" />
+
+﻿<div class="row">
+	<div class="col-lg-12">
+		<h3 class="page-header">添加部门</h3>
+		
+	</div>
+</div>
+
+<div class="panel panel-default">
+	<form action='{:U(partment_action)}'  enctype="multipart/form-data"  method="post" name="auth" id="myform">
+
+		<input type="text" style="display:none;" name="post[id]"  class="form-control" value="{$data['id']}">
+		<div class="panel-body">
+
+			<div class="form-group">
+				<label for="text-input" class="col-md-2 control-label">部门名称</label>
+				<div class="col-md-4 input-group ">
+					<input type="text" name="post[title]"  class="form-control" value="{$data[title]}">
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="text-input" class="col-md-2 control-label">应用ID</label>
+				<div class="col-md-4 input-group ">
+					<!-- <input type="text" name="post[app_id]"  class="form-control" value="{$data[app_id]}"> -->
+					<select name='post[app_id]' class="form-control" style="width: 250px">
+					 	<volist name='agent_list' id='vo'>
+					 		<if condition="$data[app_id] eq $vo[agentid]">
+						     <option value="{$vo[agentid]}"  selected="selected">{$vo[name]}</option>
+						     <else />
+						      <option value="{$vo[agentid]}">{$vo[name]}</option>
+						     </if>
+					 	</volist>
+					 </select>
+					&nbsp;&nbsp;<button class="btn" type="button" onclick="get_app()">更新应用</button>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="text-input" class="col-md-2 control-label">可见范围</label>
+				<div class="col-md-8 input-group ">
+					<div id="allpartment">
+						
+						<input id="ids" name="post[partment]" value="{$data[partment]}" style="width:500px; height:500px; display:none"  >
+					<a onclick="show_content('userweb.php?c=contacts&a=select_partment')">选择</a>
+					</div>
+					<span id="partment_name">{$partment}</span>
+				</div>
+			</div>
+			
+
+		<div class="panel-footer">
+			<button class="btn btn-sm btn-success" type="submit" onclick1="save_vote()"><i class="fa fa-dot-circle-o"></i> 保存</button>
+		</div>
+	</form>
+</div>
+
+<include file="Public/includeFooter" />
+
+<script type="text/javascript">
+function select_partment(id){
+	
+	var partment="partment"+id;
+	var partmentid=$("#partment"+id).val();	
+
+	$.ajax({  
+	  url: 'userweb.php?c=contacts&a=get_select_partment' ,  
+	  type: 'POST',
+	  data:{partmentid:partmentid},
+	  success: function (returndata) {
+	      $("#partment"+id).after(returndata);
+	  },  
+	  error: function (returndata) {  
+	      alert("失败");  
+	  }  
+	});
+	
+	var allpartment=document.getElementById('allpartment');
+	var sel=allpartment.getElementsByClassName('sel');
+  	for(var i=0;i<sel.length;i++){
+	 	if(partment==sel[i].id){
+	 		for(var n=i;n<sel.length;n++){
+	 			jj=i+1;
+	 			var vv=document.getElementById(sel[jj].id);
+	 			vv.parentNode.removeChild(vv);
+	 		}
+	 	}
+	 }
+	
+}
+
+function get_app(){
+	$.ajax({
+        url: 'userweb.php?c=partment&a=get_app',
+        type: 'GET',
+        dataType: 'json',
+        success:function(data) {  
+            alert("更新成功");
+        },  
+        error : function() {  
+            alert("更新失败");
+        }  
+    });
+}
+</script>
+											

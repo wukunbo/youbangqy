@@ -1,0 +1,127 @@
+<include file="Public/includeHeader" />
+
+﻿<div class="row">
+	<div class="col-lg-12">
+		<h3 class="page-header">活动列表</h3>
+		
+	</div>
+</div>
+
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h2><i class="fa fa-table red"></i><span class="break"></span><strong>列表</strong></h2>
+		 
+	</div>
+
+	<div class="col-md-12 input-group" style="margin-bottom: 15px;width: 100%;margin-top: 20px">
+	<form action="userweb.php?c=purchase&a=lists" method="post" style="width: 100%">
+		<select class="form-control  " name="post[partment]" style="width: 100px">
+			<option value="">请选择部门</option>
+			<volist name="partment_list" id="list">			
+				<option value="{$list.id}">{$list.title}</option>
+			</volist>
+		</select>
+
+		<select class="form-control  " name="post[status]" style="width: 100px">
+			<option value="">请选择状态</option>
+			<option value="0">未发布</option>
+			<option value="1">已发布</option>
+		</select>
+		&nbsp;
+		<script src="tool/My97DatePicker/WdatePicker.js"></script>	
+		<label for="text-input">活动时间:</label>
+		<input  type="text" name="post[time_start]" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+		-
+		<label for="text-input">结束时间:</label>
+		<input  type="text" name="post[time_end]" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+
+		<select class="form-control  " name="post[order]" style="width: 150px">
+			<option value="">排序</option>
+			<!-- <option value="start_time">报名开始时间排序</option>
+			<option value="end_time">报名截止时间排序</option> -->
+			<option value="time_start">活动开始时间排序</option>
+			<option value="time_end">活动结束时间排序</option>
+		</select>
+		
+
+		<button class="btn btn-success" type="submit" style="margin-left: 15px;"><i class="fa fa-dot-circle-o"></i>搜索</button>
+	</form>
+
+</div>
+	
+	
+	<a href="{:U('protocol')}&id=1" class="btn btn-success">申购协议</a>
+
+	<div class="panel-body">
+		<table class="table table-bordered table-striped table-condensed table-hover">
+			<thead>
+				<tr>
+					<th>编号</th>
+					<!-- <th>活动链接</th> -->
+					<th>活动标题</th>
+					<th>活动部门</th>
+					<th>活动图片</th>
+					<th>开始时间</th>
+					<th>结束时间</th>
+					<th>活动状态</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+
+			<tbody>
+			<?php $total=count($data[content]);?>
+				<volist name="data[content]" id="lists">
+					<tr>
+						<td >{$total-$key}</td>
+						<!-- <td><a href="purchase.php?id={$lists[id]}">申购链接</a></td> -->
+						<td>{$lists[title]}</td>
+						<td>{$lists[partment_title]}</td>
+						<td><a href="{$lists[image_origin]}"><img src="{$lists[image_thumb]}" width="100"></a></td>
+						<td>{$lists[time_start]|date='Y-m-d',###}</td>
+						<td>{$lists[time_end]|date='Y-m-d',###}</td>
+						<td>
+							<if  condition="$lists[status] eq 0">未发布</if>
+							<if  condition="$lists[status] eq 2">未发布</if>
+							<if  condition="$lists[status] eq 1">上架</if>
+							<if  condition="$lists[status] eq -1">已下架</if>
+						</td>
+						<td>
+							<if  condition="$lists[status] eq 0">
+							<i class="fa fa-plus"></i><a type="button" onclick="show_content('userweb.php?c=contacts&a=choose_contact&t=purchase&id={$lists[id]}&back=check_apply')">选择名单</a>
+							<i class="fa fa-plus"></i><a type="button" href="{:U('add')}&purchaseId={$lists[id]}">添加商品</a>
+							<a type="button" href="{:U('good_lists')}&id={$lists[id]}">商品列表</a>
+							</if>
+
+							<if  condition="$lists[status] eq 2">
+								<a type="button" href="{:U('publish_purchase')}&id={$lists[id]}">发布</a>
+								<a type="button" href="{:U('check_apply')}&id={$lists[id]}">已选通讯录</a>
+								<i class="fa fa-plus"></i><a type="button" href="{:U('add')}&purchaseId={$lists[id]}">添加商品</a>
+								<a type="button" href="{:U('good_lists')}&id={$lists[id]}">商品列表</a>
+							</if>
+							<if  condition="$lists[status] eq 1">
+							<a type="button" href="{:U('check_apply')}&id={$lists[id]}">已选通讯录</a>
+							<i class="fa fa-plus"></i><a type="button" href="{:U('add')}&purchaseId={$lists[id]}">添加商品</a>
+							<a type="button" href="{:U('good_lists')}&id={$lists[id]}">商品列表</a>
+							<a type="button" href="{:U('purchase_count')}&id={$lists[id]}">查看统计</a>
+							</if>
+							<a href="userweb.php?c=purchase&a=add_purchase&id={$lists[id]}" class="btn btn-info">
+								<i class="fa fa-edit "></i>
+							</a>
+
+							<a href="userweb.php?c=purchase&a=del_purchase&id={$lists[id]}" class="btn btn-danger">
+								<i class="fa fa-trash-o "></i>
+							</a>
+
+							<if  condition="$lists[status] eq 1">
+									<a href="userweb.php?c=purchase&a=purchase_status&id={$lists[id]}&to_status=-1">下架</a>
+							</if>
+						</td>
+					</tr>
+				</volist>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<include file="Public/pagination" />
+<include file="Public/includeFooter" />

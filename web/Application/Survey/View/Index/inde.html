@@ -1,0 +1,152 @@
+
+<include file="Jiayuan/Public/header" /><body class="bg_f0">
+<div class="list" style="padding-top:0px;margin-bottom: 50px;">
+	<!--swp start-->
+	<div class="swiper-container swiper1" style="overflow:hidden;">
+		<div class="swiper-wrapper" >
+			<volist name="data[ad_lists]" id="lists">
+				<div class="swiper-slide "><a href="{$lists.url}">
+						<img class="display_img" src="{$lists.img_thumb}" width="100%" >
+					</a>
+				</div>
+			</volist>
+			 
+		</div>
+	</div>
+	<!--swp end-->
+	<!--swp end-->
+	<script>
+	$(function(){
+	 
+	w=$(window).width();
+	h=w*(1/2)
+	$(".swiper-container").height(h);
+	  	var swiper = new Swiper('.swiper-container', {
+				mode: 'horizontal',
+				roundLengths:true,
+				loop:true,
+				visiblilityFullfit:true,
+				preventLinks:false,
+				autoplay:4000,	 
+				initialSlide:0,
+				slidesPerView:1,
+				calculateHeight:true,
+				DOManimation:true,			
+	 	 })
+	});
+	</script>
+	<div>
+		<label class="item item-input margin-v-10 search ">
+		<input type="text" id="Search" style="padding-right:0;" placeholder="商品搜索：请输入商品关键字">
+		<a class="icon ion-search placeholder-icon search_button text-center" onClick="search_goods();">
+		</a>
+		</label>
+	</div>
+	<script type="text/javascript" language=JavaScript charset="UTF-8">
+      document.onkeydown=function(event){
+            var e = event || window.event || arguments.callee.caller.arguments[0];
+            if(e && e.keyCode==27){ // 按 Esc 
+                //要做的事情
+              }
+            if(e && e.keyCode==113){ // 按 F2 
+                 //要做的事情
+               }            
+             if(e && e.keyCode==13){ // enter 键
+                search_goods()
+            }
+        }; 
+		function search_goods(){
+	var search=$('#Search').val();
+	window.location.href="shop.php?c=goods&a=goods_lists&keyword="+search+"&order=addtime desc";
+}
+
+</script>
+	<!--滑动js end-->
+	<div class="row text-center gray_bg margin-top">
+		<div class="col border-none" style="padding-top:5px !important; text-align:center !important;">
+			<a href="shop.php?c=goods&a=goods_lists&type=new&shop_id1={$shop_config[id]}" style="border-right:none !important;">
+				<img src="{$config["view"]}/static/image/new.png" style="width:88px; height:88px; border-radius:50%;"><br>
+			</a>
+		</div>
+		<div class="col border-none" style="padding-top:5px !important; text-align:center !important;">
+			<a href="shop.php?c=goods&a=goods_lists&type=hot&shop_id1={$shop_config[id]}" style="border-right:none !important;">
+				<img src="{$config["view"]}/static/image/hot.png" style="width:88px; height:88px; border-radius:50%;"><br>
+			</a>
+		</div>
+		<div class="col border-none" style="padding-top:5px !important; text-align:center !important;">
+			<a href="shop.php?c=goods&a=goods_lists&type=promote&shop_id1={$shop_config[id]}" style="border-right:none !important;">
+				<img src="{$config["view"]}/static/image/sale.png" style="width:88px; height:88px; border-radius:50%;"><br>
+			</a>
+		</div>
+	</div>
+	<div class=" ad_lists_fenlei light-bg padding-bottom-0" style="height:auto; overflow:hidden; display:none;">
+		<div class=" " style="width:50%; margin:0px;">
+			<a href="#">
+				<img src="../static/image/tu_01.png" width="100%">
+			</a>
+		</div>
+		<div class=" " style="width:50%;margin:0px;">
+			<a href="#">
+				<img src="../static/image/tu_02.png" width="100%">
+			</a>
+		</div>
+		<div class=" " style="width:50%;margin:0px;">
+			<a href="#">
+				<img src="../static/image/tu_03.png" width="100%">
+			</a>
+		</div>
+		<div class=" " style="width:50%;margin:0px;">
+			<a href="#">
+				<img src="../static/image/tu_04.png" width="100%">
+			</a>
+		</div>
+	</div>
+	<div class="bg_white margin-top-10 " style=" ">
+		<div class="padding-v-20" style="position: relative;">
+			<p class="margin-0 font-size-18 text-center"> 宝贝推荐 </p>
+			<p class="margin-0 font-size-18 gray text-center">RECOMMEND</p>
+			<p class="margin-0 gray font-size-10 text-center">I see more relaned goods</p>
+			<a  href="shop.php?c=goods&a=goods_lists&type=recommended"  class="text-center border-ddd gray border-e5" style="position: absolute;top:44px;right: 10px;width: 60px; height: 26px; line-height: 22px;"> more+ </a>
+		</div>
+		<div class="goods_lists_index padding-10">
+			<volist name="gooos_lists[recommended]['lists'][content]" id="lists" offset="0" length='6'>
+				<div class="item" >
+					<a  href="{:U('Goods/goods_detail')}&goods_id={$lists.goods_id}" ><img class="border-ddd" src="{$lists.img_thumb}" width="100%"></a>
+					<div class="shen_lan padding-5" style="position: relative;">
+						<p class="light font-size-12" style="margin:0 !important;width:126px;margin:0 !important;white-space: nowrap!important;text-overflow: ellipsis!important; overflow:hidden;">{$lists.goods_name}</p>
+						<p class="light font-size-12" style="margin:0 !important;">￥{$lists.shop_price}</p>
+						<a  href="{:U('Goods/goods_detail')}&goods_id={$lists.goods_id}" ><img src="{$config["view"]}/static/image/goumai.png" style="position: absolute;top:0;right: 4px;"></a>
+					</div>
+				</div>
+			</volist>
+		</div>
+	</div>
+	<div class="row assertive-bg margin-top">
+		<div class="col light margin-top-20">
+			<p class="margin-0 bold font-size-18">BEST</p>
+			<p class="margin-0 font-size-16">RECOMMEND</p>
+			<p class="bold font-size-18"> 热销爆款 </p>
+			<a href="shop.php?c=goods&a=goods_lists&type=hot" class="assertive light-bg text-center padding-5" style="width: 120px;"> VIEW MORE <i class="icon ion-arrow-right-b font-size-20"></i>
+			</a>
+		</div>
+		<div class="col" >
+			<volist name="gooos_lists[hot]['lists'][content]" id="lists" offset="0" length='1'>
+				<a  href="{:U('Goods/goods_detail')}&goods_id={$lists.goods_id}" ><img class="border-ddd" src="{$lists.img_thumb}" width="100%"></a>
+			</volist>
+		</div>
+	</div>
+	<div class="row assertive-bg">
+		<div class="col">
+			<volist name="gooos_lists[hot]['lists'][content]" id="lists" offset="1" length='1'>
+				<a  href="{:U('Goods/goods_detail')}&goods_id={$lists.goods_id}" ><img class="border-ddd" src="{$lists.img_thumb}" width="100%"></a>
+			</volist>
+		</div>
+		<div class="col">
+			<volist name="gooos_lists[hot]['lists'][content]" id="lists" offset="2" length='1'>
+				<a  href="{:U('Goods/goods_detail')}&goods_id={$lists.goods_id}" ><img class="border-ddd" src="{$lists.img_thumb}" width="100%"></a>
+			</volist>
+		</div>
+	</div>
+	<!--content end-->
+</div>
+<include file="Jiayuan/Public/footer_nav" />

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>{$data[purchase][title]}</title>
+    <link href="{$config['static']}css/ionic.min.css" rel="stylesheet" type="text/css" />
+    <link href="{$config['static']}css/style.css"rel="stylesheet" type="text/css" />
+    <link href="tool/swipe/swiper.min.css" rel="stylesheet" type="text/css" />
+    <link href="{$config['static']}css/iconfont.css"rel="stylesheet" type="text/css" />
+    <script type="text/javascript" charset="utf-8" src="{$config['static']}js/jquery.js"></script>
+    <script type="text/javascript" charset="utf-8" src="tool/swipe/swiper.min.js"></script>
+
+</head>
+  <body class="light-bg"> 	
+	<div class="list" style="padding-top:0px;">
+	<!--content start-->
+	 <div class="item item-icon-right" href="#" style="padding: 10px;">
+      <img class="float-left" width="80px" height="80px" style="border: 1px solid #da1145;" src="{$data[detail][image_thumb]}">
+      <div class="content">
+      <h2></h2>
+     <span class="gray font-size-14 no-padding line-height-32">日期：{$data[purchase][time_start]|date="Y-m-d",###} 截止：{$data[purchase][time_end]|date="Y-m-d",###}</span> 
+         
+      </div> 
+  </div>
+	<div class="light-bg padding">
+     <p>组别：{$data[user][partment]}</p>	
+	   <p>代码：{$data[user][content]}</p>
+	  <p class="padding-bottom border-bottom-ddd">姓名：{$data[user][truename]}</p>	
+    <p class="font-size-18">物品介绍</p>
+    {$data[detail][content]}
+
+	</div>
+ 
+   <!--content end-->	
+</div>
+
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>{$data[collect][title]}</title>
+<link href="{$config['static']}css/ionic.min.css" rel="stylesheet" type="text/css" />
+<link href="{$config['static']}css/style.css"rel="stylesheet" type="text/css" />
+<link href="{$config['tool']}swipe/swiper.min.css" rel="stylesheet" type="text/css" />
+<link href="{$config['static']}css/iconfont.css"rel="stylesheet" type="text/css" />
+<script type="text/javascript" charset="utf-8" src="{$config['static']}js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="{$config['tool']}swipe/swiper.min.js"></script>
+
+</head>
+  <body>
+	<div class="list">
+		<!--content start-->
+<div class="light-bg padding">
+	 <p class="font-size-16">{$data[collect][title]}</p>
+	 <p class="padding-bottom border-bottom-ddd">日期：{$data[collect][time_start]|date="Y-m-d",###} 截至：{$data[collect][time_end]|date="Y-m-d",###}</p>	
+	<volist name="data[person]" id="person">
+  <div class="padding-h-10 hong">
+    <volist name="person[extend]" id="vo">
+      <p>{$vo.name}：{$vo.value}</p>	
+    </volist>
+	</div>
+  <br>
+  </volist> 
+</div>
+	 
+
+		<!--content end-->	
+	</div>	
+  <!-- <div class="footer_02" style="bottom: 80px !important;">	 
+   <div class="item item-checkbox item-borderless" style="margin: 0 auto;width: 260px;">
+    <label class="checkbox">
+       <input type="checkbox">
+     </label>
+    同意以上内容请勾选
+  </div>
+<div class="text-center">
+<a href="javascript:void(1)" onclick="document.getElementById('tijiao').style.display='block'; document.getElementById('fade').style.display='block'">
+ <button class="button qianfen light border-none" type="submit" style="width: 100px !important;min-height: 36px !important; line-height: 36px !important;">
+  确认订单
+</button>
+</a>
+</div>
+</div> -->
+   <!-- <div id="tijiao" class="tijiao">
+ <p class="padding text-center">您的信息已提交成功</p>
+ 
+<div class="text-center margin-top-20">
+	 <a href="javascript:void(1)" onclick="document.getElementById('tijiao').style.display='none';document.getElementById('fade').style.display='none'">
+   <button class="button qianfen border-e5 jiesuan light border-none" style="padding:0px 24px !important;">
+      	确认
+      </button>
+   </a>
+   </div>
+  </div> -->
+<div id="fade" class="black_overlay"></div>     
+</html>

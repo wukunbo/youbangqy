@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>友邦保险</title>
+<link href="{$config['static']}css/ionic.min.css" rel="stylesheet" type="text/css" />
+<link href="{$config['static']}css/style.css"rel="stylesheet" type="text/css" />
+<link href="{$config['tool']}swipe/swiper.min.css" rel="stylesheet" type="text/css" />
+<link href="{$config['static']}css/iconfont.css"rel="stylesheet" type="text/css" />
+<script type="text/javascript" charset="utf-8" src="{$config['static']}js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="{$config['tool']}swipe/swiper.min.js"></script>
+  <style>
+
+
+  </style>
+</head>
+  <body class="bg_f0">
+	<div class="list" >
+		<!--content start-->
+<h4 class="text-center padding-v-10 " style="margin-top: 0 !important;">{$data[detail][title]}</h4>
+  <form action="collect.php?c=index&a=add_action" method="post">
+  <input type="hidden" name="collect_id" value="{$data[detail][id]}" />
+
+<div id="person" >
+<div id="pp" style="border-bottom:1px solid #cccccc">
+
+  <volist name="collect_extend" id="lists">
+  <div class="row">
+    <div class="col col-33 text-right">
+      <p class="gray" style="margin-top: 10px;">{$lists.name}</p>
+    </div>
+    <div class="col">
+      <label class="item item-input">
+        <input type="hidden" name="post[1][{$key}][extend_id]" value="{$lists.id}" />
+        <input type="hidden" name="post[1][{$key}][collect_id]" value="{$lists.collect_id}" />
+        <input type="hidden" name="post[1][{$key}][name]" value="{$lists.name}" />
+        <input class="gray postname" type="text" placeholder="{$lists.hint}" id="name" name="post[1][{$key}][value]">
+      </label>
+    </div>
+  </div>
+  </volist>
+
+</div>
+</div>
+
+<if condition="$data[detail][type] eq 2">
+<div class="padding">
+
+<a onclick="addinfo();" class="button border-e5 button-block qianfen border-none light jiesuan margin-0" style="width: 140px;">
+ <i class="icon ion-ios-plus-outline white" style="display: block; float: right; margin-right: 10px; margin-top: -2px ! important;"></i>
+	新增用户信息
+</a>
+
+ </div>
+ </if>
+
+		<!--content end-->	
+	</div>
+
+		<div class="text-center margin-v-10 " style="background: none;">
+<div style="width:100%" class="text-center">
+      <a href="{:U('protocol')}&id={$_REQUEST[id]}" style="text-decoration: underline !important;color: blue!important;width: 100%;display:inline-block;margin-bottom: 10px">{$protocol}</a>
+      </div>
+		<button type="submit" class="button qianfen light border-none" style="width: 100px !important;min-height: 36px !important; line-height: 36px !important;">
+      	 确认提交
+        </button>
+	</a>
+	</div>	
+</form>
+    
+
+</html>
+
+<script type="text/javascript">
+var i=1;
+function addinfo(){
+	i++;
+  $.ajax({
+      url: 'collect.php?c=index&a=add_more&id={$_REQUEST[id]}',
+      type: 'GET',
+      dataType: 'json',
+      data: {i:i},
+      success:function(data) {  
+        var info="<div id=pp"+i+" style='border-bottom:1px solid #cccccc'>"+data+"</div>";
+        $("#person").append(info);
+      },  
+      error : function() {  
+          alert("失败");
+      }  
+  });
+	
+}	
+</script>

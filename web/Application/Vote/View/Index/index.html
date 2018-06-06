@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>{$data[vote][detail][title]}</title>
+    <link rel="stylesheet" href="{$config['static']}ionic/css/ionic.min.css"/>
+    <script src="{$config['static']}ionic/js/ionic.bundle.min.js"></script>
+    <script type="text/javascript" src="{$config['static']}/ionic/jquery.js"></script>
+    <style>
+        html{
+            overflow: scroll;
+        }
+        .topBar{
+            box-sizing: border-box;
+            padding: 8px 0 0;
+            color: #ffffff;
+            background: #d31145;
+            font-size: 18px;
+        }
+        .bat{
+            width: 60%;
+            height: 50px;
+        }
+       .batSub{
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .batSel{
+            color:#fff;
+            background:#d31145;
+            border: 1px solid #d31145;
+        }
+        .batNo{
+            color:#d31145;
+            background:#fff;
+            border: 1px solid #d31145;
+        }
+        .num{
+            font-size: 34px;
+            font-weight: bold;
+        }
+        .voteNum{
+            background: #d31145;
+            color:#fff;
+            height: 130px;
+            line-height: 130px;
+            margin-bottom: 10px;
+        }
+
+        .detail{
+            vertical-align:bottom;
+            font-size: 20px;
+            color: #d31145;
+            float: left;
+        }
+        .voteBtn{
+            float: right;
+            background: #d31145;
+            color: #ffffff;
+            border: none;
+            padding:5px 10px;
+            border-radius: 5px;
+        }
+        .tijiao {
+            /*box-sizing: border-box;*/
+            padding: 30px 0 0 0;
+            display: none;
+            position: fixed;
+            bottom: 35%;
+            left: 15%;
+            width: 70%;
+            height: 150px;
+            background-color: white;
+            z-index: 1002;
+        }
+        .black_overlay{
+            display:none;
+            position:absolute;
+            bottom:0;
+            left:0;
+            width:100%;
+            height:100%;
+            background-color:black;
+            z-index:1001;
+            -moz-opacity:0.6;
+            opacity:.60;
+            filter:alpha(opacity=60);
+        }
+        .sure{
+            background: #d31145;
+            color: #ffffff;
+            border: none;
+            padding:5px 10px;
+            border-radius: 5px;
+        }
+
+        .row  .input{
+            width: 100%;
+            border: 1px solid #aaa;
+            border-radius: 10px;
+            padding-left: 10px;
+        }
+    </style>
+</head>
+<body>
+<img src="{$data[vote][detail][image_thumb]}" alt="顶部图" style="width:100%"/>
+
+<div class="row" style="margin-top: -10px ;margin-left:-10px;width: 104%">
+    <div class="col topBar text-center">
+        <p>
+            <span>投票人数</span>
+            <br/>
+            <span>{$data[vote][detail][count_vote]}</span>
+        </p>
+    </div>
+    &nbsp;
+    <div class="col topBar text-center">
+        <p>
+            <span>访问量</span>
+            <br/>
+            <span>{$data[vote][detail][count_view]}</span>
+        </p>
+    </div>
+</div>
+
+<div class="item item-borderless" style="margin-left: -16px">
+    <div class="row bat">
+
+        <a class="col-center text-center col batSub batSel" onclick="topBar(0)" href="javascript:void(0)"
+                style="color:#fff;background:#d31145 ">最新参赛</a>
+
+        <a class="col-center text-center col batSub batNo" onclick="topBar(1)"  href="vote.php?c=index&a=sort&id={$data[vote][detail][id]}"
+           style="">投票排行</a>
+    </div>
+</div>
+
+<div class="row" style="display: none1;">
+    <form method="post" action="{:U('index')}&id={$data[vote][detail][id]}" class="row">
+        <input style="width: 60%" name="keyword" type="text" value="" class="input col" placeholder="输入姓名搜索" />
+        <button type="submit" class="voteBtn col col-25" style="padding:0 24px"> 搜索 </button>
+    </form>
+</div>
+
+<div class="item">
+
+        <volist name="data[option_lists][content]" id="vo"  >
+
+        <eq name="mod" value="0">
+            <div class="row" style="margin-bottom: 1px">
+            <div class="col text-center" style="border: 1px solid #ddd">
+                <img class="voteNum" src="{$vo[image_thumb]}" width="100px" height="130px" onclick="option_detail({$data[vote][detail][id]},{$vo[id]})">
+                   <!--  <span class="num">{$vo[count_vote]|default=0}</span>
+                    票 -->
+                </img>
+               <p>
+                    <span class="num" id="show_count_{$vo[id]}">{$vo[count_vote]|default=0}</span>
+                    票
+                   <!-- <span class="detail" onclick="option_detail({$vo[id]})">详情》</span> -->
+                   <button class="voteBtn" onclick="vote({$vo[vote_id]},{$vo[id]})">投票</button>
+               </p>
+            </div>
+            &nbsp;
+        </eq>
+        <eq name="mod" value="1">
+            <div class="col text-center" style="border: 1px solid #ddd">
+                    <img class="voteNum" src="{$vo[image_thumb]}" width="100px" height="130px" onclick="option_detail({$data[vote][detail][id]},{$vo[id]})">
+                       <!--  <span class="num">{$vo[count_vote]|default=0}</span>
+                        票 -->
+                    </img>
+                   <p>
+                        <span class="num" id="show_count_{$vo[id]}">{$vo[count_vote]|default=0}</span>
+                        票
+                      <!--  <span class="detail" onclick="option_detail({$vo[id]})">详情》</span> -->
+                       <button class="voteBtn" onclick="vote({$vo[vote_id]},{$vo[id]})">投票</button>
+                   </p>
+                </div>
+            </div>
+        </eq>
+        
+        </volist>
+        <if condition="count($data[option_lists][content])%2 eq 1">
+                <div class="col text-center">
+                </div>
+                </div>
+        </if>
+
+</div>
+
+
+<div class="tabs tabs-icon-top" style="border: none;position: fixed;bottom: 0">
+    <a href="vote.php?c=index&a=show&id={$data[vote][detail][id]}" class="tab-item" onclick="sel_tab(0)"  style="color:#d31145;background:#fff;border: 1px solid #d31145">
+        <i class="icon ion-ios-home"></i>
+        首页
+    </a>
+    <a href="vote.php?c=index&a=sort&id={$data[vote][detail][id]}" class="tab-item" onclick="sel_tab(1)"  style="color:#d31145;background: #fff;border: 1px solid #d31145">
+        <i class="icon ion-ios-cart"></i>
+        排名
+    </a>
+    <a href="vote.php?c=index&a=add&id={$data[vote][detail][id]}" class="tab-item"  style="color:#d31145;background: #fff;border: 1px solid #d31145 ">
+        <i class="icon ion-android-person"></i>
+        报名
+    </a>
+</div>
+
+<p style="height: 40px"></p>
+<div id="tijiao" class="tijiao" style="border-radius: 5px;background-color: rgba(248, 246, 247, 0.498039);">
+    <p class="text-center" id="tijiaomsg">
+        您已投票成功！
+    </p>
+    <div class="row text-center">
+        <div class="col">
+            <button onclick="sure()" class="button sure" style="padding:0 24px;background-color: #d31145;border: none;color: white">
+                确认
+            </button>
+        </div>
+    </div>
+</div>
+<div id="fade" class="black_overlay"></div>
+
+
+
+<script>
+    var tijiao=document.querySelector('#tijiao');
+    var fade=document.querySelector('#fade');
+    function voteBtn(msg){
+        $("#tijiaomsg").html(msg);
+        tijiao.style.display='block';
+        fade.style.display='block';
+    }
+    function sure(){
+        tijiao.style.display='none';
+        fade.style.display='none';
+    }
+
+    function topBar(index){
+        var batSub=document.getElementsByClassName('batSub');
+        console.log(batSub)
+        for(var i=0;i<batSub.length;i++){
+            batSub[i].style.color='#d31145';
+            batSub[i].style.background='#fff';
+            batSub[i].style.border='1px solid #d31145'
+        }
+        batSub[index].style.color='#fff';
+        batSub[index].style.background='#d31145';
+    }
+
+   function sel_tab(index) {
+        var a = document.getElementsByClassName("tab-item");
+        var len = a.length;
+        for (var j = 0; j < len; j++) {
+            a[j].style.color='#d31145';
+            a[j].style.background='#fff';
+//            a[j].style.border='1px solid #d31145'
+
+        }
+       a[index].style.color='#fff';
+       a[index].style.background='#d31145';
+
+    };
+
+    function option_detail(id,option_id){
+        location.href="vote.php?c=index&a=option_detail&id="+id+"&vote_id="+option_id;
+    }
+
+   function vote(id,vote_id){
+        $.ajax({        
+            url: "vote.php?c=vote&a=vote_log&id="+id+"&vote_id="+vote_id,
+            type: "post",
+            dataType: "json", 
+            success:function(re){
+                if(re.status==10001){
+                    voteBtn("您已投票成功！");
+                    $("#show_count_"+vote_id).html(re.vote_count);
+                }else if(re.status==20001){
+                    voteBtn("您今天已经投过票了，明天再过来投票吧!");
+                }else if(re.status==20003){
+                    voteBtn("您需关注再过来投票吧!");
+                }else if(re.status==40001){
+                    voteBtn("您已投该人员了咯!，请投其他人吧！");
+                }
+
+            },error:function(e){
+                voteBtn("提交出错！");
+            }
+        });
+    }
+
+
+
+</script>
+</body>
+</html>

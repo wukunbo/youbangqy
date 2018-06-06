@@ -1,0 +1,163 @@
+<include file="Public/includeHeader" />
+
+﻿<div class="row">
+	<div class="col-lg-12">
+		<h3 class="page-header">题目列表</h3>
+		
+	</div>
+</div>
+
+<div class="panel panel-default">
+
+	<div class="panel-heading">
+		<h2><i class="fa fa-table red"></i><span class="break"></span><strong>列表</strong></h2>
+		 
+	</div>
+
+	<div class="form-group" style="margin-top: 20px">
+		<input name="allselect" type="checkbox" value="all" onclick="selectbtn()" />全选
+	<span style="cursor:hand" onclick="all_del()"><i class="fa fa-trash-o"></i> 批量删除</span>
+	</div>
+
+	<div class="panel-body">
+		<table class="table table-bordered table-striped table-condensed table-hover">
+			<thead>
+				<tr>
+					<th>选择</th>
+					<th>题号</th>
+					<th>题目</th>
+					<th>选项</th>
+					<!-- <th>排序</th> -->
+					<th style="width: 48px">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<volist name='data[content]' id='vo'>
+					<tr>
+						<td><input name="namelist" type="checkbox" value="<?php echo $vo[id];?>" /></td>
+						<td>{$vo[xulie]}</td>
+						<td><div  style="width:200px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;" title="{$vo[title]}">{$vo[title]}</div></td>
+						<td><volist name='vo[option]' id='vo2'>{$vo2[label]}.{$vo2[option_title]}&nbsp;&nbsp;&nbsp;&nbsp;</volist></td>
+						<!-- <td><input name="sort" id="timu_sort"  value="{$vo[sort]}" style="width: 35px"></input></td> -->
+						<td style="width: 40px">
+				          <a href='{:U("add_question",array("id"=>$vo["id"],"form"=>$_REQUEST[id]))}'><i class="fa fa-pencil"></i></a>
+				          <a href='{:U("category_del")}&categoryid={$_REQUEST[id]}&questionid={$vo[id]}' role="button" data-toggle="modal"><i class="fa fa-trash-o"></i></a>
+					    </td>
+					</tr>
+				</volist>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<include file="Public/pagination" />
+<include file="Public/includeFooter" />
+
+<script type="text/javascript">
+
+function submitxls(){
+
+	var fileval=$('#oncontacts').val();
+	var regex=/(.+)\.xls|xlsx$/i;
+	if(regex.test(fileval)==false){
+		alert("文件格式不正确,请上传Excel文件");
+		return false;
+	}
+
+	var formData = new FormData($( "#xlsform" )[0]);  
+	$.ajax({  
+	  url: 'userweb.php?c=survey&a=to_question' ,  
+	  type: 'POST',  
+	  data: formData,  
+	  async: false,  
+	  cache: false,  
+	  contentType: false,  
+	  processData: false,  
+	  success: function (returndata) {  
+	      alert("导入成功！");
+	      window.location.href="userweb.php?c=survey&a=question_lists";
+	  },  
+	  error: function (returndata) {  
+	      alert("导入失败");  
+	  }  
+	});
+}
+
+function selectall()  
+{  
+	var obj=document.all.namelist;  
+	for(var i=0;i<obj.length;i++)  
+	{  
+		obj[i].checked=true;  
+	}  
+}  
+function cacelall()  
+{  
+	var obj=document.all.namelist;  
+	for(var i=0;i<obj.length;i++)  
+	{  
+		obj[i].checked=false;  
+	}  
+}  
+
+function selectbtn(){
+
+	if($("input[name='allselect']").attr("checked")){
+		selectall();
+	}else{
+		cacelall(); 
+	}
+}
+
+function selfile(){
+	$('#oncontacts').click();
+}
+
+
+//批量删除题目
+function all_del(){
+	var str="";
+    $("input[name='namelist']:checkbox").each(function(){ 
+        if($(this).attr("checked")){
+            str += $(this).val()+","
+        }
+    });
+    str=str.substring(0,str.length-1);
+    if(str == ""){
+    	alert("请选择题目！！");
+    	return;
+    }
+    // alert(str);
+    var categoryid={$_REQUEST[id]};
+    $.ajax({
+    	url: 'userweb.php?c=survey&a=del_category',
+    	type: 'POST',
+    	dataType: 'json',
+    	data: {categoryid: categoryid,questionids: str},
+    	success:function(data) {  
+			alert("删除成功");
+			window.location.href="userweb.php?m=Userweb&c=Survey&a=show_category&id={$_REQUEST[id]}";
+		},  
+		error : function() {  
+			alert("删除失败");
+		}  
+    });
+}
+
+function question_sort(questionid){
+
+	 $.ajax({
+    	url: 'userweb.php?c=survey&a=question_sort',
+    	type: 'POST',
+    	dataType: 'json',
+    	data: {questionid: questionid,questionids: str},
+    	success:function(data) {  
+			alert("删除成功");
+			window.location.href="userweb.php?m=Userweb&c=Survey&a=show_category&id={$_REQUEST[id]}";
+		},  
+		error : function() {  
+			alert("删除失败");
+		}  
+    });
+}
+</script>

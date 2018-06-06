@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html style="overflow: scroll">
+<head lang="en">
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="{$config['static']}ionic/jquery.js"></script>
+
+    <style type="text/css">
+    	/*遮盖层样式*/
+		.box{
+			
+			position:absolute;
+			font-size: 250px;
+			left:50%;
+			z-index:100;
+			color: #fff;
+		/*	background-color:#fff;*/
+
+		}
+		#bg{
+			width:100%;
+			height:100%;
+			background-color:#000000;
+			position:absolute;/*定位*/
+			z-index:99;
+			left:0;
+			top:0;
+			display:none;/*显隐*/
+			/*透明度*/
+			opacity:0.5;
+			filter: alpha(opacity=50);
+			-moz-opacity: 0.5;
+		}
+
+    </style>
+</head>
+<body>
+
+
+
+<!--遮盖层-->
+<div id="bg"></div>
+<div class="box" id="show_num"> </div>
+
+</body>
+</html>
+
+
+
+<script type="text/javascript">
+ var iID;
+$(function () {
+  
+        $("#bg").css({
+            display: "block", height: $(document).height()
+        });
+        var $box = $('.box');
+        $box.css({
+            //设置弹出层距离左边的位置
+            left: ($("body").width() - $box.width()) / 2 - 20 + "px",
+            //设置弹出层距离上面的位置
+            top: ($(window).height() - $box.height()) / 2 - 150 + "px",
+            display: "block"
+        });
+   iID=setInterval("close()", 1000);//定时接收
+	//
+
+   
+});
+
+   //点击关闭按钮的时候，遮罩层关闭
+   var i=5;
+   function close() {
+   		if(i==0){
+   			$("#bg,.box").css("display", "none");
+   			clearTimeout(iID);//该方法可暂停  定时器的执行
+   		}else{
+   			$("#show_num").html(i);
+   			i--;
+   		}
+       
+    }
+
+</script>

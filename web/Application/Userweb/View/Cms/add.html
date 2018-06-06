@@ -1,0 +1,184 @@
+<include file="Public/includeHeader" />
+<div class="panel panel-default">
+	<form action="{:U('add_action')}&cate_id={$cate_id}&p={$p}&cms_id={$data['detail']['cms_id']}" method="post" name="add_goods" id="add_goods" onsubmit="return check()">
+		<input type="text" name="post_id"  class="form-control" value="{$data[detail]['id']}" style="display:none">
+		<div class="panel-body">
+
+			<div class="form-group">
+				<label for="text-input" class="col-md-2 control-label">部门:</label>
+				<div class="col-md-4 input-group ">
+					<select name="post[partment]" id="partment" class="form-control">
+						<volist name="partment_list" id="list">
+							<option value="{$list[id]}" <if condition="$list.id eq $data[detail]['partment']">selected</if>>{$list[title]}</option>
+						</volist>
+					</select>
+
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label for="text-input" class="col-md-2 control-label">文章标题</label>
+				<div class="col-md-4 input-group ">
+					<input id="cms_title" type="text" name="post[title]"  class="form-control" value="{$data['detail']['title']}">
+				</div>
+			</div>
+ 
+			<div class="form-group">
+				<label for="text-input" class="col-md-2 control-label">简介</label>
+				<div class="col-md-4 input-group ">
+					<textarea id="summary" name="post[summary]"class="form-control"  >{$data['detail']['summary']}</textarea>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="text-input" class="col-md-2 control-label">图片</label>
+				<div class="col-md-4 input-group ">
+					<img alt="Sample Image" src="{$data[detail]['image_thumb']}" style="<if condition="$data[detail]['image_thumb'] eq ''">display:none;
+					</if>
+					width:100px" id="UploadImg_src" class="img-thumbnail">
+					<input type="hidden" name="post[image_thumb]" id="img_thumb_hidden" value="{$data[detail]['image_thumb']}">
+					<input type="hidden" name="post[img_orogin]" id="img_orogin_hidden" value="{$data[detail]['img_orogin']}">
+					<i class="fa fa-plus"></i><a type="button"  href="javascript:show_content('userweb.php?c=Config&a=material_lists&ajax=1&return_fn=material_select')" >添加图片 </a>
+					<!--打开图册-->
+					<script src="{$config["static"]}/public/js/material_lists_ajax.js">
+						</script>
+					<script src="tool/ajaxFileUpload/jquery.ajaxFileUpload.js" type="text/javascript"></script>
+					<script>
+						//选择图片之后
+						function material_select(img_thumb,img_orogin){
+							//alert(img_thumb+img_orogin);
+							$("#UploadImg_src").show();
+							$("#UploadImg_src").attr("src",img_thumb);
+							$("#img_thumb_hidden").val(img_thumb);
+							$("#img_orogin_hidden").val(img_orogin);
+							show_content_close();
+						}
+						</script>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<label for="text-input" class="col-md-2 control-label">文章详情</label>
+				<div class="col-md-10 input-group ">
+					<link rel="stylesheet" href="tool/kindeditor-4.1.10//themes/default/default.css" />
+					<link rel="stylesheet" href="tool/kindeditor-4.1.10/plugins/code/prettify.css" />
+					<script charset="utf-8" src="tool/kindeditor-4.1.10/kindeditor.js"></script>
+					<script charset="utf-8" src="tool/kindeditor-4.1.10/lang/zh_CN.js"></script>
+					<script charset="utf-8" src="tool/kindeditor-4.1.10/plugins/code/prettify.js"></script>
+					<script>
+			 
+										KindEditor.ready(function(K) {
+											var editor1 = K.create('textarea[id="editor_id"]', {
+												cssPath : 'tool/kindeditor-4.1.10/plugins/code/prettify.css',
+												uploadJson : 'tool/kindeditor-4.1.10/php/upload_json.php',
+												fileManagerJson : 'tool/kindeditor-4.1.10/php/file_manager_json.php',
+												allowFileManager : true,
+											    filterMode : true,
+
+												afterCreate : function() {
+													 var self = this;
+													K.ctrl(document, 13, function() {
+														self.sync();
+														K('form[name=add_goods]')[0].submit();
+													});
+													K.ctrl(self.edit.doc, 13, function() {
+														self.sync();
+														K('form[name=add_goods]')[0].submit();
+														 
+													});
+												}
+											});
+											prettyPrint();
+										});
+	 
+								</script>
+					<textarea id="editor_id" name="post[context]" style="width:800px;height:700px;">{$data['detail']['context']}</textarea>
+				</div>
+			</div>
+
+		</div>
+		<div class="panel-footer">
+			<button class="btn btn-sm btn-success" type="submit" onclick1="save_vote()"><i class="fa fa-dot-circle-o"></i> 保存</button>
+			<button class="btn btn-sm btn-danger" type="reset"><i class="fa fa-ban"></i> 重置</button>
+		</div>
+	</form>
+</div>
+<include file="Public/includeFooter" />
+<script>
+
+function trigger(){
+	
+	 $("#gallery_file").trigger("click");
+	  
+}
+
+
+function check(){
+	var title=$("#cms_title").val();
+	if(title==""){
+		alert("请填写文章标题");
+		return false;
+	}
+
+	var summary=$("#summary").val();
+	if(summary==""){
+		alert("请填写文章简介");
+		return false;
+	}
+
+	var img_thumb_hidden=$("#img_thumb_hidden").val();
+	if(img_thumb_hidden==""){
+		alert("请选择图片");
+		return false;
+	}
+
+
+	return true;
+}
+
+
+function start_chose(){
+
+	var val=$('#attr_select').val();
+	
+	url="admin.php?c=Goods&a=get_chose_attr_lists&cate_id="+val+"&goods_id={$data[detail][detail][goods_id]}";
+	
+	$("#attr_lists").html('<option value="">加载中</option>').load(url); 
+	
+}
+start_chose();
+function get_attr_chose_lists(goods_id){
+	var val=$('#attr_select').val();
+
+	
+	if(val>0){
+		
+		url="admin.php?c=Goods&a=get_chose_attr_lists&cate_id="+val+"&goods_id="+goods_id;
+		
+		$("#attr_lists").html('<option value="">加载中</option>').load(url); 
+		
+	}
+}
+
+
+
+function add_chose_s(i){
+
+	url="admin.php?c=Goods&a=get_select_lists&i="+i;
+
+	  $.ajax({
+			type: "post",
+          	url: url,
+          	dataType: "json",       
+          	success: function(data) {
+
+	  			$("#cate_lists").append(data.op_str);
+				
+         	 },
+			
+      })
+}
+
+ </script>
+<!--图片上传-->
+<!-- end: JavaScript-->

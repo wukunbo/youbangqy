@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{$config['static']}ionic/css/CJ.css">
+    <script src="{$config['static']}ionic/jquery.js" type="text/javascript"></script>
+    <title>抽奖过渡</title>
+</head>
+<body>
+
+<div style="background-image:url({$image_back});position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;z-index: -1;background-size: 100% 100%;"></div>
+    
+<!--<div style="height: 100%;width: 100%;border: 1px solid #ddd">-->
+<div class="w100">
+    <div class="w80 float-l text-center" style="border: solid 1px #ddd;margin-right: -1px;height: 773px">
+
+
+    <div id="show_prize">
+   		<h1 class="text-center">
+		<if condition="$_REQUEST[prize] eq 1">
+       		一
+	    <elseif condition="$_REQUEST[prize] eq 2"/>
+	        二
+	    <elseif condition="$_REQUEST[prize] eq 3"/>
+	        三
+	    <elseif condition="$_REQUEST[prize] eq 4"/>
+	        四
+	    <elseif condition="$_REQUEST[prize] eq 5"/>
+	        五
+	    <elseif condition="$_REQUEST[prize] eq 6"/>
+	        六
+	    <else/>
+	        七
+	    </if>
+   		等奖
+   		</h1>
+        <div class="w100">
+           <h4 class="text-left" style="margin-left: 20px">
+           	<if condition="$_REQUEST[prize] eq 1">
+	        	一
+		    <elseif condition="$_REQUEST[prize] eq 2"/>
+		        二
+		    <elseif condition="$_REQUEST[prize] eq 3"/>
+		        三
+		    <elseif condition="$_REQUEST[prize] eq 4"/>
+		        四
+		    <elseif condition="$_REQUEST[prize] eq 5"/>
+		        五
+		    <elseif condition="$_REQUEST[prize] eq 6"/>
+		        六
+		    <else/>
+		        七
+		    </if>
+
+           	等奖
+           </h4>
+
+           <volist name="data[win]" id="lists">
+            <div id="show{$key+1}" class="w15 text-left float-l" style="margin-left: 30px;background-color: aqua;display: none;">
+                  <img src="{$lists.avatar_url}" style="width: 100%;height: 100%">
+                <p style="margin-left: 5px">代码：{$lists.user_id}</p>
+                <p style="margin-left: 5px">姓名：{$lists.name}</p>
+            </div>
+        	</volist>
+        </div>
+    </div>
+
+    </div>
+    <div class="w19 float-l" >
+         <div class="w100" style="border: solid 1px #ddd;margin-bottom: -1px">
+             <img src="{$data[award][image]}" style="width: 100%">
+             <p>{$data[award][content]}</p>
+         </div>
+        <div class="w100" style="border: solid 1px #ddd;">
+            <h1>抽奖滚动信息</h1>
+            <span style="margin-left: 20px">姓名</span>
+            <span style="margin-left: 20px">代码</span>
+            <div id="up_zzjs" style="height:500px;overflow: hidden">
+
+                <div id="marqueebox">
+                    <volist name="data[users]" id="lists">
+						<p>{$lists.name} &nbsp; {$lists.user_id}</p>
+					</volist>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--</div>-->
+<script>
+        //文字轮播
+    function startmarquee(lh,speed,delay) {
+        var p=false;
+        var t;
+        var o=document.getElementById("marqueebox");
+        o.innerHTML+=o.innerHTML;
+        o.style.marginTop=0;
+        o.onmouseover=function(){p=true;}
+        o.onmouseout=function(){p=false;}
+
+        function start(){
+            t=setInterval(scrolling,speed);
+            if(!p) o.style.marginTop=parseInt(o.style.marginTop)-1+"px";
+        }
+
+        function scrolling(){
+            if(parseInt(o.style.marginTop)%lh!=0){
+                o.style.marginTop=parseInt(o.style.marginTop)-1+"px";
+                if(Math.abs(parseInt(o.style.marginTop))>=o.scrollHeight/2) o.style.marginTop=0;
+            }else{
+                clearInterval(t);
+                setTimeout(start,delay);
+            }
+        }
+        setTimeout(start,delay);
+    }
+    startmarquee(20,20,1000);
+
+    var i=1;
+    var win_count={$data[win_count]|default=0};
+    
+    lottery_log();
+    show_prizeuser();
+
+    // var win_count={$data[win_count]};
+    // var show_i=1;
+
+    function show_prizeuser(){
+    	// alert(show_i);
+    	$("#show"+i).show();
+    	if(i<=win_count){
+    		i++;
+    		window.setTimeout(show_prizeuser,2000);
+    	}
+    }
+
+     function lottery_log(){
+        $.ajax({
+            url: 'lottery.php?c=pc&a=pc_start&id={$_REQUEST[id]}&prize={$data[award][type]}',
+            type: 'GET',
+            dataType: 'json',
+            // data: {log_id: log_id,pay_pass:pay_pass},
+            success:function(data) {
+                // alert(data);
+                // if(data.users){
+                //     $("#marqueebox").html(data.users);
+                // }
+
+                if(data){
+                	window.location.href="lottery.php?c=pc&a=show_process&id={$_REQUEST[id]}";
+                }else{
+                	window.setTimeout(lottery_log,2000); 
+                }
+                
+                // if(data.status==10000){
+                //     window.setTimeout(lottery_log,2000); 
+                //     // alert("支付成功");
+                //     // window.location.href="shop.php?c=order&a=pay_success&log_id="+log_id;
+                // }
+
+            },  
+            error : function() {  
+                alert("失败");
+            }  
+        });
+    }
+</script>
+</body>
+</html>

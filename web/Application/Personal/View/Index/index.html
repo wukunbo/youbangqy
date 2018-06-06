@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html style="overflow: scroll">
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>个人中心</title>
+    <link rel="stylesheet" href="{$config['static']}ionic/css/ionic.min.css"/>
+
+    <style>
+        .per_bar{
+            height: 50px;
+            position: relative;
+            bottom: 50px;
+        }
+        .per_bar1{
+            height: 50px;
+            position: relative;
+            bottom: 100px;
+        }
+        .bg{
+            width: 100%;
+            height: 50px;
+            background: #fff;
+            opacity: 0.5;
+
+        }
+        .per_bar1 .touxiang{
+            width: 80px;
+            height: 80px;
+            border: 1px solid #fff;
+            border-radius: 40px;
+            position: relative;
+            top: -50px;
+            left: 20px;
+        }
+       .per_bar1  a{
+            font-size: 16px;
+            margin: 0 10px;
+            color: #f00;
+            position: relative;
+            bottom:-8px;
+            text-decoration: none;
+        }
+        .line{
+            position: relative;
+            bottom: -10px;
+            width: 1px;
+            height: 15px;
+            border: 1px solid #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <img src="{$config['static']}img/person.jpg" alt="背景" style="width: 100%;"/>
+    <div class="per_bar bg"></div>
+    <div class="row per_bar1">
+            <img class="touxiang" src="{$data[user][avatar_url]}" alt="头像" style="margin-right: 10px"/>
+            <a href="#" >{$data[user][name]}</a>
+        <!-- <span class="line"></span>
+            <a href="#" >{$data[user][partment]}</a> -->
+        <span class="line"></span>
+            <a href="#" >{$data[user][wx_userid]}</a>
+    </div>
+
+
+
+    <a class="item item-icon-left item-icon-right" href="personal.php?c=index&a=activity" style="margin-top: -100px">
+        <i class="icon  ion-ios-compose assertive"></i>
+        在线报名
+        <i class="icon ion-ios-arrow-right"></i>
+    </a>
+
+
+    <a class="item item-icon-left item-icon-right" href="personal.php?c=index&a=lottery">
+        <i class="icon ion-android-options energized"></i>
+        在线抽奖
+        <i class="icon ion-ios-arrow-right"></i>
+    </a>
+
+    <a class="item item-icon-left item-icon-right" href="personal.php?c=index&a=survey">
+        <i class="icon ion-android-person calm"></i>
+        在线测试
+        <i class="icon ion-ios-arrow-right"></i>
+    </a>
+
+    <a class="item item-icon-left item-icon-right" href="personal.php?c=index&a=collect">
+        <i class="icon ion-android-person calm"></i>
+        多功能收集
+        <i class="icon ion-ios-arrow-right"></i>
+    </a>
+
+
+
+<p></p>
+</body>
+</html> 

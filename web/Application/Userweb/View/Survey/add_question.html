@@ -1,0 +1,92 @@
+<include file="Public/includeHeader" />
+
+﻿<div class="row">
+	<div class="col-lg-12">
+		<h3 class="page-header">添加题目</h3>
+		
+	</div>
+</div>
+
+<div class="panel panel-default">
+	<form action="{:U('add_question_action')}&id={$data[content][id]}&categoryid={$categoryid}&form={$_REQUEST[form]}"  enctype="multipart/form-data"  method="post">
+		<div class="panel-body">
+			<div class="form-group" style="width:500px;">
+        		<label>问题</label>
+         		<input type="text" name='post[title]' value="{$data[content][title]}" class="form-control">
+       		</div>
+
+       		<div class="form-group" style="width:1000px;">
+       			<label>序号+选项值+分值</label><p></p>
+        		<p><input type="checkbox" name="post[is_mul]" class="input_checkbox" style="vertical-align: sub;" <if condition="$data[content]['is_mul'] eq 'on'"> checked="true/" </if>>是否为多选题</p>
+        		<span id='append'>
+				<if condition="$data[content][id] eq ''">
+	        		<span style='float:left;'>选项&nbsp;&nbsp;<input type="text" name='option_label[]' placeholder='A(1)' value="A" class="form-control" style="width:70px;display:inline-block">&nbsp;&nbsp;&nbsp;<input type="text" name='option_title[]' placeholder='A选项内容' value="" style="width:220px;display:inline-block" class="form-control">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style='float:right;'>分值&nbsp;&nbsp;<input type="text" name='option_point[]' placeholder='3' value="{$data[content][option_point]}" class="form-control" style="width:80px;display:inline-block">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name='sort[]' placeholder='1' value="1" class="form-control" style="width:80px;display:none;"></span>
+	        		<p style='clear:both;'></p>
+	        		<span style='float:left;'>选项&nbsp;&nbsp;<input type="text" name='option_label[]' placeholder='B(2)' value="B" class="form-control" style="width:70px;display:inline-block">&nbsp;&nbsp;&nbsp;<input type="text" name='option_title[]' placeholder='B选项内容' value="" style="width:220px;display:inline-block" class="form-control">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style='float:right;'>分值&nbsp;&nbsp;<input type="text" name='option_point[]' placeholder='3' value="{$data[content][option_point]}" class="form-control" style="width:80px;display:inline-block">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name='sort[]' placeholder='2' value="2" class="form-control" style="width:80px;display:none"></span>
+	         		<p style='clear:both;'></p>
+	         		<span style='float:left;'>选项&nbsp;&nbsp;<input type="text" name='option_label[]' placeholder='C(3)' value="C" class="form-control" style="width:70px;display:inline-block">&nbsp;&nbsp;&nbsp;<input type="text" name='option_title[]' placeholder='C选项内容' value="" style="width:220px;display:inline-block" class="form-control">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style='float:right;'>分值&nbsp;&nbsp;<input type="text" name='option_point[]' placeholder='3' value="{$data[content][option_point]}" class="form-control" style="width:80px;display:inline-block">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name='sort[]' placeholder='3' value="3" class="form-control" style="width:80px;display:none"></span>
+	         		<p style='clear:both;'></p>
+	         		<span style='float:left;'>选项&nbsp;&nbsp;<input type="text" name='option_label[]' placeholder='D(4)' value="D" class="form-control" style="width:70px;display:inline-block">&nbsp;&nbsp;&nbsp;<input type="text" name='option_title[]' placeholder='D选项内容' value="" style="width:220px;display:inline-block" class="form-control">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style='float:right;'>分值&nbsp;&nbsp;<input type="text" name='option_point[]' placeholder='3' value="{$data[content][option_point]}" class="form-control" style="width:80px;display:inline-block">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name='sort[]' placeholder='3' value="4" class="form-control" style="width:80px;display:none"></span>
+	         		<p style='clear:both;'></p>
+        		<else />
+	        		<volist name="data[content][option]" id="vo">
+	        			<span style='float:left;'>选项&nbsp;&nbsp;<input type="text" name='option_label[]' placeholder='A(1)' value="{$vo[label]}" class="form-control" style="width:70px;display:inline-block">&nbsp;&nbsp;&nbsp;<input type="text" name='option_title[]' placeholder='' value="{$vo[title]}" style="width:220px;display:inline-block" class="form-control">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style='float:right;'>分值&nbsp;&nbsp;<input type="text" name='option_point[]' placeholder='3' value="{$vo[point]}" class="form-control" style="width:80px;display:inline-block">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name='sort[]' placeholder='1' value="{$vo[sort]}" class="form-control" style="width:80px;display:none"></span>
+	         			<p style='clear:both;'></p>
+	         		</volist>
+         		</if>
+         		<span style='clear:both;'></span>
+        		</span>
+        	</div>
+
+        	<div class="form-group" style="width:1000px;clear:both;">
+        		<span onclick='zhuijia();' style='cursor:pointer;'>添加选项</span>
+        	</div>
+
+		</div>
+		<div class="panel-footer">
+			<button id="question_btn" class="btn btn-sm btn-success" type="submit" onclick1="save_vote()"><i class="fa fa-dot-circle-o"></i> 保存</button>
+			<button class="btn btn-sm btn-danger" type="reset"><i class="fa fa-ban"></i> 重置</button>
+		</div>
+	</form>
+</div>
+
+<include file="Public/includeFooter" />
+
+<script>
+
+var is_onclick=false;
+$(function(){
+	$("#question_btn").click(function(){
+		is_onclick=true;
+	});
+})
+window.onbeforeunload = function() {
+	if(is_onclick){
+		return;
+	}else{
+		return "您的内容还没有保存，您确定离开吗？";
+	}
+	 
+}
+
+
+ var i=5;
+ function zhuijia(){
+ 	var $html='<span style="float:left;">选项&nbsp;&nbsp;<input type="text" name="option_label[]" placeholder="" value="" class="form-control" style="width:70px;display:inline-block">&nbsp;&nbsp;&nbsp;<input type="text" name="option_title[]" value="" style="width:220px;display:inline-block" class="form-control">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="float:right;">分值&nbsp;&nbsp;<input type="text" name="option_point[]" value="" class="form-control" style="width:80px;display:inline-block">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="sort[]" placeholder="" value="10" class="form-control" style="width:80px;display:none;"></span><p style="clear:both;"></p>';
+
+ 	if(i==5){
+ 		var $html='<span style="float:left;">选项&nbsp;&nbsp;<input type="text" name="option_label[]" placeholder="E" value="E" class="form-control" style="width:70px;display:inline-block">&nbsp;&nbsp;&nbsp;<input type="text" name="option_title[]" value="" style="width:220px;display:inline-block" class="form-control">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="float:right;">分值&nbsp;&nbsp;<input type="text" name="option_point[]" value="" class="form-control" style="width:80px;display:inline-block">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="sort[]" placeholder="5" value="5" class="form-control" style="width:80px;display:none;"></span><p style="clear:both;"></p>';
+ 	}
+ 	if(i==6){
+ 		var $html='<span style="float:left;">选项&nbsp;&nbsp;<input type="text" name="option_label[]" placeholder="F" value="F" class="form-control" style="width:70px;display:inline-block">&nbsp;&nbsp;&nbsp;<input type="text" name="option_title[]" value="" style="width:220px;display:inline-block" class="form-control">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="float:right;">分值&nbsp;&nbsp;<input type="text" name="option_point[]" value="" class="form-control" style="width:80px;display:inline-block">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="sort[]" placeholder="6" value="6" class="form-control" style="width:80px;display:none;"></span><p style="clear:both;"></p>';
+ 	}
+ 	if(i==7){
+ 		var $html='<span style="float:left;">选项&nbsp;&nbsp;<input type="text" name="option_label[]" placeholder="G" value="G" class="form-control" style="width:70px;display:inline-block">&nbsp;&nbsp;&nbsp;<input type="text" name="option_title[]" value="" style="width:220px;display:inline-block" class="form-control">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="float:right;">分值&nbsp;&nbsp;<input type="text" name="option_point[]" value="" class="form-control" style="width:80px;display:inline-block">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="sort[]" placeholder="7" value="7" class="form-control" style="width:80px;display:none;"></span><p style="clear:both;"></p>';
+ 	}
+ 	if(i==8){
+ 		var $html='<span style="float:left;">选项&nbsp;&nbsp;<input type="text" name="option_label[]" placeholder="H" value="H" class="form-control" style="width:70px;display:inline-block">&nbsp;&nbsp;&nbsp;<input type="text" name="option_title[]" value="" style="width:220px;display:inline-block" class="form-control">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="float:right;">分值&nbsp;&nbsp;<input type="text" name="option_point[]" value="" class="form-control" style="width:80px;display:inline-block">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="sort[]" placeholder="8" value="8" class="form-control" style="width:80px;display:none;"></span><p style="clear:both;"></p>';
+ 	}
+    $("#append").append($html);
+    i++;
+ } 
+ </script>

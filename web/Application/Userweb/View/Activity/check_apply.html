@@ -1,0 +1,304 @@
+<include file="Public/includeHeader" />
+
+﻿<div class="row">
+	<div class="col-lg-12">
+		<h3 class="page-header">报名列表</h3>
+		
+	</div>
+</div>
+
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h2><i class="fa fa-table red"></i><span class="break"></span><strong>列表</strong></h2>
+		
+	</div>
+
+
+	<div class="form-group" style="margin-top: 20px">
+        <a class="btn btn-primary" onclick="show_content('userweb.php?c=contacts&a=choose_contact&t=activity&back=check_apply&id={$_REQUEST['id']}')" >
+			添加人员名单
+		</a>
+		 <a class="btn btn-primary" onclick="del_apply();" >
+			批量删除
+		</a>
+	</div>
+
+	<div class="form-group" style="margin-top: 25px">
+		<a href="Uploads/excel/to_apply.xlsx" target="_blank">
+			下载导入表格样式
+		</a>  
+
+		<div class="form-group" style="margin-top: 15px">
+		<a class="btn btn-success" href="userweb.php?c=Activity&a=lists&menu_app=Activity">返回列表</a>
+
+		<a class="btn btn-primary" onclick="to_apply();" >导入名单</a>
+
+		<label style="margin-left: 15px"><input <if condition="$open_status eq 2">checked="checked"</if> type="checkbox" id="open_other" name="open_other" value="" onclick="open_other()">是否对外开放</label>
+		<label style="margin-left: 15px"><input <if condition="$open_sign eq 2">checked="checked"</if> type="checkbox" id="open_sign" name="open_sign" value="" onclick="open_sign()">允许直接签到</label>	
+		<label id="only_div" style="margin-left: 15px;<if condition='$open_sign neq 2'>display: none;</if>"><input <if condition="$only_my eq 2">checked="checked"</if> type="checkbox" id="only_my" name="only_my" value="" onclick="only_my()">仅推送给自己</label>	
+
+
+		</div>
+
+		<form id="xlsform" enctype="multipart/form-data">
+			<input onchange="submitxls({$_REQUEST[id]})" id="oncontacts" name="xlsfile" type="file" value="导入名单" style="display: none;" accept="" />
+		</form>
+
+	</div>
+
+
+	<div class="panel-body">
+		<table class="table">
+			<thead>
+				<tr>
+					<th><input name="allselect" type="checkbox" value="" id="allselect" onclick="selectbtn()" />全选</th>
+					<th>ID</th>
+					<td >代码</td>
+					<th>姓名</th>
+					<th>部门</th>
+					
+		 
+					<td >状态</td>
+					<td >报名时间</td>
+					<td >提示信息</td>
+					<th style="width:15.5em;">操作</th>
+				</tr>
+			</thead>
+			
+			<tbody>
+				<volist name="data[all][lists]" id="lists">
+					<tr >
+						<td><input name="namelist" type="checkbox" value="{$lists['id']}" /></td>
+						<!-- <td >{$lists['id']}</td> -->
+						<td >{$key+1}</td>
+						<td >{$lists[user_id]}</td>
+						<td >{$lists[truename]}</td>
+						<td >{$lists[partment]}</td>
+						
+						<td >
+
+							<if condition="$lists[is_able] eq 0">
+								未参加
+							</if> 
+							<if condition="$lists[is_able] eq 1">
+								已参加
+							</if> 
+						 
+						 </td>
+						 <td >
+							<if condition="$lists[applytime] neq null">
+						 	{$lists[applytime]|date="Y-m-d",###}
+						 	<else/>
+						 		还未报名
+						 	</if>
+						 </td>
+						 <td>
+						 	<input onchange="post_hint({$lists[id]})" id="hint{$lists[id]}" type="text" name="hint{$lists[id]}"  class="form-control" value="{$lists[hint]}">
+						 </td>
+						<td>
+							
+								<a  href="javascript:confirm_del('userweb.php?c=activity&a=del_apply&id={$lists[id]}')" ><i class="fa fa-trash-o"></i></a>
+				  			
+						</td>
+					</tr>
+				</volist>
+				 
+				 
+			</tbody>
+		</table>
+		
+		
+
+	</div>
+</div>
+<include file="Public/pagination" />
+<include file="Public/includeFooter" />
+
+<script type="text/javascript">
+
+
+function post_hint(id){
+	var val=$("#hint"+id).val();
+	// alert(id+"---"+val);
+	$.ajax({
+    	url: 'userweb.php?c=activity&a=post_hint',
+    	type: 'POST',
+    	dataType: 'json',
+    	data: {id: id,hint:val},
+    	success:function(data) {  
+
+		},  
+		error : function() {  
+			alert("失败");
+		}  
+    });
+}
+
+
+function submitxls(id){
+
+	var fileval=$('#oncontacts').val();
+	var regex=/(.+)\.xls|xlsx$/i;
+	if(regex.test(fileval)==false){
+		alert("文件格式不正确,请上传Excel文件");
+		return false;
+	}
+
+	var formData = new FormData($( "#xlsform" )[0]);  
+	$.ajax({  
+	  url: 'userweb.php?c=activity&a=to_apply&id='+id ,  
+	  type: 'POST',  
+	  data: formData,  
+	  async: false,  
+	  cache: false,  
+	  contentType: false,  
+	  processData: false,
+	  beforeSend:function(e){
+	  	show_content();
+	  },
+	  success: function (returndata) {
+	  	 show_content_close();
+	     alert("导入成功！");
+	     location.reload();
+	  },  
+	  error: function (returndata) {  
+	      alert("导入失败");  
+	  }  
+	});
+}
+
+function to_apply(){
+	$('#oncontacts').click();
+}
+
+function del_apply(){
+	var str="";
+    $("input[name='namelist']:checkbox").each(function(){ 
+        if($(this).attr("checked")){
+            str += $(this).val()+","
+        }
+    });
+    str=str.substring(0,str.length-1);
+    if(str == ""){
+    	alert("请选择名单！！");
+    	return;
+    }
+  
+    $.ajax({
+    	url: 'userweb.php?c=activity&a=del_allapply',
+    	type: 'POST',
+    	dataType: 'json',
+    	data: {ids: str},
+    	success:function(data) {  
+			alert("删除成功");
+			location.reload();
+    		// window.location.href="userweb.php?c=activity&a=check_apply&id={$_REQUEST[id]}";
+		},  
+		error : function() {  
+			alert("发布失败");
+		}  
+    });
+}
+
+//对外开放
+function open_other(){
+    checked=$("#open_other").prop("checked"); 
+    if(checked==true){
+        var open_status=2;
+    }else{
+        var open_status=1;
+    }
+    var id={$_REQUEST[id]};
+
+    $.ajax({
+        url: 'userweb.php?c=activity&a=open_status',
+        type: 'GET',
+        dataType: 'json',
+        data: {id: id,open_status:open_status},
+        success:function(data) {  
+            alert("更改成功");
+        },  
+        error : function() {  
+            alert("选择成功");
+        }  
+    });
+}
+
+//允许直接签到
+
+function open_sign(){
+    checked=$("#open_sign").prop("checked"); 
+    if(checked==true){
+        var open_sign=2;
+        $("#only_div").show();
+    }else{
+        var open_sign=1;
+        $("#only_div").hide();
+    }
+    var id={$_REQUEST[id]};
+
+    $.ajax({
+        url: 'userweb.php?c=activity&a=open_sign',
+        type: 'GET',
+        dataType: 'json',
+        data: {id: id,open_sign:open_sign},
+        success:function(data) {  
+            alert("更改成功");
+        },  
+        error : function() {  
+            alert("选择成功");
+        }  
+    });
+}
+
+//仅推送给自己
+function only_my(){
+	checked=$("#only_my").prop("checked"); 
+    if(checked==true){
+        var only_my=2;
+    }else{
+        var only_my=1;
+    }
+    var id={$_REQUEST[id]};
+
+    $.ajax({
+        url: 'userweb.php?c=activity&a=only_my',
+        type: 'GET',
+        dataType: 'json',
+        data: {id: id,only_my:only_my},
+        success:function(data) {  
+            alert("更改成功");
+        },  
+        error : function() {  
+            alert("选择成功");
+        }  
+    });
+}
+
+function selectall()  
+{  
+	var obj=document.all.namelist;  
+	for(var i=0;i<obj.length;i++)  
+	{  
+		obj[i].checked=true;  
+	}  
+}  
+function cacelall()  
+{  
+	var obj=document.all.namelist;  
+	for(var i=0;i<obj.length;i++)  
+	{  
+		obj[i].checked=false;  
+	}  
+}  
+
+function selectbtn(){
+
+	if($("input[name='allselect']").attr("checked")){
+		selectall();
+	}else{
+		cacelall(); 
+	}
+}
+
+</script>

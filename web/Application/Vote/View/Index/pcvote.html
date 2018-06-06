@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html ng-app="startVote">
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>开始投票</title>
+    <link rel="stylesheet" href="{$config['static']}ionic/css/ionic.min.css"/>
+    <link rel="stylesheet" href="{$config['static']}ionic/css/stylepc.css"/>
+    <script src="{$config['static']}ionic/js/ionic.bundle.min.js"></script>
+    <script src="{$config['static']}ionic/js.js"></script>
+    <script src="{$config['static']}ionic/jquery.js"></script>
+    <style>
+        .tou {
+            position: relative;
+            border: 1px solid red;
+            font-size: 20px;
+            margin: 0 auto;
+        }
+
+        .tijiao {
+            padding: 30px 0 0 0;
+            display: none;
+            position: fixed;
+            bottom: 35%;
+            left: 15%;
+            width: 70%;
+            height: 150px;
+            background-color: white;
+            z-index: 1002;
+        }
+
+        .black_overlay {
+            display: none;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            z-index: 1001;
+            -moz-opacity: 0.6;
+            opacity: .60;
+            filter: alpha(opacity=60);
+        }
+
+           a {
+            background-color: #d31145;
+            border-radius: 8px 8px 8px 8px;
+            box-shadow: 0 9px 0 #e1406b, 0 9px 25px rgba(0, 0, 0, 0.7);
+            color: #FFFFFF;
+            display: block;
+            font-family: '微软雅黑';
+            font-size: 42px;
+            font-weight: 700;
+            margin: 100px auto;
+            padding: 4px;
+            position: relative;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.1s ease 0s;
+        }
+       a:active {
+            box-shadow: 0 3px 0 #DB1F05, 0 3px 6px rgba(0, 0, 0, 0.9);
+            position: relative;
+            top: 6px;
+        }
+    </style>
+
+    <script>
+        angular.module('startVote', ['ionic'])
+                .controller('sv', function () {
+
+                })
+    </script>
+</head>
+<body ng-controller="sv">
+<ion-slide-box id="lunbo" show-pager="false" auto-play="true" does-continue="true">
+    <ion-slide>
+        <div class="box pink">
+            <img class="full-image" src="{$data[vote][detail][image_thumb]}">
+        </div>
+    </ion-slide>
+</ion-slide-box>
+<volist name="data[option_lists][content]" id="vo">
+    <div style="width: 100%">
+    <div class="item padding_0 text-center" style="margin-left: 5px;margin-right: 5px">
+
+        <if condition="$data[vote][detail][detail_status] eq 1">
+            <img class="pic" src="{$vo[image_thumb]}" onclick="window.location.href='vote.php?c=index&a=option_detail&id={$vo[vote_id]}&vote_id={$vo[id]}' " alt="pic"/>
+        <else/>
+            <img class="pic" src="{$vo[image_thumb]}" alt="pic"/>
+        </if>
+        <a class="tou meihong-bg flex" style="margin-bottom: 40px;" onclick="vote({$vo[vote_id]},{$vo[id]})" >
+            <b>投</b>
+        </a>
+        <div class="row xinxi">
+            <div class="col text-left">
+                <p class="text-left">
+                    {$vo[code_name]|default='代码'}：<span>{$vo[code]}</span>
+                </p>
+                <p>
+                    姓名：<span>{$vo[truename]}</span>
+                </p>
+            </div>
+            <div class="col text-right" style="display:none;">
+                票数：<span id="vote-{$vo[id]}">{$vo[count_vote]}</span>
+            </div>
+        </div>
+
+    </div>
+
+    </div>
+</volist>
+
+<div style="height: 51px"></div>
+
+
+
+<div id="tijiao" class="tijiao" style="border-radius: 5px;background-color:  rgba(248, 246, 247, 0.5);">
+    <p class="text-center" id="tijiaomsg">
+        您已投票成功！
+    </p>
+    <div class="row text-center">
+        <div class="col">
+            <button onclick="sure()" class="button sure"
+                    style="padding:0 24px;background-color: #d31145;border: none;color: white">
+                确认
+            </button>
+        </div>
+    </div>
+</div>
+<div id="fade" class="black_overlay"></div>
+<div class="tabs tabs-icon-top" style="border: none;position: fixed;bottom: 0">
+    <div onclick="to_sort({$data[vote][detail][id]})" class="tab-item" style="color:#d31145;background:#fff;border: 1px solid #d31145">
+        <i class="icon ion-ios-home"></i>
+        排名
+    </div>
+    <div onclick="to_show({$data[vote][detail][id]})" class="tab-item"  style="color:#d31145;background: #fff;border: 1px solid #d31145">
+        <i class="icon ion-ios-cart"></i>
+        活动规则
+    </div>
+    <div onclick="to_prize({$data[vote][detail][id]})" class="tab-item"  style="color:#d31145;background: #fff;border: 1px solid #d31145 ">
+        <i class="icon ion-android-person"></i>
+        奖品
+    </div>
+</div>
+<script>
+    var ow = document.body.offsetWidth;
+    var fullImage = getClass('full-image');
+
+    cha(fullImage, ow, 'width');
+    cha(fullImage, ow / 3, 'height');
+
+    var pic = getClass('pic');
+    cha(pic, ow, 'width');
+    cha(pic, ow , 'height');
+
+    var tou = getClass('tou');
+    cha(tou, ow / 5, 'width');
+    cha(tou, ow / 5, 'height');
+    cha(tou, ow / 5 / 2, 'borderRadius');
+    cha(tou, -ow / 5 / 2, 'marginTop');
+
+   var xinxi = getClass('xinxi');
+   cha(xinxi, -ow / 5 / 2, 'marginTop');
+
+    function cha(data, num, attr) {
+        for (var j = 0; j < data.length; j++) {
+            sett(data[j], num, attr);
+        }
+    }
+
+    function sure() {
+        tijiao.style.display = 'none';
+        fade.style.display = 'none';
+    }
+
+    function voteBtn(msg) {
+        $("#tijiaomsg").html(msg);
+        tijiao.style.display = 'block';
+        fade.style.display = 'block';
+    }
+
+
+    function vote(id, vote_id) {
+        $.ajax({
+            url: "vote.php?c=vote&a=vote_log&pc=1&id=" + id + "&vote_id=" + vote_id,
+            type: "post",
+            dataType: "json",
+            success: function (re) {
+                if (re.status == 10001) {
+                    voteBtn("您已投票成功！");
+                    $("#vote-" + vote_id).html(re.vote_count);
+                    // setTimeout(function(){ window.location.reload();},2000);
+                } else if (re.status == 10000) {
+                    voteBtn("无权参与该投票！");
+                } else if (re.status == 10002) {
+                    voteBtn("投票还未开始！");
+                } else if (re.status == 10003) {
+                    voteBtn("投票已结束！");
+                } else if (re.status == 20001) {
+                    voteBtn("您已经投过票了");
+                } else if (re.status == 20003) {
+                    voteBtn("您需关注再过来投票吧!");
+                } else if(re.status==40001){
+                    voteBtn("您已投该人员了咯!，请投其他人吧！");
+                }
+
+            }, error: function (e) {
+                voteBtn("提交出错！");
+            }
+        });
+    }
+
+</script>
+</body>
+</html>
+
+<script type="text/javascript">
+function to_show(id){
+    window.location.href="vote.php?c=index&a=show&id="+id;
+}
+
+function to_prize(id){
+    window.location.href="vote.php?c=index&a=prize&id="+id;
+}
+
+function to_sort(id){
+    window.location.href="vote.php?c=index&a=novote_sort&id="+id;
+}
+</script>

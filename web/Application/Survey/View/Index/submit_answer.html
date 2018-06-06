@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html style="overflow: scroll">
+<head lang="en">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>友邦保险</title>
+    <link rel="stylesheet" href="{$config['static']}ionic/css/ionic.min.css"/>
+</head>
+<body>
+
+<if condition="$user_id">
+<div class="item light" style="background: rgb(217,17,69)">
+    <div class="row">组别：{$data[user][partment]}</div>
+    <div class="row">代码：{$data[user][user_id]}</div>
+    <div class="row">姓名：{$data[user][truename]}</div>
+    <span class="light" style="position: absolute;top:40px;right: 90px;font-weight: bold;font-size: 22px;">已完成</span>
+    <i class="ion-android-checkmark-circle light" style="position: absolute;top:25px;right: 40px;font-size: 50px;"></i>
+
+</div>
+</if>
+
+
+<if condition="$user_openid">
+<div class="item light" style="background: rgb(217,17,69)">
+    <div class="row">{$data[survey][value1]}：{$open_value[value1]}</div>
+    <div class="row">{$data[survey][value2]}：{$open_value[value2]}</div>
+    <div class="row">{$data[survey][value3]}：{$open_value[value3]}</div>
+    <span class="light" style="position: absolute;top:40px;right: 90px;font-weight: bold;font-size: 22px;">已完成</span>
+    <i class="ion-android-checkmark-circle light" style="position: absolute;top:25px;right: 40px;font-size: 50px;"></i>
+
+</div>
+</if>
+
+<div class="item">
+    <p class="text-center" style="font-size: 20px;color: #000;font-weight: 600;white-space:normal" >{$data[survey][title]}</p>
+    <div class="row"></div>
+    <if condition="$data[survey][type] neq 2">
+
+    <div class="row"></div>
+    <div class="row padding-top" style="margin-top: 20px">
+       <!-- <div class="col col-50 text-right col-center"style="color: #f0186e;font-size: 20px;">
+             得分：
+        </div>-->
+        <div class="col col-center text-center">
+            <span  style="color: rgb(217,17,69);font-size: 50px;font-weight: 600">
+                {$data[sum_point]}
+            </span>
+            <span style="color: rgb(217,17,69);font-size: 20px;">分</span>
+        </div>
+        
+    </div>
+    <if condition="$survey_type eq 1">
+        <div class="">
+            <volist name="wrong" id="lists">
+                <p style="white-space:normal;width: 100%">{$key+1}.{$lists[title]} <br>这道题您没有答对哦！正确答案:{$lists[right]}</p>
+            </volist>
+        </div>
+    </if>
+    </if>
+    <if condition="$data[survey][type] eq 2">
+    <!--<span>结果</span>-->
+    <div class="row"></div>
+    <div class="row" style="margin: 20px 10px 0 10px">
+        <div class="col text-center col-center">
+            <div style="color: #f0186e;font-size: 20px;font-weight: bold">提交成功</div>
+            <div style="color: #000;font-weight:bold;position: relative;top:20px;font-size: 14px;">您的反馈已收到，谢谢参与</div>
+        </div>
+    </div>
+    </if>
+</div>
+<div class="item text-center">
+     <if condition="$is_repeat eq 2">
+        <!-- <div class="col button light" style="background: #f0186e;border-radius: 10px">确 认</div> &nbsp; -->
+            <div class=" button light" style="background: rgb(217,17,69);border-radius: 10px;width: 50%;display: block;margin-left: 25%;font-size: 25px;" onclick="location.href='survey.php?c=index&a=index&id={$data[survey][id]}'">再答一次</div>
+     </if>
+            <div class=" button light" style="background: rgb(217,17,69);border-radius: 10px;width: 50%;display: block;margin-top:10px;margin-left: 25%;font-size: 25px;" onclick="WeixinJSBridge.call('closeWindow');">关闭</div>
+
+</div>
+
+</body>
+</html>

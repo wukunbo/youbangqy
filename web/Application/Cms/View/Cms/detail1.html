@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+<title>{$data[detail][title]}</title>
+<link href="{$config['view']}static/css/ionic.min.css" rel="stylesheet" type="text/css" />
+<link href="{$config['view']}static/css/style.css"rel="stylesheet" type="text/css" />
+<link href="{$config['view']}static/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="{$config['view']}tool/swipe/swiper.min.css" rel="stylesheet" type="text/css" />
+<link href="{$config['view']}static/css/mycss.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" charset="utf-8" src="{$config['view']}static/js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="{$config['view']}static/js/bootstrap.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="{$config['view']}tool/swipe/swiper.min.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script language="javascript" type="text/javascript">
+//防止js文件缓存下来，以后更新时不再需要用户重新删除IE文件等操作。
+var now=new Date();
+var number = now.getYear().toString()+now.getMonth().toString()+now.getDate().toString()+now.getHours().toString()+now.getMinutes().toString()+now.getSeconds().toString();
+//document.write('<scr'+'ipt language="javascript" type="text/javascript" src="jb51net.js?"+number+""></scr'+'ipt>');
+</script> 
+<script src="{$config['view']}static/js/weixin.js?v=12.3"></script>
+</head>
+<body>
+<style>
+  .content_img img{
+  width:100% !important; height:auto!important;
+  }
+  </style>
+<div class="list" style="padding-top:0px;margin-bottom: 50px;">
+    <h2 class="dark-gray font-size-18" style="padding:10px; padding-bottom:0px;  line-height:150%; font-size:24px!important; font-weight:bold; border-bottom:#CCCCCC 1px solid;">{$data[detail][title]}</h2>
+    <div style="text-indent:15px;font-size:14px;text-indent:0;padding:10px; padding-top:0px; padding-bottom:0px;">
+        <p style="margin-top:5px;color:#999;" class="font-size-14"> {$data[detail][addtime_1]|date="Y-m-d H:i:s",###} </p>
+         
+         
+    </div>
+     
+     
+    <div class="  item-body padding content_img">
+        <p> {$data[detail][context]} </p>
+    </div>
+    <div class="  row-no-padding revive_action">
+        <a class=" font-size-14 text-right padding-h-10 " style="display:none" 1href="{:U('Cms/cms_detail')}&cms_id={$vo.cms_id}#review">
+            <i class="ion-chatbox-working  font-size-20"></i>
+            <span class=""> {$data[detail][discussion_count]}</span>
+        </a>
+        <a  class="  ont-size-14 padding-h-10" href="#" onClick="share_img(1);"  ><i class=" font-size-20 ion-share"></i></a>
+        <a class="  ont-size-14 padding-h-10" style="display:none" onClick="zan({$data[detail][cms_id]},{$data[detail][praise_count]})">
+            <i class="ion-thumbsup font-size-20"></i>
+            <span id="zan{$data[detail][cms_id]}" class=" ">{$data[detail][praise_count]}</span>
+        </a>
+    </div>
+    <volist name="data[comment_lists][content1]" id="vo" >
+        <div class="item item-body review_lists">
+            <div class="avatar">
+                <img src="{$vo.userinfo.headimgurl}" style="left:6px;  ">
+                <div class="tx_bg"></div>
+                <p>{$vo.userinfo.nickname} </p>
+                <p class="addtime">{$vo.addtime|date="Y-m-d H:i:s",###}</p>
+            </div>
+            <div class="margin-v-5 dark">{$vo.content|textartToHtml}</div>
+        </div>
+    </volist>
+    <div class="yellow">{$data[pinglun][lists][page]}</div>
+</div>
+<div class="share_img"  id="share_img" onClick="share_img(0);" style="display:none; width:100%; height:100%; position:absolute; z-index:100000; top:0px; left:0px;background:rgba(0, 0,0,0.4) none repeat scroll 0 0 !important; text-align:right;">
+    <img src="{$config['view']}/static/images/guide.png">
+</div>
+<div class="comment_area" style="display:none">
+<form action="{:U('Topic/add_pinglun')}&id={$data.topic.id}"   enctype="multipart/form-data"  method="post" name="savaform" id="savaform">
+    <label class="item item-input col">  
+        <input type="text"  id="content" name="post[content]" placeholder='输入您的评论' value=""/>
+    </label>
+    <button onClick="javascript:sendMsg({$data[detail][cms_id]})" type="button" class="icon button send"> 发送 </button>
+</form>
+</div>
+<include file="dailog" />
+</body>
+</html>
+<script type="text/javascript">
+share_base('{$wxconfig.appid}','{$wxconfig.timestamp}','{$wxconfig.noncestr}','{$wxconfig.signature}');
+ wx.ready(function(){
+     
+    img_url='http://{$_SERVER['SERVER_NAME']}/youbangqy/web/{$data[detail][image_thumb]}';
+    share_link='http://{$_SERVER['SERVER_NAME']}/youbangqy/web/cms.php?c=cms&a=detail&id={$_REQUEST[id]}';
+    ajax_url='';
+    wx_share('{$data[detail][title]}',share_link,img_url,ajax_url);
+ });
+function wx_share(title,share_link,img_url,ajax_url){
+     
+    
+    //分享到朋友圈
+    wx.onMenuShareTimeline({
+        title: title, // 分享标题
+        link: share_link, // 分享链接
+        imgUrl: img_url, // 分享图标
+        success: function () { 
+            if(ajax_url!=null){
+                $.ajax({
+                    type: "post",
+                    url: ajax_url,
+                    dataType: "json", 
+                    success:function(data){
+                     
+                        if(data.status==10001){
+                            show_tips_settime('分享成功，去任务中心获得金币：'+data.point);
+                        }else if(data.status==10002){
+                            show_tips_settime('已分享');
+                        }
+                    
+                    },
+                    
+                    error:function(data,textStatus) {
+                        aleert("false")
+                    },
+                    complete: function(data,textStatus) {
+                            
+                    }
+                })
+            }
+            
+        },
+        cancel: function () { 
+    
+        }
+    });
+//分享给朋友 
+     wx.onMenuShareAppMessage({
+            title: title, // 分享标题
+            desc: title, // 分享描述
+            link: share_link, // 分享链接
+            imgUrl: img_url, // 分享图标
+            type: '', // 分享类型,music、video或link，不填默认为link
+            dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+            success: function () { 
+                 $.ajax({
+                    type: "post",
+                    url: ajax_url,
+                    dataType: "json", 
+                    success:function(data){
+
+                        if(data.status==10001){
+                            show_tips_settime('分享成功，去任务中心获得金币：'+data.point);
+                        }else if(data.status==10002){
+                            show_tips_settime('已分享');
+                        }
+                    },                      
+                    error:function(data,textStatus) {
+                        aleert("false")
+                    },
+                    complete: function(data,textStatus) {
+                                
+                    }   
+                })
+            },
+            cancel: function () { 
+         
+            }
+        });
+
+    //分享到QQ
+    wx.onMenuShareQQ({
+        title: title, // 分享标题
+        desc: title, // 分享描述
+        link: share_link, // 分享链接
+        imgUrl: img_url, // 分享图标
+        success: function () { 
+           // 用户确认分享后执行的回调函数
+        },
+        cancel: function () { 
+           // 用户取消分享后执行的回调函数
+        }
+    });
+//分享到腾讯微博   
+    wx.onMenuShareWeibo({
+        title: title, // 分享标题
+        desc: title, // 分享描述
+        link: share_link, // 分享链接
+        imgUrl: img_url, // 分享图标
+        success: function () { 
+           // 用户确认分享后执行的回调函数
+        },
+        cancel: function () { 
+            // 用户取消分享后执行的回调函数
+        }
+    });
+    
+}
+    function sendMsg(business_id){
+       var content=$("#content").val();
+       if(content.length<3){
+          //alert("请发布12字以上的评论!");
+           show_tips_time("请发布3字以上的评论!",1000);
+          return false;
+       }
+       $.ajax({        
+        url: "cms.php?m=Cms&c=Action&a=add_comment&business_type=cms&business_id="+business_id,
+        data:  $("#savaform").serialize(),
+        type: "post",
+        dataType: "json", 
+        success:function(re){     
+             if(re.status==10001){
+                show_tips_time("评论成功",1000);
+                location.reload();
+             }else{
+                show_tips_time(re.text,2000);
+             }
+        }
+       })
+    }
+    
+  function share_img(show){
+    if(show==1){
+        $("#share_img").fadeIn();
+ 
+    }else{
+        $("#share_img").fadeOut();
+ 
+    }
+};
+<if condition="$share eq 1">
+share_img(1);
+</if>
+    function zan(a,b){
+    
+      $.ajax({        
+        url: "cms.php?m=Cms&c=Action&a=praise&business_type=cms",
+        data:  "id="+a,
+        type: "post",
+        dataType: "json", 
+        success:function(re){     
+             if(re.status==10001){
+                show_tips_time("点赞成功!",1000);
+                $('#zan'+a).html(b+1);
+             }else{
+                show_tips_time(re.text,2000);
+             }
+        }
+       })
+    } 
+</script>

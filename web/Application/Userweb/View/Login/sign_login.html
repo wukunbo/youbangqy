@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<script src="{$config['Public']}js/login.js"></script>
+<include file="Public/login_header" />
+<body class=" theme-blue">
+<div class="navbar navbar-default" role="navigation">
+	<div class="navbar-header">
+		<a class="" href="index.html"><span class="navbar-brand"><span class="fa fa-paper-plane"></span> {$config[page_title]}</span></a>
+	</div>
+	<div class="navbar-collapse collapse" style="height: 1px;">
+	</div>
+</div>
+<div class="dialog">
+	<div class="" style="border: 0">
+		<div id="code" style="height: 220px;width: 250px"></div>
+     <img id="logo" src="{$config['Public']}static/images/youbang.jpg" height="200px" width="220px" style="display: none;">
+     <div id="wx_user" style="margin-left:80px;display: none;">*******</div>
+		<div class="form-group" id="pass_div" style="margin-top: 25px;display: none;">
+      <input type="hidden" name="username" id="username" class="form-control span12" value="">
+      <p style="margin-top: 10px"></p>
+			<input style="width: 300px" type="password" name="password" id="password" class="form-controlspan12 form-control" placeholder="请输入密码">
+			<a href="#" class="btn btn-primary" onClick="sign_login()" style="margin-top: 15px">登   录</a>
+
+		</div>
+
+	</div>
+	<p class="pull-right" style=""><a href="" target="blank" style="font-size: .75em; margin-top: .25em;"></a>
+	</p>
+</div>
+<script src="{$config['Public']}lib/bootstrap/js/bootstrap.js"></script>
+</body>
+</html>
+<script src="{$config['Public']}js/jquery.qrcode.min.js"></script>
+
+<script type="text/javascript">
+var ID;
+window.onload = function() {
+ 	ID=setInterval("get_data()", 2000);//定时接收
+ 	var str = "http://{$_SERVER['HTTP_HOST']}/youbangqy/web/personal.php?c=index&a=sign_login&uid={$uid}";
+	$('#code').qrcode(str);
+ }
+
+ function get_data(){
+       
+        $.ajax({
+            url: 'userweb.php?c=login&a=read_txt&uid={$uid}',
+            type: 'GET',
+            dataType: 'json',
+            success:function(data) {  
+              if(data){
+                $("#username").val(data);
+                $("#wx_user").html(data.replace('admin:',''));
+                $("#code").hide();
+                $("#logo").show();
+                $("#wx_user").show();
+              	$("#pass_div").show();
+              	clearTimeout(ID);
+              }
+            },  
+            error : function() {  
+             
+            }  
+        });
+    }
+
+  function sign_login(obj){
+  
+  var username=$('#username').val();
+  var password=$('#password').val();
+
+  // if(username ==''){
+  //   alert('请输入账号');
+  //   return;
+  // }
+  if(password ==''){
+    alert('请输入密码');
+    return;
+  }
+  
+  var url="userweb.php?c=Login&a=check&uid={$uid}&username="+username+"&password="+password;
+
+  $.ajax({
+    type: "post",
+      url: url,
+      dataType: "json",       
+      success: function(data) {
+        if(data.status == '10001'){
+          location.href = "userweb.php";
+        }else if(data.status == '10002'){
+          alert('用户名错误');
+        }else if(data.status == '10003'){
+          alert('密码错误');
+        }else{
+          alert(data.text);
+        }       
+      },
+    complete:function(data){
+
+    }
+  })
+}
+
+</script>

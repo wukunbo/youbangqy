@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+<title>大头在世界</title>
+<link href="{$config['view']}static/css/ionic.min.css" rel="stylesheet" type="text/css" />
+<link href="{$config['view']}static/css/style.css"rel="stylesheet" type="text/css" />
+<link href="{$config['view']}static/css/bootstrap.min.css"rel="stylesheet" type="text/css" />
+<script type="text/javascript" charset="utf-8" src="{$config['view']}static/js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="{$config['view']}static/js/bootstrap.min.js"></script>
+<link href="tool/dailog/dailog.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="tool/dailog/dailog.js"></script>
+<style>
+img{
+width:100%;
+}
+ 
+ body{background:url(add/mmexport1443168532494.jpg); background-attachment:fixed;}
+</style>
+</head>
+<body>
+<div class="list" style="padding-top:0px;">
+	<!--content start-->
+	<div class="menu_four">
+		<div class="item tabs tabs-secondary" style="margin:-1px 0 -1px 0;">
+			<a class="tab-item dark-gray <if condition="$cate_id eq 9"> active
+				</if>
+				" href="{:U('cms_lists')}&cate_id=9&img_type=1" style="border-right:none !important;">
+				在各国 </a>
+			<a class="tab-item dark-gray <if condition="$cate_id eq 10"> active
+				</if>
+				" href="{:U('cms_lists')}&cate_id=10&img_type=1" style="border-right:none !important;">
+				在展会 </a>
+			<a class="tab-item dark-gray <if condition="$cate_id eq 11"> active
+				</if>
+				" href="{:U('cms_lists')}&cate_id=11&img_type=1" style="border-right:none !important;">
+				在身边 </a>
+			<a class="tab-item dark-gray <if condition="$cate_id eq 12"> active
+				</if>
+				" href="{:U('cms_lists')}&cate_id=12" style="border-right:none !important;">
+				在网上 </a>
+		</div>
+	</div>
+	<div id="lists_content">
+	</div>
+	 
+ 
+	
+	
+	 
+</div>
+<script>
+scroll_obj="lists_content";
+scroll_url=window.location.href+"&ajax=1";
+scroll_int=1;
+</script>
+<script type="text/javascript" charset="utf-8" src="tool/scroll_page/scroll.js"></script>
+
+<!-- Modal -->
+<include file="dailog" />
+</body>
+<script>
+    function zan(a,b){
+    
+      $.ajax({        
+        url: "cms.php?m=Cms&c=Action&a=praise&business_type=cms",
+        data:  "id="+a,
+        type: "post",
+        dataType: "json", 
+        success:function(re){     
+             if(re.status==10001){
+              	show_tips_time("点赞成功!",1000);
+				b=parseInt(b)
+                $('#zan'+a).html(b+1);
+             }else{
+             	show_tips_time(re.text,2000);
+             }
+        }
+       })
+  	} 
+	
+ 
+function test(content,img){
+	//alert(content);
+	$("#text").html(content);
+	$("#img1").attr('src',img);
+	$("#img2").attr('src',img);
+}
+	</script>
+</html>

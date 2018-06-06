@@ -1,0 +1,25 @@
+<volist name="Cms_lists[content]" id="vo">
+	<div class="item  " style=" border:none; padding-bottom:2px; background:none; " >
+		<div href="{$vo.url}" style="width:100%; display:block;border:#ddd 1px solid; border-radius:5px;background:#fff;  ">
+			<h2 class="dark-gray font-size-18" style="padding:10px; padding-bottom:0px; color:#f0186e !important;line-height:150%; font-weight:bold;">{$vo.title}</h2>
+			<div style="text-indent:15px;font-size:14px;text-indent:0;padding:10px; padding-top:0px; padding-bottom:0px;">
+				<p style="margin-top:5px;color:#999;" class="font-size-14">
+					<php> echo date("Y-m-d",$vo[addtime]);</php>
+				</p>
+				<a  href="{:U('Cms/cms_detail')}&cms_id={$vo.cms_id}" style="margin-top:5px;">
+					<img src="{$vo.img_thumb}" width="100%"></a>
+			</div>
+			<div class="  row-no-padding revive_action">
+				<a class=" font-size-14 text-right padding-h-10 " href="{:U('Cms/cms_detail')}&cms_id={$vo.cms_id}#review">
+					<i class="ion-chatbox-working  font-size-20"></i>
+					<span class=""> {$vo.discussion_count}</span>
+				</a>
+				<a  class="  ont-size-14 padding-h-10" href="{:U('Cms/cms_detail')}&cms_id={$vo.cms_id}&share=1"  ><i class=" font-size-20 ion-share"></i></a>
+				<a class="  ont-size-14 padding-h-10" onClick="zan({$vo.cms_id},{$vo.praise_count})">
+					<i class="ion-thumbsup font-size-20"></i>
+					<span id="zan{$vo.cms_id}" class=" ">{$vo.praise_count}</span>
+				</a>
+			</div>
+		</div>
+	</div>
+</volist>

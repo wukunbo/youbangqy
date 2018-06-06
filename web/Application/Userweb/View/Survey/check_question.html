@@ -1,0 +1,180 @@
+<include file="Public/includeHeader" />
+
+﻿<div class="row">
+	<div class="col-lg-12">
+		<h3 class="page-header">题目列表</h3>
+		
+	</div>
+</div>
+
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h2><i class="fa fa-table red"></i><span class="break"></span><strong>列表</strong></h2>
+		 
+	</div>
+
+	<div class="form-group" style="margin-top: 20px">
+        
+        <form name="form1" action="{:U('check_question')}&id={$_REQUEST[id]}" method="post" style="margin-top: 15px;">
+			<label for="text-input">选题库:</label>
+			<select id="question_category" name="question_category" class="control-form">
+				<volist name="cate_name" id="vo">
+					<option value="{$vo.id}">{$vo.title}</option>
+				</volist>
+			</select>
+
+			<button class="btn btn-success" type="submit" style="margin-left: 15px;"><i class="fa fa-dot-circle-o"></i>搜索</button>
+
+			<button class="btn btn-warn" type="button" onclick="del_category()">删除该题库及题</button>
+		</form>
+
+
+		 <a class="btn btn-primary" onclick="all_del();" >
+			批量删除
+		</a>
+
+		<a class="btn btn-primary" onclick="question_sort();" >
+			题目排序
+		</a>	
+	</div>
+
+	<div class="panel-body">
+		<table class="table table-bordered table-striped table-condensed table-hover">
+			<thead>
+				<tr>
+
+					<th><input name="allselect" type="checkbox" value="" id="allselect" onclick="selectbtn()" />全选</th>
+					<th>题号</th>
+					<th>题目</th>
+					<th>选项</th>
+					<th>所属题库</th>
+					<th>排序</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+			<form name="myform" action="{:U('question_sort')}&id={$_REQUEST[id]}" method="post">
+
+				<volist name='data[content]' id='vo'>
+					<tr>
+						<td><input name="namelist" type="checkbox" value="{$vo.id}" /></td>
+						<td>{$vo[xulie]}</td>
+						<td><div  style="width:200px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;" title="{$vo[title]}">{$vo[title]}</div></td>
+						<td><volist name='vo[option]' id='vo2'>{$vo2[label]}.{$vo2[option_title]}&nbsp;&nbsp;&nbsp;&nbsp;</volist></td>
+						<td>{$vo[tiku]}</td>
+						<td><input name="post[{$vo[id]}]" value="{$vo[sort]}" style="width: 50px"></input></td>
+						<td>
+				         <!--  <a href='{:U("add_question",array("id"=>$vo["id"]))}'><i class="fa fa-pencil"></i></a> -->
+				          <a onclick='return del();' href='{:U("survey_question_del",array("id"=>$vo["id"],"survey_id"=>$_REQUEST[id]))}' role="button" data-toggle="modal"><i class="fa fa-trash-o"></i></a>
+					    </td>
+					</tr>
+				</volist>
+			</form>
+			</tbody>
+
+		</table>
+		<input  name="post[question_ids]" type="hidden" id="select_question_id" value="{$data[question_ids]}" oninput="add_question();" />
+		<a class="btn btn-success" href="userweb.php?c=Survey&a=lists&menu_app=Activity">返回列表</a>
+	</div>
+</div>
+
+<include file="Public/pagination" />
+<include file="Public/includeFooter" />
+
+<script>
+$(".show_1").show();
+ </script>
+
+<script type="text/javascript">
+
+function question_sort(){
+	myform.submit();
+}
+
+
+
+function add_question(){
+	// alert(13);
+	window.location.href="userweb.php?m=Userweb&c=Survey&a=check_question&id=14";
+}
+
+function del_category(){
+	var cateid=$("#question_category").val();
+	if(cateid==""){
+		alert("无该题库");
+		return;
+	}
+	 $.ajax({
+    	url: 'userweb.php?c=survey&a=delsuy_category&survey_id={$_REQUEST[id]}',
+    	type: 'POST',
+    	dataType: 'json',
+    	data: {cateid: cateid},
+    	success:function(data) {  
+			alert("删除成功");
+			window.location.href="userweb.php?m=Userweb&c=Survey&a=check_question&id={$_REQUEST[id]}";
+		},  
+		error : function() {  
+			alert("删除失败");
+		}  
+    });
+	
+}
+
+
+function selectall()  
+{  
+	var obj=document.all.namelist;  
+	for(var i=0;i<obj.length;i++)  
+	{  
+		obj[i].checked=true;  
+	}  
+}  
+function cacelall()  
+{  
+	var obj=document.all.namelist;  
+	for(var i=0;i<obj.length;i++)  
+	{  
+		obj[i].checked=false;  
+	}  
+}  
+
+function selectbtn(){
+
+	if($("input[name='allselect']").attr("checked")){
+		selectall();
+	}else{
+		cacelall(); 
+	}
+}
+
+//批量删除题目
+function all_del(){
+	var str="";
+    $("input[name='namelist']:checkbox").each(function(){ 
+        if($(this).attr("checked")){
+            str += $(this).val()+","
+        }
+    });
+    str=str.substring(0,str.length-1);
+    if(str == ""){
+    	alert("请选择题目！！");
+    	return;
+    }
+    // alert(str);
+    // var categoryid={$_REQUEST[id]};
+    $.ajax({
+    	url: 'userweb.php?c=survey&a=all_question_del&survey_id={$_REQUEST[id]}',
+    	type: 'POST',
+    	dataType: 'json',
+    	data: {questionids: str},
+    	success:function(data) {  
+			alert("删除成功");
+			window.location.href="userweb.php?m=Userweb&c=Survey&a=check_question&id={$_REQUEST[id]}";
+		},  
+		error : function() {  
+			alert("删除失败");
+		}  
+    });
+}
+
+</script>

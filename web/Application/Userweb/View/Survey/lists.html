@@ -1,0 +1,167 @@
+<include file="Public/includeHeader" />
+
+﻿<div class="row">
+	<div class="col-lg-12">
+		<h3 class="page-header">在线测试列表</h3>
+		
+	</div>
+</div>
+
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h2><i class="fa fa-table red"></i><span class="break"></span><strong>列表</strong></h2>
+		 
+	</div>
+
+	<div class="col-md-12 input-group" style="margin-bottom: 15px;width: 100%;margin-top: 20px">
+	<form action="userweb.php?c=survey&a=lists" method="post" style="width: 100%">
+		<select class="form-control  " name="post[partment]" style="width: 100px">
+			<option value="">请选择部门</option>
+			<volist name="partment_list" id="list">			
+				<option value="{$list.id}">{$list.title}</option>
+			</volist>
+		</select>
+
+		<select class="form-control  " name="post[type]" style="width: 150px">
+			<option value="">请选择活动类型</option>
+			<option value="1">在线答题型</option>
+			<option value="2">意见反馈型</option>
+			<option value="3">互动答题型</option>
+		</select>
+
+		<select class="form-control  " name="post[status]" style="width: 100px">
+			<option value="">请选择状态</option>
+			<option value="0">未发布</option>
+			<option value="1">已发布</option>
+		</select>
+		&nbsp;
+		<script src="tool/My97DatePicker/WdatePicker.js"></script>	
+		<label for="text-input">活动时间:</label>
+		<input  type="text" name="post[time_start]" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+		-
+		<label for="text-input">结束时间:</label>
+		<input  type="text" name="post[time_end]" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+
+		<select class="form-control  " name="post[order]" style="width: 150px">
+			<option value="">排序</option>
+			<!-- <option value="start_time">报名开始时间排序</option>
+			<option value="end_time">报名截止时间排序</option> -->
+			<option value="start_time">活动开始时间排序</option>
+			<option value="end_time">活动结束时间排序</option>
+		</select>
+		
+
+		<button class="btn btn-success" type="submit" style="margin-left: 15px;"><i class="fa fa-dot-circle-o"></i>搜索</button>
+	</form>
+
+</div>
+
+	<div class="panel-body">
+		<table class="table table-bordered table-striped table-condensed table-hover">
+			<thead>
+				<tr>
+					<th> 编号 </th>
+					<th>标题</th>
+					<th>部门</th>
+					<th>类型</th>
+					<!-- <th>测试链接</th> -->
+					<th>开始时间</th>
+					<th>结束时间</th>
+					<th>二维码</th>
+					<th>状态</th>
+
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+			<?php $total=count($data[content]);?>
+				<volist name="data[content]" id="lists">
+					<tr>
+						<td >{$total-$key}</td>
+						<td width="250px">
+							{$lists[title]}
+							<if condition="$lists[type] eq 3">
+								<a href="http://{$_SERVER['SERVER_NAME']}/youbangqy/web/survey.php?c=pc&a=index&id={$lists.id}" target="_blank">开始连接</a>
+							</if>
+							<!-- {$lists[type]} -->
+						</td>
+						<td>{$lists[partment_title]}</td>
+						<td>
+							<if condition="$lists[type] eq 1">
+								在线答题型
+							</if>
+							<if condition="$lists[type] eq 2">
+								意见反馈型
+							</if>
+							<if condition="$lists[type] eq 3">
+								互动答题型
+							</if>
+						</td>
+						<!-- <td><a href="survey.php?c=index&a=show&id={$lists[id]}">测试链接</a></td> -->
+						<td>{$lists[start_time]|date='Y-m-d',###}</td>
+						<td>{$lists[end_time]|date='Y-m-d',###}</td>
+					 
+						<td><a href="{:U('erweima')}&id={$lists.id}" target="_blank">查看</a></td>		
+						<td>
+							<if condition="$lists[status] eq 0">
+								未发布
+							</if>
+							<if condition="$lists[status] eq 1">
+								已发布
+							</if>
+							<if condition="$lists[status] eq 2">
+								未发布
+							</if>
+							<if condition="$lists[status] eq -1">
+								下架
+							</if>
+						</td>
+						<td>
+						<if condition="$lists[status] eq 0">
+							<i class="fa fa-plus"></i><a type="button" onclick="show_content('userweb.php?c=contacts&a=choose_contact&t=survey&id={$lists['id']}&back=check_apply')">选择名单</a>
+						</if>
+						<a type="button" href="{:U('preview')}&id={$lists[id]}">预览</a>
+						<if condition="$lists[status] eq 2">
+							<a type="button" href="{:U('publish_survey')}&id={$lists[id]}" onclick="return confirm('确实要发布吗？')">发布</a>
+							<a type="button" href="{:U('check_apply')}&id={$lists[id]}">已选通讯录</a>
+						</if>
+						<a type="button" href="{:U('check_question')}&id={$lists[id]}">已选题目</a>
+						<if condition="$lists[status] eq 1 OR $lists[status] eq  -1">
+							<a href="{:U('again_publish')}&id={$lists[id]}" onclick="return confirm('确实要再次推送吗？')">再推送 </a>
+
+							<a type="button" href="{:U('check_apply')}&id={$lists[id]}">已选通讯录</a>
+							
+						</if>
+
+						<a type="button" href="{:U('report')}&id={$lists[id]}">测试报告</a>
+						
+						<if condition="$lists[type] eq 2">
+							<a type="button" href="{:U('survey_advice')}&id={$lists[id]}">意见列表</a>
+						</if>
+
+						<if condition="$lists.status eq 1">
+							<a href="{:U('out_survey')}&id={$lists[id]}" onclick="return confirm('确实要下架吗？')">下架 </a>
+						</if>
+
+						<if condition="$lists.status eq -1">
+							<a href="{:U('copy_survey')}&id={$lists[id]}" onclick="return confirm('确实要复制该活动吗？')">复制 </a>
+						</if>
+
+							<a href="userweb.php?c=survey&a=add&id={$lists[id]}" class="btn btn-info">
+								<i class="fa fa-edit "></i>
+							</a>
+							<a href="userweb.php?c=survey&a=del&id={$lists[id]}" class="btn btn-danger" onclick="return confirm('确实删除吗？')">
+								<i class="fa fa-trash-o "></i>
+							</a>
+						<if condition="$lists[type] eq 3">
+							<a type="button" href="{:U('delete_survey_answer')}&id={$lists[id]}">清空数据</a>
+						</if>
+						</td>
+					</tr>
+				</volist>
+			</tbody>
+		</table>
+	</div>
+</div>	
+<include file="Public/pagination" />
+<include file="Public/includeFooter" />

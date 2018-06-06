@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>{$data[detail][title]}</title>
+    <link href="{$config['static']}ionic/css/ionic.min.css" rel="stylesheet" type="text/css"/>
+    <link href="{$config['static']}ionic/css/style.css" rel="stylesheet" type="text/css"/>
+    <!-- <link href="{$config['tool']}swipe/swiper.min.css" rel="stylesheet" type="text/css" />
+    <link href="{$config['static']}css/iconfont.css"rel="stylesheet" type="text/css" /> -->
+    <script type="text/javascript" charset="utf-8" src="{$config['static']}ionic/jquery.js"></script>
+    <!-- <script type="text/javascript" charset="utf-8" src="{$config['tool']}swipe/swiper.min.js"></script> -->
+</head>
+<body class="bg_f0">
+<div class="list" style="padding-top:0;overflow:hidden;">
+    <img src="{$data[detail][image_thumb]}" width="100%">
+    <div style="padding-left: 10px;margin-bottom: 10px">
+        <h4>活动日期</h4>
+    </div>
+    <div class="padding" style="background-color:white;color: #d31145">
+        <div class="row no-padding ">
+            <div class="col no-padding col-50" >
+                开始：{$data[detail][time_start]|date="Y-m-d",###}
+            </div>
+            <div class="col no-padding col-50" >
+                截至：{$data[detail][time_end]|date="Y-m-d",###}
+            </div>
+        </div>
+    </div>
+    <div class="padding-h-10" >
+        <h4>活动内容介绍</h4>
+        {$data[detail][content]}
+        <!--content end-->
+    </div>
+
+    <div class="padding-h-10" style="text-align: center;margin-bottom: 5px;margin-top: 5px">
+        <button class="voteBtn" style='float: none;' onclick="detail({$data[detail][id]})">开始投票</button>
+    </div>
+
+
+    <div id="tijiao" class="tijiao">
+        <p class="padding text-center" id="msg"></p>
+
+        <div class="text-center margin-top-20">
+            <a href="javascript:void(1)"
+               onclick="document.getElementById('tijiao').style.display='none';document.getElementById('fade').style.display='none'">
+                <button class="button qianfen border-e5 jiesuan light border-none" style="padding:0px 24px !important;">
+                    确认
+                </button>
+            </a>
+            <button type="submit" value="提交"/>
+        </div>
+    </div>
+    <div id="fade" class="black_overlay"></div>
+</body>
+
+</html>
+
+<script type="text/javascript">
+    function detail(id) {
+        var is_pc = {$data[detail][is_pc]};
+        var type = {$data[detail][type]};
+        if (is_pc == 2) {
+            if (type == 1) {
+                location.href = "vote.php?c=index&a=index&id=" + id;
+            } else {
+                location.href = "vote.php?c=index&a=novote&id=" + id;
+            }
+        } else {
+            location.href = "vote.php?c=index&a=pcvote&id=" + id;
+        }
+
+    }
+
+    function showmsg(msg) {
+        $("#msg").html(msg);
+        document.getElementById('tijiao').style.display = 'block';
+        document.getElementById('fade').style.display = 'block'
+    }
+</script>

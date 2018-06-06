@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html ng-app="noVote">
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>{$data[vote][detail][title]}</title>
+    <link rel="stylesheet" href="{$config['static']}ionic/css/ionic.min.css"/>
+    <script src="{$config['static']}ionic/js/ionic.bundle.min.js"></script>
+    <script src="{$config['static']}ionic/js.js"></script>
+    <script src="{$config['static']}ionic/jquery.js"></script>
+    <style>
+        html {
+            overflow: scroll;
+        }
+        a {
+            text-decoration: none;
+        }
+        .num {
+            vertical-align: bottom;
+            font-size: 20px;
+            color: #f0186e;
+            float: left;
+        }
+        .piao {
+            float: left;
+            margin-left: 5px;
+        }
+        .votePic {
+            width: 100%;
+        }
+        .voteBtn {
+            float: right;
+            background: #f0186e;
+            color: #ffffff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        .bot {
+            position: relative;
+            bottom: -8px;
+        }
+        .opc {
+            height: auto;
+            width: 100%;
+            position: absolute;
+            bottom: 5px;
+            opacity: 0.8;
+            padding-right: 5px;
+        }
+        .opcContent {
+            position: absolute;
+            bottom: 0;
+            color: #fff;
+            padding: 5px;
+        }
+        .flo_right {
+            float: right;
+        }
+        .name {
+            margin-top: -12px;
+        }
+        .bor {
+            border-collapse: collapse;
+        }
+        .tijiao {
+            padding: 30px 0 0 0;
+            display: none;
+            position: fixed;
+            bottom: 40%;
+            left: 15%;
+            width: 70%;
+            height: 150px;
+            background-color: white;
+            z-index: 1002;
+        }
+        .black_overlay {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            z-index: 1001;
+            -moz-opacity: 0.6;
+            opacity: .60;
+            filter: alpha(opacity=60);
+        }
+    </style>
+    <script>
+        angular.module('noVote', ['ionic'])
+    </script>
+</head>
+<body>
+<ion-slide-box style="margin-bottom: -15px" id="lunbo" show-pager="false" auto-play="true" does-continue="true">
+    <ion-slide>
+        <img src="{$data[vote][detail][image_thumb]}" alt="轮播图" style="width: 100%"/>
+    </ion-slide>
+</ion-slide-box>
+
+<volist name="data[option_lists][content]" id="vo">
+    <eq name="mod" value="0">
+        <div class="row" style="margin-top: 10px;margin-bottom: 50px">
+            <div class="col col-50 bor" style="position: relative;">
+                <a href="vote.php?c=index&a=option_detail&id={$vo[vote_id]}&vote_id={$vo[id]}" >
+                    <img src="{$vo[image_thumb]}"  class="votePic full-image" alt="" />
+                </a>
+                <div class="opc">
+                    <p class="" style="padding-left: 5px;color: white;background: #535353;margin-bottom: 0">{$vo[code]}</p>
+                    <p class="" style="padding-left: 5px;color:white;background: #535353;margin-bottom: 0">{$vo[truename]}</p>
+                </div>
+                <div style="position:absolute;bottom: -40px;padding-left: 5px;padding-right: 5px;margin-bottom: 0;display: flex;width: 100%">
+                    <div style="width: 50%">
+                    <span class="num bot" id="show_count_{$vo[id]}">{$vo[count_vote]}</span>
+                    <span class="piao bot">票</span>
+                    </div>
+                    <div style="width: 50%" class="text-right">
+                    <a href="#" class="voteBtn" onclick="vote({$vo[vote_id]},{$vo[id]})">投票</a>
+                    </div>
+                </div>
+            </div>
+    </eq>
+    <eq name="mod" value="1">
+        <div class="col col-50 bor" style="position: relative;">
+            <a href="vote.php?c=index&a=option_detail&id={$vo[vote_id]}&vote_id={$vo[id]}">
+                <img src="{$vo[image_thumb]}" class="votePic full-image" alt="" />
+            </a>
+            <div class="opc">
+                <p class="" style="padding-left: 5px;color: white;background: #535353;margin-bottom: 0">{$vo[code]}</p>
+                    <p class="" style="padding-left: 5px;color:white;background: #535353;margin-bottom: 0">{$vo[truename]}</p>
+            </div>
+            <div style="position:absolute;bottom: -40px;padding-left: 5px;padding-right: 5px;margin-bottom: 0;display: flex;width: 100%">
+                <div style="width:50%">
+                <span class="num bot" id="show_count_{$vo[id]}">{$vo[count_vote]}</span>
+                <span class="piao bot">票</span>
+                </div>
+                <div style="width: 50%" class="text-right">
+                <a href="#" class="voteBtn" onclick="vote({$vo[vote_id]},{$vo[id]})">投票</a>
+                </div>
+            </div>
+        </div>
+        </div>
+    </eq>
+</volist>
+<if condition="count($data[option_lists][content])%2 eq 1">
+    <div class="col bor">
+    </div>
+    </div>
+</if>
+
+
+<p></p>
+<p></p><br><br>
+<div class="tabs tabs-icon-top" style="border: none;position: fixed;bottom: 0;margin-top: 10px;padding-top: 0">
+    <a href="vote.php?c=index&a=novote&id={$data[vote][detail][id]}" class="tab-item" onclick="sel_tab(0)"
+       style="color:#fff;background:#d31145;border: 1px solid #d31145">
+        <i class="icon ion-ios-home"></i>
+        首页
+    </a>
+    <a href="vote.php?c=index&a=novote_sort&id={$data[vote][detail][id]}" class="tab-item" onclick="sel_tab(1)"
+       style="color:#d31145;background: #fff;border: 1px solid #d31145">
+        <i class="icon ion-ios-cart"></i>
+        排名
+    </a>
+    <a href="vote.php?c=index&a=prize&id={$data[vote][detail][id]}" class="tab-item"  style="color:#d31145;background: #fff;border: 1px solid #d31145 ">
+        <i class="icon ion-android-person"></i>
+        奖品
+    </a>
+</div>
+
+<p style="height: 40px">
+
+</p>
+<div id="tijiao" class="tijiao" style="border-radius: 5px;background-color: rgba(248, 246, 247, 0.498039);">
+    <p class="text-center" id="tijiaomsg" style="padding: 5px">
+        您已投票成功！
+    </p>
+    <div class="row text-center">
+        <div class="col">
+            <button onclick="sure()" class="button sure" style="padding:0 24px;background-color: #d31145;border: none;color: white">
+                确认
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="fade" class="black_overlay">
+</div>
+<script>
+    var ow = document.body.offsetWidth;//获取文档可视宽度
+    var fullImage = getClass('full-image');//获取图片类型
+    cha(fullImage, (ow/2)-10, 'width');//设置图片宽（比例1：1）
+    cha(fullImage, (ow / 2)-10, 'height');//设置图片高（比例1：1）
+    var bor = getClass('bor');
+    cha(bor, ow / 2, 'height');
+    function cha(data, num, attr) {
+        for (var j = 0; j < data.length; j++) {
+            sett(data[j], num, attr);
+        }
+    }
+    function sure() {
+        tijiao.style.display = 'none';
+        fade.style.display = 'none';
+    }
+    var tijiao = document.querySelector('#tijiao');
+    var fade = document.querySelector('#fade');
+    function voteBtn(msg) {
+        $("#tijiaomsg").html(msg);
+        tijiao.style.display = 'block';
+        fade.style.display = 'block';
+    }
+    function vote(id, vote_id) {
+        $.ajax({
+            url: "vote.php?c=vote&a=vote_log&id=" + id + "&vote_id=" + vote_id,
+            type: "post",
+            dataType: "json",
+            success: function (re) {
+                if (re.status == 10001) {
+                    voteBtn("您已投票成功！");
+                    $("#show_count_" + vote_id).html(re.vote_count);
+                } else if (re.status == 10000) {
+                    voteBtn("无权参与该投票！");
+                } else if (re.status == 20001) {
+                    voteBtn("您今天已经投过票了，明天再过来投票吧!");
+                } else if (re.status == 20003) {
+                    voteBtn("您需关注再过来投票吧!");
+                } else if(re.status==40001){
+                    voteBtn("您已投该人员了咯!，请投其他人吧！");
+                }
+
+            }, error: function (e) {
+                voteBtn("提交出错！");
+            }
+        });
+    }
+</script>
+</body>
+</html>

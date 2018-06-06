@@ -1,0 +1,315 @@
+<include file="Public/includeHeader" />
+
+﻿<div class="row">
+	<div class="col-lg-12">
+		<h3 class="page-header">创建PC抽奖</h3>
+		
+	</div>
+</div>
+
+<div class="panel panel-default">
+	<form action="userweb.php?c=lottery&a=pc_action"  enctype="multipart/form-data"  method="post" onsubmit="return check()">
+	<input type="text" style="display:none;" name="post[id]"  class="form-control" value="{$data[detail]['id']}">
+		<div class="panel-body">
+
+			<ul class="nav nav-tabs" style="margin-bottom:10px;">
+				<li><a href="userweb.php?c=lottery&a=pcadd&id={$_REQUEST[id]}">基本设置</a></li>
+				<li><a href="userweb.php?c=lottery&a=pcaward&id={$_REQUEST[id]}">奖品设置</a></li>
+				<!-- <li><a href="#pc" data-toggle="tab">PC投屏设置</a></li> -->
+			</ul>
+
+			<div id="myTabContent" class="tab-content">
+
+			<div class="form-group">
+				<label for="text-input" class="col-md-2 control-label">部门:</label>
+				<div class="col-md-4 input-group ">
+					<select name="post[partment]" id="partment" class="form-control">
+						<volist name="partment_list" id="list">
+							<option value="{$list[id]}" <if condition="$list.id eq $data[detail]['partment']">selected</if>>{$list[title]}</option>
+						</volist>
+					</select>
+
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="text-input" class="col-md-2 control-label">面向部门:</label>
+				<div class="col-md-4 input-group ">
+					<select name="post[win_type]" id="partment" class="form-control">
+						<option value="1" <if condition="$data[detail]['win_type'] eq 1">selected</if>>内勤</option>
+						<option value="2" <if condition="$data[detail]['win_type'] eq 2">selected</if>>外勤</option>
+					</select>
+
+				</div>
+			</div>
+
+
+			<!-- <div class="tab-pane active in" id="home"> -->
+			<div class="form-group">
+				<label for="text-input" class="col-md-2 control-label">抽奖标题:</label>
+				<div class="col-md-4 input-group ">
+					<input id="pc_title" type="text" name="post[title]"  class="form-control" value="{$data[detail]['title']}">
+				</div>
+			</div>
+
+			<script src="tool/My97DatePicker/WdatePicker.js"></script>
+					
+			<div class="form-group">
+				<label for="text-input" class="col-md-2 control-label">开始时间:</label>
+				<div class="col-md-4 input-group ">
+					<input id="start_time" type="text" name="post[start_time]" value="<if condition="$data[detail][start_time] neq ''">{$data[detail][start_time]|date="Y-m-d H:m:s",###}</if>" class="form-control" onClick="WdatePicker({dateFmt:'yyyy-MM-dd H:m:s'})">
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="text-input" class="col-md-2 control-label">结束时间:</label>
+				<div class="col-md-4 input-group ">
+					<input id="end_time" type="text" name="post[end_time]" value="<if condition="$data[detail][end_time] neq ''">{$data[detail][end_time]|date="Y-m-d H:m:s",###}</if>" class="form-control" onClick="WdatePicker({dateFmt:'yyyy-MM-dd H:m:s'})">
+				</div>
+			</div>
+
+			<!-- <div class="form-group">
+				<label for="text-input" class="col-md-2 control-label">登录账号:</label>
+				<div class="col-md-4 input-group ">
+					<input type="text" name="post[username]"  class="form-control" value="">
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="text-input" class="col-md-2 control-label">登录密码:</label>
+				<div class="col-md-4 input-group ">
+					<input type="text" name="post[password]"  class="form-control" value="">
+				</div>
+			</div> -->
+
+			<script src="tool/ajaxupload/js/ajaxupload.js" type="text/javascript"></script>
+
+			<div class="form-group">
+				<label for="select" class="col-md-2 control-label">活动首图:</label>
+				<div class="col-md-9 input-group ">
+					<a type="button" id="UploadImg_common_single1" data-type="pcvote"><img id="image_thumb_common_single1" src="{$data['detail']['image_start']}<if condition="$data['detail']['image_start'] eq ''">{$config['static']}/public/image/shangchuan.png</if>" width="400px" height="200px" onerror="this.src='{$config['static']}/public/image//shangchuan.png'" width="100px" i >
+					</a>
+					<input type="hidden" name="post[image_start]" id="img_thumb_hidden_common_single1" value="{$data[detail]['image_start']}">
+					<p class="help-block" id="text_common_single"></p>
+					<if condition="$data['detail']['image_start'] neq ''">
+						<p class="help-block">点击图片，更换新的图片</p>
+					</if>
+					 
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="select" class="col-md-2 control-label">活动背景图:</label>
+				<div class="col-md-9 input-group ">
+					<a type="button" id="UploadImg_common_single2" data-type="pcvote"><img id="image_thumb_common_single2" src="{$data['detail']['image_back']}<if condition="$data['detail']['image_back'] eq ''">{$config['static']}/public/image/shangchuan.png</if>" width="400px" height="200px" onerror="this.src='{$config['static']}/public/image//shangchuan.png'" width="100px" i >
+					</a>
+					<input type="hidden" name="post[image_back]" id="img_thumb_hidden_common_single2" value="{$data[detail]['image_back']}">
+					<p class="help-block" id="text_common_single"></p>
+					<if condition="$data['detail']['image_back'] neq ''">
+						<p class="help-block">点击图片，更换新的图片</p>
+					</if>
+					 
+				</div>
+			</div>
+		<!-- 	</div> -->
+
+			<!-- <div class="tab-pane fade" id="detail"> -->
+			<div class="form-group">
+				<label for="text-input" class="col-md-2 control-label">抽奖详情:</label>
+				<div class="col-md-4 input-group ">
+					<div style="display:block; float:left; width:800px;">
+						<link rel="stylesheet" href="tool/kindeditor-4.1.10//themes/default/default.css" />
+						<link rel="stylesheet" href="tool/kindeditor-4.1.10/plugins/code/prettify.css" />
+						<script charset="utf-8" src="tool/kindeditor-4.1.10/kindeditor.js"></script>
+						<script charset="utf-8" src="tool/kindeditor-4.1.10/lang/zh_CN.js"></script>
+						<script charset="utf-8" src="tool/kindeditor-4.1.10/plugins/code/prettify.js"></script>
+						<script>
+			 
+										KindEditor.ready(function(K) {
+											var editor1 = K.create('textarea[id="editor_id"]', {
+												cssPath : 'tool/kindeditor-4.1.10/plugins/code/prettify.css',
+												uploadJson : 'tool/kindeditor-4.1.10/php/upload_json.php',
+												fileManagerJson : 'tool/kindeditor-4.1.10/php/file_manager_json.php',
+												allowFileManager : true,
+											    filterMode : true,
+												afterCreate : function() {
+													 var self = this;
+													K.ctrl(document, 13, function() {
+														self.sync();
+														K('form[name=add_goods]')[0].submit();
+													});
+													K.ctrl(self.edit.doc, 13, function() {
+														self.sync();
+														K('form[name=add_goods]')[0].submit();
+														 
+													});
+												}
+											});
+											prettyPrint();
+										});
+	 
+								</script>
+						<textarea id="editor_id" name="post[content]" style="width:600px;height:400px;">{$data['detail']['content']}</textarea>
+					</div>
+				</div>
+			</div>
+
+			<!-- </div> -->
+
+			<!-- <div class="tab-pane fade" id="award"> -->
+				
+			<!-- </div>
+ -->
+			<!-- <div class="tab-pane fade" id="pc"> -->
+			<?php if(!isset($_REQUEST[id])){ ?>
+			<div id="firstarea">
+			<div id="area1" class="form-group">
+				<label for="select" class="col-md-2 control-label">填写区域名称:</label>
+				<div class="col-md-6 input-group ">
+					<input id="lottery_area" class="lotteryarea" type="text" name="post[lotteryarea][1][area]"  class="form-control" value="">
+					<a class="aSel" onclick="show_content('userweb.php?c=contacts&a=select_area&idi=1')">选择</a> 
+
+					<!-- <a class="aSel" data-par='' onclick="show_content('userweb.php?c=contacts&a=select_area&inputid=wx_id&inputshow=admin_name')">选择</a> -->
+					<span id="admin_name" class="admin_name" style="font-size: 12px;"></span>
+				</div>
+				
+				
+				<input type="hidden" class="pcuserid" name="post[lotteryarea][1][pc_user_id]" value="{$data[wx_userid]}" id="wx_id"></input>
+			</div>
+			</div>
+
+			
+			<div class="form-group">
+				<label for="select" class="col-md-2 control-label"><button type="button" class="btn btn-primary" onclick="add_area()">新增区域</button></label>
+			</div>
+			<?php }else{ ?>
+				<volist name="area" id="vv">
+				<div class="form-group" id="area{$key}">
+					<label for="select" class="col-md-2 control-label">填写区域名称:</label>
+					<div class="col-md-4 input-group ">
+						<input class="pcarea" type="text" name="post[lotteryarea][{$key}][area]"  class="form-control" value="{$vv[area]}">
+						<a class="aSel" onclick="show_content('userweb.php?c=contacts&a=select_area&idi={$key}')">选择</a> 
+						<span class="admin_name" style="font-size: 12px;">{$vv[name]}</span>
+					</div>
+					<input  type="hidden" class="pcuserid" name="post[lotteryarea][{$key}][pc_user_id]" value="{$vv[pc_user_id]}"></input>
+					<input  type="hidden" class="pcid" name="post[lotteryarea][{$key}][id]" value="{$vv[id]}"></input>
+				</div>
+				</volist>
+			<?php } ?>
+
+			<!-- </div> -->
+
+
+			</div>
+
+
+		</div>
+
+		<div class="panel-footer">
+			<button class="btn btn-sm btn-success" type="submit"><i class="fa fa-dot-circle-o"></i> 保存</button>
+			<button class="btn btn-sm btn-danger" type="reset"><i class="fa fa-ban"></i> 重置</button>
+		</div>
+
+
+	</form>
+</div>
+
+<include file="Public/includeFooter" />
+<script src="{$config['Public']}assets/plugins/jquery-ui/js/jquery-ui-1.10.4.min.js"></script>
+<script type="text/javascript">
+
+function check(){
+	var title=$("#pc_title").val();
+	if(title==""){
+		alert("请填写活动标题");
+		return false;
+	}
+
+	var start_time=$("#start_time").val();
+	if(start_time==""){
+		alert("请填写开始时间");
+		return false;
+	}
+
+	var end_time=$("#end_time").val();
+	if(end_time==""){
+		alert("请填写结束时间");
+		return false;
+	}
+
+	var area=$("#lottery_area").val();
+	if(area==""){
+		alert("请填写区域");
+		return false;
+	}
+
+	return true;
+}
+
+window.onload = function() {  
+  init();  //初始化  
+}  
+function init() {  
+    //初始化图片上传  UploadImg
+    var UploadImg1 = document.getElementById("UploadImg_common_single1");
+    var UploadImg2 = document.getElementById("UploadImg_common_single2");
+    
+    AjxUploadImg_common_single(UploadImg1,"image_thumb_common_single1","img_thumb_hidden_common_single1");
+    AjxUploadImg_common_single(UploadImg2,"image_thumb_common_single2","img_thumb_hidden_common_single2");
+}
+
+//图片上传  
+function AjxUploadImg_common_single(btn,image_thumb,image_hidden) {  
+
+  	data_type="pclottery";
+    var button = btn;  
+    new AjaxUpload(button, {  
+        action: 'userweb.php?c=upload&a=upload_img',  
+        data: {type:data_type},  
+        dataType:"json",
+        name: 'myfile',  
+        onSubmit: function(file, ext) {
+      $("#text_common_single").html("上传中……")
+            if (!(ext && /^(jpg|JPG|png|PNG|gif|GIF)$/.test(ext))) {  
+                alert("您上传的图片格式不对，请重新选择！"); 
+        $("#text_common_single").html("")
+                return false;  
+            }
+        },  
+
+        onComplete: function(file,response) {
+      $("#text_common_single").html("上传成功")
+          var data=jQuery.parseJSON(response);
+        
+      $('#'+image_thumb).attr('src',data.img_thumb);
+      $('#'+image_hidden).val(data.img_thumb);
+        
+             
+        }  
+    });  
+}  
+
+// function add_area(){
+// 	var info=$("#area").html();
+// 	$("#firstarea").append(info);
+// }
+
+var i=1;
+function add_area(){
+	i++;
+	var info="<div class='form-group'  id='area"+i+"'>"+$("#area1").html()+"</div>";
+	$("#firstarea").append(info);
+	var id="#area"+i;
+	$(id+" .lotteryarea").attr("name","post[lotteryarea]["+i+"][area]");
+	$(id+" .pcuserid").attr("name","post[lotteryarea]["+i+"][pc_user_id]");
+
+	$(id+" .admin_name").html('');
+	$(id+" .pcuserid").val('');
+
+	var method="show_content('userweb.php?c=contacts&a=select_area&idi="+i+"')";
+	$(id+" .aSel").attr("onclick",method);
+
+	
+}	
+
+</script>

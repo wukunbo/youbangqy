@@ -1,0 +1,136 @@
+
+        
+        <include file="Activity:activity_public" />
+
+        <div class="padding-h-10 " style="width: 100%">
+            <p class="padding-bottom border-bottom-ddd font-size-16 assertive">在线报名</p>
+
+            <p>代码：{$data[user][wx_userid]}</p>
+
+            <p >姓名：{$data[user][name]}</p>
+
+            <!-- <p>部门／职场：{$data[user][partment]}</p> -->
+        
+                <div style="z-index: 0">
+                 <span style="float: left;">备注：</span>
+                     <form action="activity.php?c=activity&a=jujie&id={$data[detail][id]}" method="post" id="form_beizhu">
+                    <input id="beizhu" name="beizhu" class="margin-left border-ddd" type="text" placeholder=""
+                    style="float: left;z-index: 0">
+                    <!--<textarea id="beizhu" name="beizhu" class="margin-left border-ddd" type="text" rows="3" style="width: 250px;"></textarea>-->
+                </form>
+                </div>
+               
+
+        </div>
+
+        <!--content end-->
+        <div style="clear: both"></div>
+    <div class="text-center margin-top-20" style="margin-bottom: 15px;z-index: 999999;">
+        <a href="javascript:void(1)" onclick="success()">
+            <button class="button qianfen light border-none" type="button"
+                    style="width: 100px !important;min-height: 36px !important; line-height: 36px !important;;z-index: 9999999">
+                报名提交
+            </button>
+        </a>
+
+        <a href="javascript:void(1)" onclick="jujie()">
+            <button class="button qianfen light border-none" type="submit"
+                    style="width: 100px !important;min-height: 36px !important; line-height: 36px !important;;z-index: 9999999">
+                残忍拒绝
+            </button>
+        </a>
+    </div>
+
+   <!-- <h4 class="text-center bold padding-v-10 qianfen light" style="width:100%;margin: 20px 0 0 0 !important;
+            position: fixed;bottom: 0">
+        {$data[detail][title]}
+    </h4>
+
+    <div style="height: 30px"></div>-->
+</div>
+
+
+    <div id="tanchuang"
+         style="position:fixed;top:30%;left:15%; width:70%;border:#ccc 1px solid;  overflow:hidden;border-radius: 10px">
+        <div style="height: 50px; color:#fff; background:#d31145; padding:10px;font-size: 18px;">
+            提示
+        </div>
+        <div style="height: 150px;font-size: 18px;white-space: normal;padding: 20px;display: flex;
+            align-items: center;justify-content: center;background: #e0e0e0">
+            <div>
+                <!-- <p class=" text-center margin-top margin-0">没有填写备注信息</p>
+
+                <p class="text-center margin-0">提交失败</p> -->
+
+                <p class="text-center margin-0">请填写拒接报名原因</p>
+                <br/>
+                <a href="javascript:void(1)" onclick="document.getElementById('tanchuang').style.display='none';"
+                   style="padding:3px 24px !important;margin-left: 40px"
+                   class="button qianfen border-e5 jiesuan light border-none">
+                    确 认
+                </a>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</body>
+
+</html>
+
+<script type="text/javascript">
+    document.getElementById('tanchuang').style.display = 'none';
+    function jujie() {
+
+        var beizhu = $("#beizhu").val();
+        if (beizhu == "") {
+            document.getElementById('tanchuang').style.display = 'block';
+        } else {
+            $.ajax({
+                url:"activity.php?c=activity&a=ajax_activity&id={$data[detail][id]}&status=-1",
+                type: 'POST',
+                data:{beizhu:beizhu},
+                success: function (returndata) {
+                    if(returndata == "no"){
+                        alert("活动报名已截止");
+                    }else if(returndata == "noman"){
+                        alert("活动人数已满");
+                    }else if(returndata == "noapply"){
+                        alert("不在活动邀请范围内，请联系主办方");
+                    }else{
+                        window.location.href="activity.php?c=activity&a=jujie&id={$data[detail][id]}";  
+                    }
+                },  
+                error: function (returndata) {  
+                  alert(returndata);  
+                }  
+            });
+        }
+    }
+
+    function success(){
+        var beizhu = $("#beizhu").val();
+        $.ajax({
+            url:"activity.php?c=activity&a=ajax_activity&id={$data[detail][id]}&status=1",
+            type: 'POST',
+            data:{beizhu:beizhu},
+            success: function (returndata) {
+                if(returndata == "no"){
+                    alert("活动报名已截止");
+                }else if(returndata == "noman"){
+                    alert("活动人数已满");
+                }else if(returndata == "noapply"){
+                    alert("不在活动邀请范围内，请联系主办方");
+                }else{
+                    window.location.href="activity.php?c=activity&a=success&id={$data[detail][id]}";
+                }
+                
+            },  
+            error: function (returndata) {  
+              alert(returndata);  
+            }  
+        });
+    }
+</script>

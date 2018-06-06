@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+<title>大头说</title>
+<link href="{$config['view']}static/css/ionic.min.css" rel="stylesheet" type="text/css" />
+<link href="{$config['view']}static/css/style.css"rel="stylesheet" type="text/css" />
+<link href="{$config['view']}static/css/accordion_all.css" rel="stylesheet" type="text/css" />
+<link href="{$config['view']}static/css/accordion.css" rel="stylesheet" type="text/css" />
+<link href="{$config['view']}static/css/theme.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" charset="utf-8" src="{$config['view']}static/js/jquery.js"></script>
+<script type="text/javascript" src="{$config['view']}static/js/core.js"></script>
+<script type="text/javascript" src="{$config['view']}static/js/widget.js"></script>
+<script type="text/javascript" src="{$config['view']}static/js/accordion.js"></script>
+</head>
+<body>
+<style>
+ body{background:url(add/mmexport1443168532494.jpg)!important; background-repeat:repeat-y; background-size:100% 100%;background-attachment:fixed; background-attachment:fixed;}
+</style>
+<div class="list" style="margin-bottom:0px; background:none;">
+	<!--content start-->
+	<div class="menu_two" style="margin-top:0;">
+		<div class="item tabs tabs-secondary"  style="margin:-1px 0 -1px 0;">
+			<a class="tab-item dark-gray <php> if($cate_id ==14){ echo "active";}
+			
+			
+			</php>
+			" href="{:U('cms_lists')}&cate_id=14" >     
+			敢动态 </a>
+			<a class="tab-item dark-gray <php> if($cate_id ==5){ echo "active";}
+			
+			
+			</php>
+			" href="{:U('cms_lists')}&cate_id=5" style="border-right:none !important;">
+			敢活动</a>
+		</div>
+	</div>
+	<div style=""  id="list1" 
+	
+	<php> if($cate_id !=5){ echo 'style="display:none;"';}</php>
+	>
+	<volist name="Cms_lists[content]" id="vo">
+		<div class="item  " style=" border:none; padding-bottom:2px; background:none; " >
+			<a href="{$vo.url}" style="width:100%; display:block;border:#ddd 1px solid; border-radius:5px;background:#fff;  ">
+				<h2 class="dark-gray font-size-18" style="padding:10px; padding-bottom:0px; color:#f0186e !important;line-height:150%; font-weight:bold;">{$vo.title}</h2>
+				<div style="text-indent:15px;font-size:14px;text-indent:0;padding:10px; padding-top:0px;">
+					<p style="margin-top:5px;color:#999;" class="font-size-14">
+						<php> echo date("Y-m-d",$vo[addtime]);</php>
+					</p>
+					<p style="margin-top:5px;"><img width="100%" src="{$vo.img_thumb}" class="pic"></p>
+				</div>
+				<p style="border-top:#ddd 1px solid;padding:10px;" >查看全文</p>
+			</a>
+		</div>
+	</volist>
+ </div>
+<div id="list3" 
+
+
+<php> if($cate_id !=14){ echo 'style="display:none;"';}</php>
+>
+<volist name="Cms_lists[content]" id="vo">
+	<div class="item  " style=" border:none; padding-bottom:2px;" >
+		<a href="{$vo.url}" style="width:100%; display:block;border:#ddd 1px solid; border-radius:5px;background:#fff; ">
+			<h2 class="dark-gray font-size-18" style="padding:10px; color:#f0186e !important;line-height:150%; font-weight:bold;">{$vo.title}</h2>
+			<div style="text-indent:15px;font-size:14px;text-indent:0;padding:10px; padding-top:0px;">
+				<p style="margin-top:5px;color:#999;" class="font-size-14">
+					<php> echo date("Y-m-d",$vo[addtime]);</php>
+				</p>
+				<p style="margin-top:5px;"><img width="100%" src="{$vo.img_thumb}" class="pic"></p>
+			</div>
+			<p style="border-top:#ddd 1px solid;padding:10px;" >查看全文</p>
+		</a>
+	</div>
+</volist>
+<div class="page"> {$Cms_lists[page]} </div>
+</div>
+<!--content end-->
+</div>
+</body>
+</html>

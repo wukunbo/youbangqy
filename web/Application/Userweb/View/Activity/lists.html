@@ -1,0 +1,201 @@
+<include file="Public/includeHeader" />
+
+﻿<div class="row">
+	<div class="col-lg-12">
+		<h3 class="page-header">活动列表</h3>
+		
+	</div>
+</div>
+
+<div class="col-md-12 input-group" style="margin-bottom: 15px;width: 100%">
+	<form action="userweb.php?c=activity&a=lists" method="post" style="width: 100%">
+		<select class="form-control  " name="post[partment]" style="width: 100px">
+			<option value="">请选择部门</option>
+			<volist name="partment_list" id="list">			
+				<option value="{$list.id}">{$list.title}</option>
+			</volist>
+		</select>
+
+		<select class="form-control  " name="post[category]" style="width: 130px">
+			<option value="">请选择活动类型</option>
+			<volist name="category_list" id="list">			
+				<option value="{$list.cate_id}">{$list.cat_name}</option>
+			</volist>
+		</select>
+
+		<select class="form-control  " name="post[status]" style="width: 100px">
+			<option value="">请选择状态</option>
+			<option value="0">未发布</option>
+			<option value="1">已发布</option>
+		</select>
+		&nbsp;
+		<script src="tool/My97DatePicker/WdatePicker.js"></script>	
+		<label for="text-input">活动时间:</label>
+		<input  type="text" name="post[time_start]" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+		-
+		<label for="text-input">截止时间:</label>
+		<input  type="text" name="post[time_apply]" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+
+		<select class="form-control  " name="post[order]" style="width: 130px">
+			<option value="">排序</option>
+			<option value="time_start">报名开始时间排序</option>
+			<option value="time_apply">报名截止时间排序</option>
+			<option value="start_time">活动开始时间排序</option>
+			<option value="end_time">活动结束时间排序</option>
+		</select>
+		
+
+		<button class="btn btn-success" type="submit" style="margin-left: 10px;"><i class="fa fa-dot-circle-o"></i>搜索</button>
+	</form>
+
+</div>
+
+
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h2><i class="fa fa-table red"></i><span class="break"></span><strong>列表</strong></h2>
+		 
+	</div>
+	<div class="panel-body">
+		
+		<table class="table">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>标题</th>
+					<th>所属部门</th>
+					<th>活动类型</th>
+					<!-- <th>报名截止</th>
+					<th>活动开始</th> -->
+					<th >签到码</th>
+					<th >离场码</th>
+
+					<th >创建人</th>
+					<!-- <th >修改时间</th> -->
+					<th >发布时间</th>
+		 
+					<th>状态</th>
+					<th>详细</th>
+
+					<th style="width:15.5em;">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php $total=count($data[content]);?>
+				<volist name="data[content]" id="lists">
+					<tr >
+						<!-- <td >{$lists['id']}</td> -->
+						<td >{$total-$key}</td>
+						<td width="200px">{$lists['title']}</td>
+						<td width="100px">{$lists['partment_title']}</td>
+						<!-- <td ><a href="activity.php?c=activity&a=index&id={$lists['id']}">活动链接</a></td> -->
+						<td width="120px">{$lists['cat_name']}</td>
+						<!-- <td >{$lists['time_apply']|date="Y-m-d",###}</td>
+						<td >{$lists['start_time']|date="Y-m-d",###}</td> -->
+						<td width="70px"><a href="userweb.php?c=activity&a=sign_code&id={$lists[id]}"  target="_blank">查看</a></td>
+						
+						<td width="70px">
+							<!-- <if condition="$lists[status] eq 1 OR $lists[status] eq -1">
+								<a href="{$lists['signout']}">点击查看</a>
+							</if>
+							<if condition="$lists[status] eq 0 OR $lists[status] eq 2">
+								未发布暂无
+							</if>  -->
+							<a href="userweb.php?c=activity&a=sign_out&id={$lists[id]}"  target="_blank">查看</a>
+						</td>
+
+						<td width="80px">{$lists['admin_name']}</td>
+
+						<!-- <td >{$lists['addtime']|date="Y-m-d",###}</td> -->
+						<td >
+							<if condition="$lists['publishtime'] neq null">
+							{$lists['publishtime']|date="Y-m-d",###}
+							</if>
+						</td>
+						
+						<td width="70px">
+							<if condition="$lists[status] eq 0">
+								未发布
+							</if> 
+							<if condition="$lists[status] eq 1">
+								已发布
+							</if> 
+							<if condition="$lists[status] eq 2">
+								未发布
+							</if>
+
+							<if condition="$lists[status] eq -1">
+								已下架
+							</if> 
+						 
+						 </td>
+
+						 <td>
+						 	<button type="button" class="btn btn-primary popover-hide" 
+							      title="详细详细" data-container="body" 
+							      data-toggle="popover" data-placement="top"
+							      data-html="true"
+							      data-content="报名截止:{$lists['time_apply']|date="Y-m-d",###}<br>活动开始:{$lists['start_time']|date="Y-m-d",###}<br>修改时间:{$lists['addtime']|date="Y-m-d",###}">
+							      详情
+							</button>
+						 </td>
+						 
+						<td>
+							<if condition="$lists[status] eq 0">
+								<!-- <i class="fa fa-plus"></i><a type="button" onclick="show_content('userweb.php?c=activity&a=select_list&id={$lists['id']}')">选择名单</a> -->
+								
+								<!-- <a href="userweb.php?c=activity&a=check_apply&id={$lists[id]}"> 预览名单 </a> -->
+								<i class="fa fa-plus"></i><a type="button" onclick="show_content('userweb.php?c=contacts&a=choose_contact&t=activity&id={$lists['id']}&back=check_apply')">选择名单</a>
+
+								<a class="btn btn-xs btn-danger" href="userweb.php?c=activity&a=publish_activity&id={$lists[id]}" onclick="return confirm('确实要发布吗？')">
+                          			发布
+                      			</a>
+                      			<a href="userweb.php?c=activity&a=preview&id={$lists[id]}">预览</a>
+                      			<a  href="javascript:confirm_del('userweb.php?c=activity&a=del&id={$lists[id]}')" onclick="return confirm('确实要删除吗？')"><i class="fa fa-trash-o"></i></a>
+
+							</if>
+
+							<if condition="$lists[status] eq 2">
+								<!-- <a href="activity.php?c=activity&a=index&id={$lists['id']}">预览</a> -->
+								<a href="userweb.php?c=activity&a=check_apply&id={$lists[id]}"> 名单 </a>
+								<a class="btn btn-xs btn-danger" href="userweb.php?c=activity&a=publish_activity&id={$lists[id]}" onclick="return confirm('确实要发布吗？')">
+                          			发布
+                      			</a>
+                      			<a href="userweb.php?c=activity&a=preview&id={$lists[id]}">预览</a>
+                      			<a  href="javascript:confirm_del('userweb.php?c=activity&a=del&id={$lists[id]}')" onclick="return confirm('确实要删除吗？')"><i class="fa fa-trash-o"></i></a>
+							</if>
+							</if>
+
+							<if condition="$lists[status] eq 1">
+								<a href="userweb.php?c=activity&a=check_apply&id={$lists[id]}&show=1"> 名单 </a>
+
+								<a href="userweb.php?c=activity&a=out_activity&id={$lists[id]}" onclick="return confirm('确实要下架吗？')">下架 </a>
+								<a href="userweb.php?c=activity&a=again_publish&id={$lists[id]}" onclick="return confirm('确实要再次推送吗？')">再推送 </a>
+							</if>
+
+							<if condition="$lists[status] eq -1">
+								<a href="userweb.php?c=activity&a=copy_activity&id={$lists[id]}">复制</a>
+							</if>
+
+
+							<if condition="$lists[status] neq 1 OR ($lists[status] eq 1 AND $lists[end_time] gt time()) ">
+							&nbsp;
+		
+							
+							</if>
+
+							<a href="{:U('add')}&id={$lists.id}"><i class="fa fa-pencil"></i></a> &nbsp;
+
+							<if condition="$lists[status] eq 1 AND $lists[end_time] lt time()">
+								<a  href="javascript:confirm_del('userweb.php?c=activity&a=del&id={$lists[id]}')" ><i class="fa fa-trash-o"></i></a>
+							</if>
+						</td>
+					</tr>
+				</volist>
+			</tbody>
+		</table>
+	</div>
+ 
+</div>
+<include file="Public/pagination" />
+<include file="Public/includeFooter" />

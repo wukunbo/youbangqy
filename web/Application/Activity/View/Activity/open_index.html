@@ -1,0 +1,111 @@
+<include file="Activity:activity_public" />
+
+<div class="padding-h-10 " style="width: 100%">
+	<p class="padding-bottom border-bottom-ddd font-size-16 assertive">在线报名</p>
+
+	<div style="z-index: 0">
+		<form action="activity.php?c=activity&a=jujie&id={$data[detail][id]}" method="post" id="form_beizhu">
+			<div class="row">
+				<div class="col col-33">
+					邀请人代码：
+				</div>
+				<div class="col">
+					<input id="user_code" name="user_code" class="margin-left border-ddd" type="text" placeholder="">
+				</div>
+			</div>
+			<div class="row">
+				<div class="col col-33">
+					您 的 姓 名：
+				</div>
+				<div class="col">
+					<input id="name" name="name" class="margin-left border-ddd" type="text" placeholder="">
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col col-33">
+					备 注：
+				</div>
+				<div class="col">
+					<input id="beizhu" name="beizhu" class="margin-left border-ddd" type="text" placeholder="">
+				</div>
+			</div>
+			
+
+	    </form>
+	</div>
+
+</div>
+
+<div style="clear: both"></div>
+
+
+<div class="text-center margin-top-20" style="margin-bottom: 15px">
+    <a href="javascript:void(1)" onclick="success()">
+        <button class="button qianfen light border-none" type="button"
+                style="width: 100px !important;min-height: 36px !important; line-height: 36px !important;">
+            报名提交
+        </button>
+    </a>
+
+</div>
+
+<div id="tanchuang"
+     style="display:none;position:fixed;top:30%;left:15%; width:70%;border:#ccc 1px solid;  overflow:hidden;border-radius: 10px">
+    <div style="height: 50px; color:#fff; background:#d31145; padding:10px;font-size: 18px;">
+        提示
+    </div>
+    <div style="height: 150px;font-size: 18px;white-space: normal;padding: 20px;display: flex;
+        align-items: center;justify-content: center;background: #e0e0e0">
+        <div>
+            <!-- <p class=" text-center margin-top margin-0">没有填写备注信息</p>
+
+            <p class="text-center margin-0">提交失败</p> -->
+
+            <p class="text-center margin-0">请填写完整信息</p>
+            <br/>
+            <a href="javascript:void(1)" onclick="document.getElementById('tanchuang').style.display='none';"
+               style="padding:3px 24px !important;margin-left: 40px"
+               class="button qianfen border-e5 jiesuan light border-none">
+                确 认
+            </a>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    document.getElementById('tanchuang').style.display = 'none';
+
+    function success(){
+       	var name = $("#name").val();
+       	var user_code = $("#user_code").val();
+       	var beizhu = $("#beizhu").val();
+
+       	if(name == "" || user_code == ""){
+       		document.getElementById('tanchuang').style.display = 'block';
+       	}else{
+
+	        $.ajax({
+	            url:"activity.php?c=activity&a=ajax_activity&id={$data[detail][id]}&status=1",
+	            type: 'POST',
+	            data:{name:name,user_code:user_code,beizhu:beizhu},
+	            success: function (returndata) {
+	                if(returndata == "no"){
+	                    alert("活动报名已截止");
+	                }else if(returndata == "noman"){
+                    	alert("活动人数已满");
+                	}else if(returndata == "noapply"){
+                		alert("不在活动邀请范围内，请联系主办方");
+                	}else{
+	                    window.location.href="activity.php?c=activity&a=success&id={$data[detail][id]}";
+	                }
+	                
+	            },  
+	            error: function (returndata) {  
+	              alert(returndata);  
+	            }  
+	        });
+	    }
+    }
+</script>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html style="overflow: scroll">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+<title>活动签到</title>
+<link href="{$config['static']}css/ionic.min.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" charset="utf-8" src="{$config['static']}js/jquery.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js?t=<?php echo time();?>"></script>
+<!--     <script type="text/javascript" charset="utf-8" src="{$config['tool']}wxjs/weixin.js?t=<?php echo time();?>"></script>
+ -->
+<script type="text/javascript">
+    	wx.config({
+			// debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+		    appId: '{$wxconfig.appid}', // 必填，公众号的唯一标识
+		    timestamp:'{$wxconfig.timestamp}', // 必填，生成签名的时间戳
+		    nonceStr: '{$wxconfig.noncestr}', // 必填，生成签名的随机串
+		    signature: '{$wxconfig.signature}',// 必填，签名，见附录1
+		    jsApiList: ['closeWindow','openLocation','getLocation','onMenuShareTimeline','showOptionMenu ','onMenuShareAppMessage','onMenuShareQQ', 'onMenuShareWeibo'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+		});
+
+        
+
+		wx.ready(function(){
+
+			wx.getLocation({
+				type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+				success: function (res) {
+					var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+					var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+					var speed = res.speed; // 速度，以米/每秒计
+					var accuracy = res.accuracy; // 位置精度       
+					document.getElementById('latitude').value=latitude;
+					document.getElementById('longitude').value=longitude;
+					fun(latitude,longitude);
+				}
+			});
+
+		})
+
+        
+       
+    </script>
+<style>
+    	body{ background:#fff;}
+
+	</style>
+</head>
+<body  >
+<input type="text" name="latitude" value="23" style="display:none;" id="latitude">
+<input type="text" name="longitude" value="101" style="display:none;" id="longitude">
+<!-- <div id="fujin_text"></div> -->
+<!-- <div id="show_msg" class="list has-header" style="padding-top:0; overflow:hidden;display: none;">
+    <div style="left:10%; position:relative; margin-top:30px; width:80%;background: #fff">
+        <div style="border:#ccc 1px solid;  overflow:hidden;">
+            <div style="height: 30px; color:#fff; background:#d31145; padding:10px 0 0 10px;font-size: 14px !important;">提示</div>
+            <div style="white-space: normal !important;text-align:center;height: 80px;font-size: 18px !important;padding: 5px;display: flex;align-items: center;justify-content: center">
+                <p id="fujin_text" style="white-space: normal !important;">
+                </p>
+                <p id="hint" style="white-space: normal !important;"></p>
+            </div>
+        </div>
+    </div>
+</div> -->
+<div class="padding-h-10" id="show_msg" style="display:none;">
+	<div style="background:#d31145; color:#FFFFFF; line-height:30px; height:30px; font-size:13px; padding-left:10px;">签到信息提示</div>
+	<div><img src="Application/Personal/View/static/img/youbang.jpg" width="50%" style="margin-left:25%;"></div>
+	<div class="text-center padding" style="width: 100%;font-size:20px "> {$activity[title]} </div>
+	<div class="row">
+		<div class="col  text-center"> 代码：{$apply[user_id]}  </div>
+		 
+	</div>
+	<div class="row">
+		<div class="col  text-center"> 姓名：{$apply[truename]} </div>
+		 
+	</div>
+	<div class="text-center padding">
+		<p style="font-size: 25px; color:#d31145" id="qiandao">签到成功</p>
+		<p style="font-size: 12px; color:#999999;" id="shijian"> {$apply[addtime]|date="Y-m-d H:i:s",###}   </p>
+	</div>
+	<div class="row">
+		<div class="col text-right" id="hint">
+		</div>
+		<div class="col">
+		</div>
+	</div>
+	<div class="text-center">
+		<a href="#" onClick="WeixinJSBridge.call('closeWindow');" class=" " style="margin-top: 10px; width:90%; margin-left:5%; display:block; line-height:34px; height:34px;background:#d31145; color:#fff;">确定</a>
+	</div>
+</div>
+</body>
+</html>
+<script type="text/javascript">
+function fun(latitude,longitude){
+	// alert(5555555);
+	url="activity.php?c=activity&a=sign&id={$_REQUEST[id]}&latitude="+latitude+"&longitude="+longitude;
+	$.ajax({
+		type: "get",
+		url: url,
+		dataType: "json",       
+		success: function(data) {	
+			if(data.status==10000){
+				$("#qiandao").html("位置不正确，签到失败");
+				$("#shijian").html(data.time);
+				$("#show_msg").show();
+			}
+			if(data.status==10001){
+				$("#qiandao").html("签到成功");
+				$("#shijian").html(data.time);
+				$("#hint").html(data.hint);
+				$("#show_msg").show();
+			}
+		},		
+	})
+}
+</script>

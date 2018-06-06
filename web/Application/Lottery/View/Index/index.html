@@ -1,0 +1,365 @@
+`<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content=" initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+<link rel="stylesheet" type="text/css" href="Application/Lottery/View/Index/style/style.css" media="all" />
+<script type="text/javascript" src="Application/Lottery/View/Index/style/zepto.js"></script>
+<script type="text/javascript" src="Application/Lottery/View/Index/style/alert.js"></script>
+<title>大转盘</title>
+</head>
+<body class="activity-lottery-winning">
+<style>
+body{
+background:url({$data['detail']['back_img']}) repeat-y  scroll 0 0 / 100% auto;
+}
+</style>
+
+
+<div class="main">
+  <div id="outercont">
+    <div id="outer-cont">
+      <div id="outer"><img src="Application/Lottery/View/Index/style/activity-lottery-{$prize}.png"></div>
+    </div>
+    <div id="inner-cont">
+      <div id="inner"> <img src="Application/Lottery/View/Index/style/activity-lottery-2.png"> </div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="boxcontent boxyellow" id="result" style="display:none">
+      <div class="result">
+        <div class="title-orange"><span>恭喜你中奖了</span></div>
+        <div class="Detail">
+          <p>你中了：<span class="red" id="prizetype"> </span></p>
+        <!--   <p>中奖号：<span class="red" id="win_sn"> </span></p> -->
+          <p class="red" id="contact">请您输入您的手机号码，我们将尽快联系您! </p>
+          <div id="number_alreay" style="display:none">
+            <p class="red" >您的手机号码已经上传:<span class="red" id="phone_number"></span></p>
+          </div>
+          <div id="input_submit" >
+            <p>
+              <input name="phone" class="px" id="phone" value="" type="text" placeholder="用户请输入您的手机号码">
+              <input name="partment" class="px" id="partment" value="" type="text" placeholder="请输入所属职场">
+              <input name="lottery_id" class="px" id="id" value="{$id}" type="text" style="display:none;">
+              <input name="win" class="px" id="win_prize" value="" type="text" style="display:none;">
+            </p>
+            <p>
+              <input onclick="send_phone()" class="pxbtn" name="提 交" id="save-btn" type="button" value="用户提交">
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+   
+  <div class="boxcontent boxyellow">
+    <div class="box">
+      <div class="title-green">可抽奖次数：</div>
+      <div class="Detail">
+        <p class="red" id="show_count">{$data[user][lottery_count]}</p>
+      </div>
+    </div>
+  </div>
+  
+  
+</div>
+</div>
+<script type="text/javascript">
+        $(function () {
+            window.requestAnimFrame = (
+             function () {
+                return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
+                function (callback) {
+              
+                    window.setTimeout(callback, 1000 / 60)
+                }
+             
+                
+            })();
+            var totalDeg = 360 * 3 + 0;
+            var steps = [];
+            var lostDeg = [30, 90, 150, 210, 270, 330];
+            var prizeDeg = [6, 66, 126, 186, 246, 306];
+            var prize, sncode,prizename,prizedes;
+            var count = 0;
+            var now = 0;
+            var a = 0.01;
+            var outter, inner, timer, running = false;
+            function countSteps() {
+                var t = Math.sqrt(2 * totalDeg / a);
+                var v = a * t;
+                for (var i = 0; i < t; i++) {
+                    steps.push((2 * v * i - a * i * i) / 2)
+                }
+                
+                steps.push(totalDeg)
+            }
+            function step() {
+                outter.style.webkitTransform = 'rotate(' + steps[now++] + 'deg)';
+                outter.style.MozTransform = 'rotate(' + steps[now++] + 'deg)';
+                if (now < steps.length) {
+                    running = true;
+                    requestAnimFrame(step)
+                } else {
+                    running = false;
+                    setTimeout(function () {
+                        if (prize != null) {
+                            $("#sncode").text(sncode);
+                            $("#prizetype").text(prizename + " - " + prizedes);
+                            $("#result").slideToggle(500);
+                            //$("#outercont").slideUp(500)
+                        } else {
+                          //  alert("{$reply['repeat_lottery_reply']}")
+                        }
+                    },
+                    200)
+                }
+            }
+			function run(){
+			
+			     running = true;
+          			timer = setInterval(function () {
+                            i += 5;
+                            outter.style.webkitTransform = 'rotate(' + i + 'deg)';
+                            outter.style.MozTransform = 'rotate(' + i + 'deg)'
+                        },
+                        1)
+				}
+            function start(deg,type) {
+                deg = deg || lostDeg[parseInt(lostDeg.length * Math.random())];
+				
+                running = true;
+               
+                clearInterval(timer);
+                totalDeg = 360 * 2 + deg;
+                steps = [];
+                now = 0;
+                
+                countSteps();
+                requestAnimFrame(step)
+                if(type==1){
+                setTimeout("show_out()",'2700');
+                }else{
+					setTimeout("alert('谢谢参与')",'2700');
+					
+                   }
+            }
+			
+            window.start = start;
+            outter = document.getElementById('outer');
+            inner = document.getElementById('inner');
+            i = 10;
+       
+            $("#inner").click(function () {
+            
+
+            	var id= {$id};
+            	 
+        	 		 if (running) return;
+
+        				var back_status = {$data[status]};
+
+               
+        				if(back_status == 10021){
+        					alert('抽奖次数已用完');
+        					return;
+        					}
+
+        				if(back_status == 10019){
+        					alert('还没开始');
+        					return;
+        					}
+        				if(back_status == 10020){
+        					alert('活动已结束');
+        					return;
+        					}
+
+			
+                $.ajax({
+                    url: "lottery.php?a=win&id="+id,
+                    dataType: "json",
+                    data: {
+                        t: Math.random()
+                    },
+               
+                    success: function (data) {
+                    	//alert('1');
+                    	
+                        $("#show_count").html(data.lottery_count);
+
+                    	if(data.status == 10021)
+                    	{
+                        	alert('抽奖次数已用完');
+                        	return;
+                    	}
+              
+                    	
+                        if (data.zhongjiang==1) {
+                          
+							
+                                run();
+                            	$("#prizetype").html(data.prize_name+"-"+data.prize);
+                                prize_level = data.level;
+                                prizename = data.name;
+                                prizedes = data.award;//转的角度 6 一等奖
+                                $("#win_prize").val(data.level);
+													
+                                start(prizeDeg[prize_level-1],1);
+                              	
+                        } else {
+                        	
+                            prize = null;
+                            run();
+                            start();
+                                                
+                        }
+                        running = false;
+                        count++;
+						
+                    },
+                    error: function () {
+                    
+                        prize = null;
+                        start();
+                        running = false;
+                        count++;
+                    },
+                    timeout: 15000
+                })
+				 
+            })
+        });
+		
+		
+		function show_out(){
+		
+				$("#result").css("display","");
+			
+	 
+			}
+
+function send_phone(){
+	
+		var phone= $("#phone").val();
+		var win= $("#win_prize").val();
+        var partment=$("#partment").val();
+        if(phone=="" || partment==""){
+            alert("请输入手机号和所属职场");
+            return;
+        }
+		var id= $("#id").val();
+		
+		// alert(id+"-"+phone+"-"+win);
+		$.ajax({
+			type: "post",
+			url: "lottery.php?c=index&a=win_ziliao&phone="+phone+"&win="+win+"&lottery_id="+id+"&partment="+partment,
+			dataType: "json", 
+		
+			success:function(data){
+
+			if(data.status==10001){
+    		    $("#contact").css("display","none");
+    			$("#input_submit").css("display","none");
+    			$("#number_alreay").css("display","");
+				$("#phone_number").html(data.phone);
+                alert("您的信息已经提交成功");
+			}
+			// window.location.href="marketing.php?id="+id;
+			},
+			
+			error:function(data,textStatus) {
+				},
+			complete: function(data,textStatus) {
+					
+				 }
+			
+			
+		})
+		
+		
+	
+	 
+}
+		
+		
+		
+		
+		
+   //      $("#save-btn").bind("click",function () {
+   //          var btn = $(this);
+   //          var tel = $("#tel").val();
+   //          if (tel == '') {
+   //              alert("请输入手机号");
+   //              return
+   //          }
+
+   //          var submitData = {
+   //                  code: $("#sncode").text(),
+   //                  tel: tel,
+   //          };
+   //         	$.post('1', submitData, function(data) {
+			// if (data.success == true) {
+			// 	//alert(data.msg);
+			// 	$("#result").slideUp(500);
+			// 	return
+			// } else {}
+			// },"json")
+   //      });
+
+        document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
+        window.shareData = {
+            "imgUrl": "{$shareimg}",
+            "timeLineLink": "{$sharelink}",
+            "sendFriendLink": "{$sharelink}",
+            "weiboLink":  "{$sharelink}",
+            "tTitle":  "{$sharetitle}",
+            "tContent": "{$sharedesc}",
+            "fTitle":  "{$sharetitle}",
+            "fContent": "{$sharedesc}",
+            "wContent": "{$sharedesc}",
+        };
+        // 发送给好友
+        WeixinJSBridge.on('menu:share:appmessage', function (argv) {
+            WeixinJSBridge.invoke('sendAppMessage', {
+                "img_url": window.shareData.imgUrl,
+                "img_width": "640",
+                "img_height": "640",
+                "link": window.shareData.sendFriendLink,
+                "desc": window.shareData.fContent,
+                "title": window.shareData.fTitle
+            }, function (res) {
+                _report('send_msg', res.err_msg);
+            })
+        });
+
+        // 分享到朋友圈
+        WeixinJSBridge.on('menu:share:timeline', function (argv) {
+            WeixinJSBridge.invoke('shareTimeline', {
+                "img_url": window.shareData.imgUrl,
+                "img_width": "640",
+                "img_height": "640",
+                "link": window.shareData.timeLineLink,
+                "desc": window.shareData.tContent,
+                "title": window.shareData.tTitle
+            }, function (res) {
+                _report('timeline', res.err_msg);
+            });
+        });
+
+        // 分享到微博
+        WeixinJSBridge.on('menu:share:weibo', function (argv) {
+            WeixinJSBridge.invoke('shareWeibo', {
+                "content": window.shareData.wContent,
+                "url": window.shareData.weiboLink,
+            }, function (res) {
+                _report('weibo', res.err_msg);
+            });
+        });
+        }, false)
+    </script> 
+</body>
+</html>
+</body>
+</html>
